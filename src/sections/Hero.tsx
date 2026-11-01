@@ -31,6 +31,65 @@ interface HeroProps {
   introDone?: boolean;
 }
 
+/**
+ * The name is the first thing a visitor is likely to poke at, so it answers:
+ * pointing at a letter lifts it and tints it blue while its two nearest
+ * neighbours follow at reduced strength, so the word reacts as a group instead
+ * of one character twitching alone.
+ */
+function InteractiveName({ text, reduceMotion }: { text: string; reduceMotion: boolean }) {
+  const [active, setActive] = useState<number | null>(null);
+  const words = text.split(" ");
+
+  return (
+    <span
+      aria-hidden
+      className="flex flex-wrap gap-x-[0.24em]"
+      onMouseLeave={() => setActive(null)}
+    >
+      {words.map((word, wordIndex) => {
+        // Characters are indexed across the whole name so the falloff carries
+        // across the word break rather than restarting at "Capisen".
+        const offset = words.slice(0, wordIndex).join(" ").length + (wordIndex > 0 ? 1 : 0);
+
+        return (
+          <span key={wordIndex} className="inline-flex whitespace-nowrap">
+            {[...word].map((char, charIndex) => {
+              const index = offset + charIndex;
+              const distance = active === null ? Infinity : Math.abs(index - active);
+              const lift = reduceMotion
+                ? 0
+                : distance === 0
+                  ? 9
+                  : distance === 1
+                    ? 4.5
+                    : distance === 2
+                      ? 1.5
+                      : 0;
+
+              return (
+                <span
+                  key={charIndex}
+                  onMouseEnter={() => setActive(index)}
+                  className="inline-block transition-[transform,color,text-shadow] duration-300 ease-out"
+                  style={{
+                    transform: `translateY(-${lift}px)`,
+                    color: distance === 0 ? "#2878f0" : distance === 1 ? "#4f8ee6" : undefined,
+                    textShadow:
+                      distance === 0 ? "0 0 30px rgba(40,120,240,0.45)" : undefined,
+                  }}
+                >
+                  {char}
+                </span>
+              );
+            })}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 export function Hero({ introDone = true }: HeroProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
@@ -154,19 +213,22 @@ export function Hero({ introDone = true }: HeroProps) {
               </span>
             </motion.div>
 
-            {/* Headline */}
+            {/* Name */}
             <motion.h1
               {...reveal(0.15, { opacity: 0, y: 14 }, SETTLED, 0.6)}
-              className="mt-5 font-display text-[clamp(2rem,3.6vw,3.4rem)] font-bold leading-[1.05] tracking-tight text-[#f4f7fc]"
+              className="mt-5 font-display text-[clamp(2.35rem,5.2vw,4rem)] font-bold leading-[1.02] tracking-tight text-[#f4f7fc]"
             >
-              Curious by nature.
-              <motion.span
-                {...reveal(0.3, { opacity: 0, y: 14 }, SETTLED, 0.6)}
-                className="block"
-              >
-                Building through <span className="text-[#2878f0]">code.</span>
-              </motion.span>
+              <span className="sr-only">{heroContent.name}</span>
+              <InteractiveName text={heroContent.name} reduceMotion={prefersReducedMotion} />
             </motion.h1>
+
+            {/* Headline */}
+            <motion.p
+              {...reveal(0.28, { opacity: 0, y: 12 }, SETTLED, 0.5)}
+              className="mt-4 font-display text-[clamp(1.05rem,1.5vw,1.3rem)] font-medium leading-snug text-[#c3cddd]"
+            >
+              Curious by nature. Building through <span className="text-[#2878f0]">code.</span>
+            </motion.p>
 
             {/* Description */}
             <motion.p

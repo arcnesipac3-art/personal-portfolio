@@ -19,6 +19,7 @@ export const personalInfo = {
 // ─── HERO SECTION ─────────────────────────────────────────────
 
 export const heroContent = {
+  name: "Arc Capisen",
   label: "STUDENT DEVELOPER — PHILIPPINES",
   headline: "Curious by nature. Building through code.",
   description:
