@@ -50,7 +50,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
         aria-label="Primary"
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
           scrolled
-            ? "border-b border-[#192437] bg-[#080b12]/90 shadow-[0_12px_32px_-24px_rgba(0,0,0,1)] backdrop-blur-xl"
+            ? "border-b border-border bg-bg/90 shadow-[0_12px_32px_-24px_rgba(0,0,0,1)] backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
         }`}
       >
@@ -68,10 +68,10 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
             }}
             className="flex items-center gap-2.5 rounded transition-transform active:scale-[0.97] focus-ring"
           >
-            <span className="flex h-7 w-7 items-center justify-center border border-[#192437] font-mono text-[11px] font-bold text-[#9aa8bd] transition-colors hover:border-[#2878f0]/40 hover:text-[#2878f0]">
+            <span className="flex h-7 w-7 items-center justify-center border border-border font-mono text-[11px] font-bold text-text-secondary transition-colors hover:border-blue/40 hover:text-blue">
               {personalInfo.monogram}
             </span>
-            <span className="font-display text-[13px] font-semibold tracking-tight text-[#f4f7fc]">
+            <span className="font-display text-[13px] font-semibold tracking-tight text-text-primary">
               {personalInfo.name}
             </span>
           </a>
@@ -91,8 +91,8 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
                   }}
                   className={`relative rounded px-2.5 py-1.5 text-[13px] font-medium transition-colors duration-200 focus-ring ${
                     isActive
-                      ? "text-[#f4f7fc]"
-                      : "text-[#66758b] hover:bg-white/[0.03] hover:text-[#9aa8bd]"
+                      ? "text-text-primary"
+                      : "text-text-muted hover:bg-white/3 hover:text-text-secondary"
                   }`}
                   aria-current={isActive ? "location" : undefined}
                 >
@@ -101,7 +101,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
                     <motion.span
                       layoutId="nav-active-pill"
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded border border-[#2878f0]/20 bg-[#2878f0]/[0.08]"
+                      className="absolute inset-0 rounded border border-blue/20 bg-blue/8"
                       aria-hidden
                     />
                   )}
@@ -116,7 +116,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
             {/* Palette trigger — the only way to reach it on touch devices */}
             <button
               onClick={onOpenPalette}
-              className="flex h-8 items-center gap-1.5 rounded border border-[#192437] px-2 text-[#9aa8bd] transition-all hover:border-[#2878f0]/40 hover:text-[#2878f0] active:scale-95 focus-ring"
+              className="flex h-8 items-center gap-1.5 rounded border border-border px-2 text-text-secondary transition-all hover:border-blue/40 hover:text-blue active:scale-95 focus-ring"
               aria-label="Open command palette"
               aria-keyshortcuts="Control+K Meta+K"
             >
@@ -129,7 +129,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
             {/* Mobile toggle */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex h-8 w-8 items-center justify-center rounded text-[#9aa8bd] transition-all hover:text-[#f4f7fc] active:scale-90 md:hidden focus-ring"
+              className="flex h-8 w-8 items-center justify-center rounded text-text-secondary transition-all hover:text-text-primary active:scale-90 md:hidden focus-ring"
               aria-label="Toggle navigation menu"
               aria-expanded={mobileOpen}
             >
@@ -150,7 +150,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
             className="fixed inset-0 z-40 md:hidden"
           >
             <div
-              className="absolute inset-0 bg-[#080b12]/95 backdrop-blur-xl"
+              className="absolute inset-0 bg-bg/95 backdrop-blur-xl"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -180,7 +180,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
                     transition={{ delay: 0.04 * i + 0.08, duration: 0.25 }}
                     aria-current={isActive ? "location" : undefined}
                     className={`font-display text-2xl font-semibold tracking-tight transition-colors active:scale-[0.98] ${
-                      isActive ? "text-[#2878f0]" : "text-[#9aa8bd] hover:text-[#2878f0]"
+                      isActive ? "text-blue" : "text-text-secondary hover:text-blue"
                     }`}
                   >
                     {link.label}

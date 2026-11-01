@@ -109,7 +109,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-[200] flex items-start justify-center pt-[20vh] px-4"
+          className="fixed inset-0 z-200 flex items-start justify-center pt-[20vh] px-4"
           onClick={onClose}
         >
           {/* Backdrop */}
@@ -146,7 +146,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
             </div>
 
             {/* Results */}
-            <div className="max-h-[300px] overflow-y-auto p-2">
+            <div className="max-h-75 overflow-y-auto p-2">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center">
                   <p className="text-sm text-slate-500">No results found</p>
@@ -165,7 +165,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
                         i === selected
                           ? "bg-blue-500/10 text-slate-100"
-                          : "text-slate-400 hover:bg-white/[0.02]"
+                          : "text-slate-400 hover:bg-white/2"
                       }`}
                     >
                       <Icon size={15} className={i === selected ? "text-blue-400" : "text-slate-500"} />

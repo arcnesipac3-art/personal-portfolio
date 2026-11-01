@@ -169,7 +169,7 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
       onPointerLeave={handlePointerLeave}
       onClick={skip}
       aria-hidden
-      className={`fixed inset-0 z-[400] overflow-hidden ${
+      className={`fixed inset-0 z-400 overflow-hidden ${
         splitting ? "pointer-events-none" : "cursor-pointer"
       }`}
     >
@@ -178,13 +178,13 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
         initial={{ y: 0 }}
         animate={{ y: splitting ? "-101%" : 0 }}
         transition={{ duration: CURTAIN_MS / 1000, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 top-0 h-1/2 bg-[#080b12]"
+        className="absolute inset-x-0 top-0 h-1/2 bg-bg"
       />
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: splitting ? "101%" : 0 }}
         transition={{ duration: CURTAIN_MS / 1000, ease: [0.76, 0, 0.24, 1] }}
-        className="absolute inset-x-0 bottom-0 h-1/2 bg-[#080b12]"
+        className="absolute inset-x-0 bottom-0 h-1/2 bg-bg"
       />
 
       {/* Visual layer — fades out just before the curtain parts */}
@@ -198,17 +198,17 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
         <div ref={spotlightRef} className="absolute inset-0" />
 
         <div ref={dotsRef} className="absolute -inset-4 will-change-transform">
-          <div className="absolute left-[14%] top-[24%] h-1.5 w-1.5 rounded-full bg-[#2878f0]/40" />
-          <div className="absolute right-[18%] top-[38%] h-1 w-1 rounded-full bg-[#38bdf8]/50" />
-          <div className="absolute left-[22%] bottom-[26%] h-1 w-1 rounded-full bg-[#2878f0]/50" />
-          <div className="absolute right-[12%] bottom-[34%] h-1.5 w-1.5 rounded-full bg-[#38bdf8]/40" />
+          <div className="absolute left-[14%] top-[24%] h-1.5 w-1.5 rounded-full bg-blue/40" />
+          <div className="absolute right-[18%] top-[38%] h-1 w-1 rounded-full bg-cyan/50" />
+          <div className="absolute left-[22%] bottom-[26%] h-1 w-1 rounded-full bg-blue/50" />
+          <div className="absolute right-[12%] bottom-[34%] h-1.5 w-1.5 rounded-full bg-cyan/40" />
         </div>
 
         {/* HUD corner brackets */}
-        <div className="absolute left-5 top-5 h-5 w-5 border-l border-t border-[#2878f0]/25" />
-        <div className="absolute right-5 top-5 h-5 w-5 border-r border-t border-[#2878f0]/25" />
-        <div className="absolute bottom-5 left-5 h-5 w-5 border-b border-l border-[#2878f0]/25" />
-        <div className="absolute bottom-5 right-5 h-5 w-5 border-b border-r border-[#2878f0]/25" />
+        <div className="absolute left-5 top-5 h-5 w-5 border-l border-t border-blue/25" />
+        <div className="absolute right-5 top-5 h-5 w-5 border-r border-t border-blue/25" />
+        <div className="absolute bottom-5 left-5 h-5 w-5 border-b border-l border-blue/25" />
+        <div className="absolute bottom-5 right-5 h-5 w-5 border-b border-r border-blue/25" />
 
         {/* Centre piece */}
         <div className="relative flex h-full flex-col items-center justify-center px-6">
@@ -221,7 +221,7 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="flex h-16 w-16 items-center justify-center border border-[#2878f0]/40 bg-[#0e1522] font-mono text-xl font-bold text-[#2878f0] shadow-[0_0_50px_-14px_rgba(40,120,240,0.7)]"
+              className="flex h-16 w-16 items-center justify-center border border-blue/40 bg-surface font-mono text-xl font-bold text-blue shadow-[0_0_50px_-14px_rgba(40,120,240,0.7)]"
             >
               {personalInfo.monogram}
             </motion.div>
@@ -231,7 +231,7 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.14 }}
-            className="mt-5 font-display text-lg font-bold tracking-tight text-[#f4f7fc] sm:text-xl"
+            className="mt-5 font-display text-lg font-bold tracking-tight text-text-primary sm:text-xl"
           >
             {personalInfo.name}
           </motion.p>
@@ -243,7 +243,7 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.4 + i * 0.16 }}
-                className="font-mono text-[10px] tracking-wider text-[#66758b]"
+                className="font-mono text-[10px] tracking-wider text-text-muted"
               >
                 {line}
               </motion.span>
@@ -258,12 +258,12 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
           >
             <span
               ref={counterRef}
-              className="font-mono text-[10px] tabular-nums text-[#2878f0]"
+              className="font-mono text-[10px] tabular-nums text-blue"
             >
               000
             </span>
-            <div className="h-px w-32 overflow-hidden bg-[#192437]">
-              <div ref={barRef} className="h-full w-full origin-left scale-x-0 bg-[#2878f0]" />
+            <div className="h-px w-32 overflow-hidden bg-border">
+              <div ref={barRef} className="h-full w-full origin-left scale-x-0 bg-blue" />
             </div>
           </motion.div>
         </div>
@@ -272,7 +272,7 @@ export function IntroOverlay({ onDone }: IntroOverlayProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.7 }}
-          className="absolute inset-x-0 bottom-10 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-[#66758b]"
+          className="absolute inset-x-0 bottom-10 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted"
         >
           Click or press any key to skip
         </motion.p>

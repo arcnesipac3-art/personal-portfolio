@@ -20,10 +20,10 @@ const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 /** Tech tags that float around the portrait — the only chrome on the photo. */
 const FLOATING_TAGS = [
-  { label: "REACT", tone: "text-[#2878f0]", position: "top-8 -left-2 sm:-left-4", from: -6, drift: "group-hover:-translate-x-1" },
-  { label: "TYPESCRIPT", tone: "text-[#38bdf8]", position: "top-1/3 -right-2 sm:-right-4", from: 6, drift: "group-hover:translate-x-1" },
-  { label: "DJANGO", tone: "text-[#2878f0]", position: "bottom-12 -left-2 sm:-left-4", from: -6, drift: "group-hover:-translate-x-1" },
-  { label: "PYTHON", tone: "text-[#38bdf8]", position: "bottom-8 -right-2 sm:-right-4", from: 6, drift: "group-hover:translate-x-1" },
+  { label: "REACT", tone: "text-blue", position: "top-8 -left-2 sm:-left-4", from: -6, drift: "group-hover:-translate-x-1" },
+  { label: "TYPESCRIPT", tone: "text-cyan", position: "top-1/3 -right-2 sm:-right-4", from: 6, drift: "group-hover:translate-x-1" },
+  { label: "DJANGO", tone: "text-blue", position: "bottom-12 -left-2 sm:-left-4", from: -6, drift: "group-hover:-translate-x-1" },
+  { label: "PYTHON", tone: "text-cyan", position: "bottom-8 -right-2 sm:-right-4", from: 6, drift: "group-hover:translate-x-1" },
 ];
 
 interface HeroProps {
@@ -187,7 +187,7 @@ export function Hero({ introDone = true }: HeroProps) {
     >
       {/* ── Background layers ─────────────────────────────────── */}
       <div
-        className="pointer-events-none absolute inset-0 bg-grid opacity-40 [mask-image:radial-gradient(ellipse_75%_65%_at_50%_45%,#000,transparent)]"
+        className="pointer-events-none absolute inset-0 bg-grid opacity-40 mask-[radial-gradient(ellipse_75%_65%_at_50%_45%,#000,transparent)]"
         aria-hidden
       />
       <div className="pointer-events-none absolute inset-0 radial-glow" aria-hidden />
@@ -202,26 +202,26 @@ export function Hero({ introDone = true }: HeroProps) {
         className="pointer-events-none absolute right-[6%] top-[18%] hidden h-3 w-3 lg:block"
         aria-hidden
       >
-        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/[0.1]" />
-        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/[0.1]" />
+        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/10" />
+        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/10" />
       </div>
       <div
         className="pointer-events-none absolute bottom-[16%] left-[4%] hidden h-3 w-3 xl:block"
         aria-hidden
       >
-        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/[0.08]" />
-        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/[0.08]" />
+        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/8" />
+        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/8" />
       </div>
 
       {/* Floating dots with parallax */}
       <div ref={parallaxRef} className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute left-[10%] top-[22%] h-1.5 w-1.5 rounded-full bg-[#2878f0]/10" />
-        <div className="absolute right-[14%] top-[35%] h-1 w-1 rounded-full bg-[#38bdf8]/15" />
-        <div className="absolute left-[18%] bottom-[28%] h-1 w-1 rounded-full bg-[#2878f0]/15" />
-        <div className="absolute right-[10%] bottom-[32%] h-1.5 w-1.5 rounded-full bg-[#38bdf8]/10" />
+        <div className="absolute left-[10%] top-[22%] h-1.5 w-1.5 rounded-full bg-blue/10" />
+        <div className="absolute right-[14%] top-[35%] h-1 w-1 rounded-full bg-cyan/15" />
+        <div className="absolute left-[18%] bottom-[28%] h-1 w-1 rounded-full bg-blue/15" />
+        <div className="absolute right-[10%] bottom-[32%] h-1.5 w-1.5 rounded-full bg-cyan/10" />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080b12]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent to-bg" aria-hidden />
 
       {/* ── Content ───────────────────────────────────────────── */}
       <div className="shell relative z-10">
@@ -231,10 +231,10 @@ export function Hero({ introDone = true }: HeroProps) {
             {/* Label */}
             <motion.div {...reveal(0.1, { opacity: 0, y: 12 })} className="flex items-center gap-3">
               <span
-                className="h-px w-8 bg-gradient-to-r from-[#2878f0] to-transparent"
+                className="h-px w-8 bg-linear-to-r from-blue to-transparent"
                 aria-hidden
               />
-              <span className="font-mono text-[11px] tracking-[0.15em] text-[#2878f0]">
+              <span className="font-mono text-[11px] tracking-[0.15em] text-blue">
                 {heroContent.label}
               </span>
             </motion.div>
@@ -242,7 +242,7 @@ export function Hero({ introDone = true }: HeroProps) {
             {/* Name */}
             <motion.h1
               {...reveal(0.15, { opacity: 0, y: 14 }, SETTLED, 0.6)}
-              className="mt-5 font-display text-[clamp(2.35rem,5.2vw,4rem)] font-bold leading-[1.02] tracking-tight text-[#f4f7fc]"
+              className="mt-5 font-display text-[clamp(2.35rem,5.2vw,4rem)] font-bold leading-[1.02] tracking-tight text-text-primary"
             >
               <span className="sr-only">{heroContent.name}</span>
               <InteractiveName
@@ -257,13 +257,13 @@ export function Hero({ introDone = true }: HeroProps) {
               {...reveal(0.28, { opacity: 0, y: 12 }, SETTLED, 0.5)}
               className="mt-4 font-display text-[clamp(1.05rem,1.5vw,1.3rem)] font-medium leading-snug text-[#c3cddd]"
             >
-              Curious by nature. Building through <span className="text-[#2878f0]">code.</span>
+              Curious by nature. Building through <span className="text-blue">code.</span>
             </motion.p>
 
             {/* Description */}
             <motion.p
               {...reveal(0.4, { opacity: 0, y: 12 })}
-              className="mt-6 max-w-[34rem] text-[15px] leading-[1.75] text-[#9aa8bd]"
+              className="mt-6 max-w-136 text-[15px] leading-[1.75] text-text-secondary"
             >
               {heroContent.description}
             </motion.p>
@@ -279,7 +279,7 @@ export function Hero({ introDone = true }: HeroProps) {
                   e.preventDefault();
                   scrollToSection(heroContent.ctaPrimary.href);
                 }}
-                className="group gap-2 rounded border border-[#2878f0]/40 bg-[#2878f0]/10 px-5 py-2.5 text-sm font-medium text-[#f4f7fc] hover:border-[#2878f0]/70 hover:bg-[#2878f0]/[0.18] hover:shadow-[0_10px_30px_-16px_rgba(40,120,240,0.9)] focus-ring"
+                className="group gap-2 rounded border border-blue/40 bg-blue/10 px-5 py-2.5 text-sm font-medium text-text-primary hover:border-blue/70 hover:bg-blue/18 hover:shadow-[0_10px_30px_-16px_rgba(40,120,240,0.9)] focus-ring"
               >
                 {heroContent.ctaPrimary.label}
                 <span className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -292,7 +292,7 @@ export function Hero({ introDone = true }: HeroProps) {
                   e.preventDefault();
                   scrollToSection(heroContent.ctaSecondary.href);
                 }}
-                className="group inline-flex items-center gap-2 rounded border border-white/[0.08] px-5 py-2.5 text-sm font-medium text-[#9aa8bd] transition-colors duration-300 hover:border-white/[0.18] hover:text-[#f4f7fc] focus-ring"
+                className="group inline-flex items-center gap-2 rounded border border-white/8 px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors duration-300 hover:border-white/18 hover:text-text-primary focus-ring"
               >
                 {heroContent.ctaSecondary.label}
                 <span className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -304,26 +304,26 @@ export function Hero({ introDone = true }: HeroProps) {
             {/* Meta info row */}
             <motion.div
               {...reveal(0.6, { opacity: 0, y: 12 })}
-              className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-[#192437] pt-6"
+              className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-border pt-6"
             >
               <a
                 href={personalInfo.github}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 rounded text-[13px] text-[#66758b] transition-colors duration-300 hover:text-[#2878f0]"
+                className="flex items-center gap-2 rounded text-[13px] text-text-muted transition-colors duration-300 hover:text-blue"
               >
                 <GithubIcon size={13} className="shrink-0" />
                 GitHub
               </a>
-              <span className="hidden h-3.5 w-px bg-white/[0.08] sm:block" aria-hidden />
-              <span className="flex items-center gap-2 text-[13px] text-[#66758b]">
+              <span className="hidden h-3.5 w-px bg-white/8 sm:block" aria-hidden />
+              <span className="flex items-center gap-2 text-[13px] text-text-muted">
                 <MapPin size={13} className="shrink-0" />
                 {personalInfo.location}
               </span>
-              <span className="hidden h-3.5 w-px bg-white/[0.08] sm:block" aria-hidden />
-              <span className="flex items-center gap-2 text-[13px] text-[#66758b]">
-                <Sparkles size={13} className="shrink-0 text-[#2878f0]/60" />
-                <span className="font-mono text-[11px] text-[#2878f0]">
+              <span className="hidden h-3.5 w-px bg-white/8 sm:block" aria-hidden />
+              <span className="flex items-center gap-2 text-[13px] text-text-muted">
+                <Sparkles size={13} className="shrink-0 text-blue/60" />
+                <span className="font-mono text-[11px] text-blue">
                   {personalInfo.currentlyLearning}
                 </span>
               </span>
@@ -335,7 +335,7 @@ export function Hero({ introDone = true }: HeroProps) {
             {...reveal(0.2, { opacity: 0, scale: 0.96, x: 16 }, { opacity: 1, scale: 1, x: 0 }, 0.8)}
             className="relative"
           >
-            <div className="group relative mx-auto w-full max-w-sm lg:max-w-[28rem]">
+            <div className="group relative mx-auto w-full max-w-sm lg:max-w-md">
               {/* Radial lighting behind the portrait */}
               <div
                 className="pointer-events-none absolute -inset-16 rounded-full bg-[radial-gradient(circle,rgba(40,120,240,0.12),transparent_65%)] blur-2xl"
@@ -357,15 +357,15 @@ export function Hero({ introDone = true }: HeroProps) {
                   aria-hidden
                 />
                 <div
-                  className="pointer-events-none absolute -inset-4 border border-white/[0.05]"
+                  className="pointer-events-none absolute -inset-4 border border-white/5"
                   aria-hidden
                 />
                 <div
-                  className="pointer-events-none absolute -left-4 -top-4 h-8 w-8 border-l border-t border-[#2878f0]/40"
+                  className="pointer-events-none absolute -left-4 -top-4 h-8 w-8 border-l border-t border-blue/40"
                   aria-hidden
                 />
                 <div
-                  className="pointer-events-none absolute -bottom-4 -right-4 h-8 w-8 border-b border-r border-[#2878f0]/40"
+                  className="pointer-events-none absolute -bottom-4 -right-4 h-8 w-8 border-b border-r border-blue/40"
                   aria-hidden
                 />
 
@@ -374,9 +374,9 @@ export function Hero({ introDone = true }: HeroProps) {
                     overwrite it on every frame. */}
                 <div
                   ref={portraitRef}
-                  className="relative overflow-hidden border border-white/[0.08] bg-[#0c111c] shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)] transition-transform duration-300 ease-out will-change-transform"
+                  className="relative overflow-hidden border border-white/8 bg-bg-secondary shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)] transition-transform duration-300 ease-out will-change-transform"
                 >
-                  <div className="aspect-[7/8] w-full">
+                  <div className="aspect-7/8 w-full">
                     {!imageFailed && (
                       <img
                         src="/images/profile.jpg"
@@ -393,7 +393,7 @@ export function Hero({ introDone = true }: HeroProps) {
                     )}
                     {!imageLoaded && (
                       <div className="flex h-full w-full items-center justify-center">
-                        <span className="font-display text-5xl font-bold text-[#192437]">
+                        <span className="font-display text-5xl font-bold text-border">
                           {personalInfo.monogram}
                         </span>
                       </div>
@@ -402,17 +402,17 @@ export function Hero({ introDone = true }: HeroProps) {
 
                   {/* Blue rim light */}
                   <div
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#2878f0]/[0.12] via-transparent to-[#38bdf8]/10"
+                    className="pointer-events-none absolute inset-0 bg-linear-to-tr from-blue/12 via-transparent to-cyan/10"
                     aria-hidden
                   />
                   {/* Base fade */}
                   <div
-                    className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#080b12]/70 via-[#080b12]/20 to-transparent transition-opacity duration-500 group-hover:opacity-60"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-bg/70 via-bg/20 to-transparent transition-opacity duration-500 group-hover:opacity-60"
                     aria-hidden
                   />
                   {/* Inner hairline */}
                   <div
-                    className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/[0.04]"
+                    className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/4"
                     aria-hidden
                   />
                 </div>
@@ -423,7 +423,7 @@ export function Hero({ introDone = true }: HeroProps) {
                 <motion.span
                   key={tag.label}
                   {...reveal(0.5 + i * 0.1, { opacity: 0, x: tag.from }, { opacity: 1, x: 0 }, 0.4)}
-                  className={`absolute ${tag.position} border border-white/[0.08] bg-[#080b12]/90 px-2.5 py-1 font-mono text-[9px] tracking-[0.12em] backdrop-blur-sm transition-[translate] duration-300 ${tag.tone} ${tag.drift}`}
+                  className={`absolute ${tag.position} border border-white/8 bg-bg/90 px-2.5 py-1 font-mono text-[9px] tracking-[0.12em] backdrop-blur-sm transition-[translate] duration-300 ${tag.tone} ${tag.drift}`}
                 >
                   {tag.label}
                 </motion.span>
@@ -445,15 +445,15 @@ export function Hero({ introDone = true }: HeroProps) {
         className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2.5"
         aria-hidden
       >
-        <span className="flex h-9 w-5 items-start justify-center rounded-full border border-white/[0.18]">
+        <span className="flex h-9 w-5 items-start justify-center rounded-full border border-white/18">
           <motion.span
             animate={prefersReducedMotion ? undefined : { y: [0, 9, 0], opacity: [1, 0.15, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="mt-2 h-1.5 w-[3px] rounded-full bg-[#2878f0]"
+            className="mt-2 h-1.5 w-0.75 rounded-full bg-blue"
           />
         </span>
 
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#66758b]">
+        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-text-muted">
           Scroll
         </span>
       </motion.div>

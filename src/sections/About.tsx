@@ -49,14 +49,14 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.12 }}
             className="lg:col-span-5"
           >
-            <div className="border border-white/[0.07] bg-[#0d1220]/40 p-5 transition-colors duration-300 hover:border-white/[0.12]">
+            <div className="border border-white/7 bg-[#0d1220]/40 p-5 transition-colors duration-300 hover:border-white/12">
               <div className="space-y-px">
                 {aboutContent.infoLabels.map((info) => {
                   const Icon = infoIcons[info.key] ?? Target;
                   return (
                     <div
                       key={info.key}
-                      className="group/row -mx-2 flex items-center gap-3 rounded-sm border-b border-white/[0.04] px-2 py-2.5 transition-colors duration-300 last:border-0 hover:bg-white/[0.02]"
+                      className="group/row -mx-2 flex items-center gap-3 rounded-sm border-b border-white/4 px-2 py-2.5 transition-colors duration-300 last:border-0 hover:bg-white/2"
                     >
                       <Icon
                         size={13}
@@ -72,7 +72,7 @@ export function About() {
                   );
                 })}
               </div>
-              <div className="mt-3 border-t border-white/[0.04] pt-3">
+              <div className="mt-3 border-t border-white/4 pt-3">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-slate-600">
                   Currently at
                 </p>

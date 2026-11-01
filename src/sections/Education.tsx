@@ -58,16 +58,16 @@ function usePinnedJourney() {
 function PanelDecor() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d1728] via-[#0a1018] to-[#080b12]" />
-      <div className="absolute -left-24 -top-28 h-72 w-72 rounded-full bg-[#2878f0]/[0.14] blur-[90px]" />
-      <div className="absolute -bottom-32 -right-16 h-72 w-72 rounded-full bg-[#38bdf8]/[0.07] blur-[100px]" />
+      <div className="absolute inset-0 bg-linear-to-br from-[#0d1728] via-[#0a1018] to-bg" />
+      <div className="absolute -left-24 -top-28 h-72 w-72 rounded-full bg-blue/14 blur-[90px]" />
+      <div className="absolute -bottom-32 -right-16 h-72 w-72 rounded-full bg-cyan/7 blur-[100px]" />
       <div className="absolute inset-0 bg-grid-fine opacity-30" />
 
-      <div className="absolute left-0 top-0 h-full w-px bg-gradient-to-b from-[#2878f0]/40 via-[#2878f0]/5 to-transparent" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-[#2878f0]/40 via-transparent to-transparent" />
-      <div className="absolute right-4 top-4 h-8 w-8 border-r border-t border-[#2878f0]/25" />
-      <div className="absolute bottom-4 left-4 h-8 w-8 border-b border-l border-[#2878f0]/20" />
-      <div className="absolute bottom-6 right-6 h-1.5 w-1.5 rotate-45 bg-[#38bdf8]/30" />
+      <div className="absolute left-0 top-0 h-full w-px bg-linear-to-b from-blue/40 via-blue/5 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-blue/40 via-transparent to-transparent" />
+      <div className="absolute right-4 top-4 h-8 w-8 border-r border-t border-blue/25" />
+      <div className="absolute bottom-4 left-4 h-8 w-8 border-b border-l border-blue/20" />
+      <div className="absolute bottom-6 right-6 h-1.5 w-1.5 rotate-45 bg-cyan/30" />
     </div>
   );
 }
@@ -79,7 +79,7 @@ function EntryBody({ entry, index }: { entry: EducationEntry; index: number }) {
   return (
     <>
       <span
-        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 select-none font-display text-[6rem] font-bold leading-none text-white/[0.02] lg:text-[7rem]"
+        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 select-none font-display text-[6rem] font-bold leading-none text-white/2 lg:text-[7rem]"
         aria-hidden
       >
         {pad(index + 1)}
@@ -87,23 +87,23 @@ function EntryBody({ entry, index }: { entry: EducationEntry; index: number }) {
 
       <div className="relative">
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center border border-[#2878f0]/25 bg-[#0a0f1a]">
-            <Icon size={14} className="text-[#2878f0]" />
+          <span className="flex h-8 w-8 items-center justify-center border border-blue/25 bg-[#0a0f1a]">
+            <Icon size={14} className="text-blue" />
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#66758b]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
             {entry.level}
           </span>
           {entry.strand && (
-            <span className="border border-[#38bdf8]/25 bg-[#38bdf8]/[0.05] px-2 py-0.5 font-mono text-[10px] text-[#38bdf8]">
+            <span className="border border-cyan/25 bg-cyan/5 px-2 py-0.5 font-mono text-[10px] text-cyan">
               {entry.strand}
             </span>
           )}
         </div>
 
-        <p className="mt-6 font-mono text-[13px] tracking-[0.06em] text-[#2878f0]">
+        <p className="mt-6 font-mono text-[13px] tracking-[0.06em] text-blue">
           {entry.years}
         </p>
-        <h3 className="mt-2 max-w-xl font-display text-[1.75rem] font-bold leading-[1.08] tracking-tight text-[#f4f7fc] sm:text-4xl lg:text-[2.4rem]">
+        <h3 className="mt-2 max-w-xl font-display text-[1.75rem] font-bold leading-[1.08] tracking-tight text-text-primary sm:text-4xl lg:text-[2.4rem]">
           {entry.school}
         </h3>
         <p className="mt-3.5 max-w-lg text-[14px] leading-relaxed text-[#8b9ab1] sm:text-[15px]">
@@ -115,9 +115,9 @@ function EntryBody({ entry, index }: { entry: EducationEntry; index: number }) {
             {entry.highlights.map((highlight) => (
               <li
                 key={highlight}
-                className="inline-flex items-center gap-2 border border-white/[0.06] bg-white/[0.02] px-2.5 py-1 font-mono text-[10px] text-[#8b9ab1]"
+                className="inline-flex items-center gap-2 border border-white/6 bg-white/2 px-2.5 py-1 font-mono text-[10px] text-[#8b9ab1]"
               >
-                <span className="h-1 w-1 shrink-0 bg-[#2878f0]/70" aria-hidden />
+                <span className="h-1 w-1 shrink-0 bg-blue/70" aria-hidden />
                 {highlight}
               </li>
             ))}
@@ -159,7 +159,7 @@ function EntryStage({
             }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             aria-hidden={!isActive}
-            className="relative col-start-1 row-start-1 flex min-h-[280px] min-w-0 flex-col justify-center p-6 will-change-transform sm:p-8 lg:min-h-0 lg:p-10"
+            className="relative col-start-1 row-start-1 flex min-h-70 min-w-0 flex-col justify-center p-6 will-change-transform sm:p-8 lg:min-h-0 lg:p-10"
           >
             <EntryBody entry={entry} index={i} />
           </motion.div>
@@ -174,7 +174,7 @@ function EntryPanel({ active, offset, className = "" }: { active: number; offset
   return (
     <div
       id="journey-panel"
-      className={`relative overflow-hidden border border-white/[0.07] bg-[#0a0f1a] ${className}`}
+      className={`relative overflow-hidden border border-white/7 bg-[#0a0f1a] ${className}`}
     >
       <PanelDecor />
       <EntryStage active={active} offset={offset} className="h-full" />
@@ -223,7 +223,7 @@ function TimelineRail({
     <nav aria-label="Education timeline" className="min-w-0">
       <div className="relative">
         <span
-          className="absolute bottom-8 left-[5px] top-8 w-px bg-gradient-to-b from-[#2878f0]/25 via-white/[0.07] to-transparent"
+          className="absolute bottom-8 left-1.25 top-8 w-px bg-linear-to-b from-blue/25 via-white/7 to-transparent"
           aria-hidden
         />
 
@@ -240,7 +240,7 @@ function TimelineRail({
                   <span
                     className={`h-1.5 w-1.5 rotate-45 transition-[background-color,box-shadow] duration-300 ${
                       isActive
-                        ? "bg-[#38bdf8] shadow-[0_0_10px_2px_rgba(56,189,248,0.45)]"
+                        ? "bg-cyan shadow-[0_0_10px_2px_rgba(56,189,248,0.45)]"
                         : "bg-[#243049]"
                     }`}
                   />
@@ -258,12 +258,12 @@ function TimelineRail({
                   title={entry.school}
                   className={`relative isolate block w-full cursor-pointer overflow-hidden border px-3.5 py-3 text-left transition-colors duration-300 lg:py-2.5 ${
                     isActive
-                      ? "border-[#2878f0]/45 bg-[#2878f0]/[0.07]"
-                      : "border-white/[0.06] bg-[#0d1220]/25 hover:border-white/[0.14] hover:bg-white/[0.02]"
+                      ? "border-blue/45 bg-blue/7"
+                      : "border-white/6 bg-[#0d1220]/25 hover:border-white/14 hover:bg-white/2"
                   }`}
                 >
                   <span
-                    className={`absolute left-0 top-0 h-full w-px bg-[#2878f0] transition-opacity duration-300 ${
+                    className={`absolute left-0 top-0 h-full w-px bg-blue transition-opacity duration-300 ${
                       isActive ? "opacity-100" : "opacity-0"
                     }`}
                     aria-hidden
@@ -272,14 +272,14 @@ function TimelineRail({
                   <span className="flex items-center justify-between gap-3">
                     <span
                       className={`font-mono text-[10px] tabular-nums transition-colors duration-300 ${
-                        isActive ? "text-[#38bdf8]" : "text-[#4a5768]"
+                        isActive ? "text-cyan" : "text-[#4a5768]"
                       }`}
                     >
                       {entry.years}
                     </span>
                     <span
                       className={`shrink-0 font-mono text-[9px] uppercase tracking-[0.16em] transition-opacity duration-300 ${
-                        isActive ? "text-[#2878f0] opacity-100" : "opacity-0"
+                        isActive ? "text-blue opacity-100" : "opacity-0"
                       }`}
                     >
                       Active
@@ -288,7 +288,7 @@ function TimelineRail({
 
                   <span
                     className={`mt-1.5 block truncate font-display text-[14px] tracking-tight transition-colors duration-300 ${
-                      isActive ? "font-semibold text-[#f4f7fc]" : "font-medium text-[#8b9ab1]"
+                      isActive ? "font-semibold text-text-primary" : "font-medium text-[#8b9ab1]"
                     }`}
                   >
                     {entry.school}
@@ -296,7 +296,7 @@ function TimelineRail({
 
                   <span
                     className={`mt-0.5 block font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-300 ${
-                      isActive ? "text-[#66758b]" : "text-[#3d4a5c]"
+                      isActive ? "text-text-muted" : "text-[#3d4a5c]"
                     }`}
                   >
                     {entry.level}
@@ -318,28 +318,28 @@ function JourneyHeader({ active }: { active: number }) {
     <div className="flex shrink-0 items-start justify-between gap-5 sm:gap-8">
       <div className="min-w-0">
         <div className="flex items-center gap-2.5">
-          <span className="font-mono text-xs text-[#66758b]">04</span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#66758b]">
+          <span className="font-mono text-xs text-text-muted">04</span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
             Journey
           </span>
         </div>
 
-        <h2 className="mt-5 font-display text-3xl font-bold leading-[1.08] tracking-tight text-[#f4f7fc] sm:text-4xl md:text-[2.6rem]">
+        <h2 className="mt-5 font-display text-3xl font-bold leading-[1.08] tracking-tight text-text-primary sm:text-4xl md:text-[2.6rem]">
           Keep building.
         </h2>
 
-        <p className="mt-3.5 max-w-2xl text-[15px] leading-relaxed text-[#66758b] sm:text-base">
+        <p className="mt-3.5 max-w-2xl text-[15px] leading-relaxed text-text-muted sm:text-base">
           A journey of learning, competing, and growing — one step at a time.
         </p>
 
         <span
-          className="mt-5 block h-px w-20 bg-gradient-to-r from-[#2878f0] via-[#2878f0]/50 to-transparent"
+          className="mt-5 block h-px w-20 bg-linear-to-r from-blue via-blue/50 to-transparent"
           aria-hidden
         />
       </div>
 
       <div className="shrink-0 text-right" role="status" aria-live="polite">
-        <p className="font-mono text-[26px] leading-none tabular-nums text-[#2878f0] sm:text-[32px] lg:text-[40px]">
+        <p className="font-mono text-[26px] leading-none tabular-nums text-blue sm:text-[32px] lg:text-[40px]">
           {pad(active + 1)}
           <span className="text-[#233149]">/{pad(TOTAL)}</span>
         </p>
@@ -357,12 +357,12 @@ function JourneyProgress({ active }: { active: number }) {
 
   return (
     <div className="mt-6 flex shrink-0 items-center gap-4">
-      <div className="relative h-px flex-1 bg-white/[0.07]">
+      <div className="relative h-px flex-1 bg-white/7">
         <motion.span
           initial={false}
           animate={{ scaleX: (active + 1) / TOTAL }}
           transition={{ duration: reduceMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 origin-left bg-[#2878f0]"
+          className="absolute inset-0 origin-left bg-blue"
         />
       </div>
 
@@ -374,7 +374,7 @@ function JourneyProgress({ active }: { active: number }) {
             reduceMotion ? undefined : { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
           }
         >
-          <ArrowDown size={12} className="text-[#2878f0]" />
+          <ArrowDown size={12} className="text-blue" />
         </motion.span>
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
           Scroll to travel
@@ -503,7 +503,7 @@ function PinnedJourney() {
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
         <div
-          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#2878f0]/30 to-transparent"
+          className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-blue/30 to-transparent"
           aria-hidden
         />
 
@@ -516,7 +516,7 @@ function PinnedJourney() {
             <EntryPanel
               active={active}
               offset={46}
-              className="min-h-0 lg:col-span-7 lg:h-full lg:max-h-[30rem] lg:self-center"
+              className="min-h-0 lg:col-span-7 lg:h-full lg:max-h-120 lg:self-center"
             />
 
             <div className="flex min-h-0 flex-col justify-center lg:col-span-5">

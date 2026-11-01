@@ -20,22 +20,22 @@ const mailto = `mailto:${personalInfo.email}`;
 function Rule({ children }: { children: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#66758b]">
+      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
         {children}
       </span>
-      <span className="h-px flex-1 bg-white/[0.06]" aria-hidden />
+      <span className="h-px flex-1 bg-white/6" aria-hidden />
     </div>
   );
 }
 
 function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) {
   return (
-    <div className="group relative border border-[#2878f0]/30 bg-[#2878f0]/[0.06] transition-colors duration-300 hover:border-[#2878f0]/55 hover:bg-[#2878f0]/[0.09]">
-      <span className="absolute left-0 top-0 h-full w-px bg-[#2878f0]" aria-hidden />
+    <div className="group relative border border-blue/30 bg-blue/6 transition-colors duration-300 hover:border-blue/55 hover:bg-blue/9">
+      <span className="absolute left-0 top-0 h-full w-px bg-blue" aria-hidden />
 
       <div className="flex items-center gap-3 p-4 sm:gap-4">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-[#2878f0]/25 bg-[#0a0f1a]">
-          <Mail size={15} className="text-[#2878f0]" />
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-blue/25 bg-[#0a0f1a]">
+          <Mail size={15} className="text-blue" />
         </span>
 
         <div className="min-w-0 flex-1">
@@ -44,7 +44,7 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
             role="status"
             aria-live="polite"
             className={`font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-300 ${
-              copied ? "text-emerald-400" : "text-[#66758b]"
+              copied ? "text-emerald-400" : "text-text-muted"
             }`}
           >
             {copied ? "Copied to clipboard" : "Email — primary"}
@@ -52,7 +52,7 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
           <a
             href={mailto}
             title={`Email ${personalInfo.email}`}
-            className="mt-1 block truncate text-[15px] font-medium text-[#f4f7fc] transition-colors duration-300 hover:text-[#2878f0] focus-ring"
+            className="mt-1 block truncate text-[15px] font-medium text-text-primary transition-colors duration-300 hover:text-blue focus-ring"
           >
             {personalInfo.email}
           </a>
@@ -66,7 +66,7 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
             className={`flex h-8 w-8 items-center justify-center border transition-colors duration-300 focus-ring ${
               copied
                 ? "border-emerald-500/30 text-emerald-400"
-                : "border-white/[0.08] text-[#8b9ab1] hover:border-[#2878f0]/35 hover:text-[#2878f0]"
+                : "border-white/8 text-[#8b9ab1] hover:border-blue/35 hover:text-blue"
             }`}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -75,7 +75,7 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
           <a
             href={mailto}
             aria-label={`Compose an email to ${personalInfo.name}`}
-            className="flex h-8 w-8 items-center justify-center border border-white/[0.08] text-[#8b9ab1] transition-colors duration-300 hover:border-[#2878f0]/35 hover:text-[#2878f0] focus-ring"
+            className="flex h-8 w-8 items-center justify-center border border-white/8 text-[#8b9ab1] transition-colors duration-300 hover:border-blue/35 hover:text-blue focus-ring"
           >
             <ArrowUpRight size={14} />
           </a>
@@ -93,24 +93,24 @@ function SocialRow({ label, href, Icon }: (typeof socials)[number]) {
         target="_blank"
         rel="noreferrer"
         title={prettyUrl(href)}
-        className="group flex items-center gap-3 px-4 py-3.5 transition-colors duration-300 hover:bg-white/[0.02] focus-ring"
+        className="group flex items-center gap-3 px-4 py-3.5 transition-colors duration-300 hover:bg-white/2 focus-ring"
       >
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/[0.06] bg-[#0a0f1a] transition-colors duration-300 group-hover:border-[#2878f0]/30">
-          <Icon size={15} className="text-[#8b9ab1] transition-colors duration-300 group-hover:text-[#2878f0]" />
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/6 bg-[#0a0f1a] transition-colors duration-300 group-hover:border-blue/30">
+          <Icon size={15} className="text-[#8b9ab1] transition-colors duration-300 group-hover:text-blue" />
         </span>
 
         <span className="min-w-0 flex-1">
           <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
             {label}
           </span>
-          <span className="mt-0.5 block truncate text-[13px] text-[#8b9ab1] transition-colors duration-300 group-hover:text-[#f4f7fc]">
+          <span className="mt-0.5 block truncate text-[13px] text-[#8b9ab1] transition-colors duration-300 group-hover:text-text-primary">
             {prettyUrl(href)}
           </span>
         </span>
 
         <ArrowUpRight
           size={14}
-          className="shrink-0 text-[#3d4a5c] transition-[transform,color] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2878f0]"
+          className="shrink-0 text-[#3d4a5c] transition-[transform,color] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue"
         />
       </a>
     </li>
@@ -151,7 +151,7 @@ export function Contact() {
     <section id="contact" className="relative section-padding overflow-hidden">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
       <div
-        className="absolute bottom-0 left-1/2 h-64 w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.03] blur-[100px]"
+        className="absolute bottom-0 left-1/2 h-64 w-125 -translate-x-1/2 rounded-full bg-blue-500/3 blur-[100px]"
         aria-hidden
       />
 
@@ -160,32 +160,32 @@ export function Contact() {
           {/* ── Introduction ─────────────────────────────────────── */}
           <motion.div {...rise(0)} className="min-w-0 lg:col-span-5">
             <div className="flex items-center gap-2.5">
-              <span className="font-mono text-xs text-[#66758b]">06</span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#66758b]">
+              <span className="font-mono text-xs text-text-muted">06</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
                 Contact
               </span>
             </div>
 
-            <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-[#f4f7fc] sm:text-4xl lg:text-[2.6rem]">
+            <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl lg:text-[2.6rem]">
               {contactContent.heading}
             </h2>
 
             <span
-              className="mt-6 block h-px w-24 bg-gradient-to-r from-[#2878f0] via-[#2878f0]/50 to-transparent"
+              className="mt-6 block h-px w-24 bg-linear-to-r from-blue via-blue/50 to-transparent"
               aria-hidden
             />
 
-            <p className="mt-6 inline-flex items-center gap-2 border border-[#38bdf8]/20 bg-[#38bdf8]/[0.04] px-2.5 py-1">
+            <p className="mt-6 inline-flex items-center gap-2 border border-cyan/20 bg-cyan/4 px-2.5 py-1">
               <span className="relative flex h-1.5 w-1.5" aria-hidden>
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#38bdf8] opacity-60" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#38bdf8]" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan" />
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#38bdf8]">
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-cyan">
                 {contactContent.availability}
               </span>
             </p>
 
-            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#66758b]">
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-text-muted">
               {contactContent.description}
             </p>
 
@@ -196,12 +196,12 @@ export function Contact() {
             <div className="mt-8">
               <a
                 href={mailto}
-                className="group inline-flex w-full items-center justify-center gap-2.5 border border-[#2878f0]/40 bg-[#2878f0]/[0.07] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[#f4f7fc] transition-colors duration-300 hover:border-[#2878f0]/70 hover:bg-[#2878f0]/[0.13] focus-ring sm:w-auto"
+                className="group inline-flex w-full items-center justify-center gap-2.5 border border-blue/40 bg-blue/7 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-text-primary transition-colors duration-300 hover:border-blue/70 hover:bg-blue/13 focus-ring sm:w-auto"
               >
                 {contactContent.ctaLabel}
                 <ArrowUpRight
                   size={13}
-                  className="text-[#2878f0] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  className="text-blue transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 />
               </a>
               <p className="mt-3 max-w-xs text-[12px] leading-relaxed text-[#4a5768]">
@@ -228,7 +228,7 @@ export function Contact() {
                 <Rule>Elsewhere</Rule>
               </div>
 
-              <ul className="mt-2.5 divide-y divide-white/[0.05] border border-white/[0.07]">
+              <ul className="mt-2.5 divide-y divide-white/5 border border-white/7">
                 {socials.map((social) => (
                   <SocialRow key={social.label} {...social} />
                 ))}

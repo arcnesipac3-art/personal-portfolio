@@ -111,7 +111,7 @@ export function CustomCursor() {
   if (!isDesktop || prefersReducedMotion) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[9999] hidden md:block" aria-hidden>
+    <div className="pointer-events-none fixed inset-0 z-9999 hidden md:block" aria-hidden>
       {/* Dot — tracks the pointer exactly */}
       <div
         ref={dotRef}

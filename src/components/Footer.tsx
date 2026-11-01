@@ -13,15 +13,15 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-[#192437] bg-[#080b12] py-10">
+    <footer className="relative border-t border-border bg-bg py-10">
       <div className="shell">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           {/* Left: name + tagline */}
           <div className="text-center sm:text-left">
-            <p className="font-display text-sm font-semibold text-[#f4f7fc]">
+            <p className="font-display text-sm font-semibold text-text-primary">
               {personalInfo.name}
             </p>
-            <p className="mt-0.5 text-xs text-[#66758b]">{personalInfo.footerTagline}</p>
+            <p className="mt-0.5 text-xs text-text-muted">{personalInfo.footerTagline}</p>
           </div>
 
           {/* Center: nav shortcuts */}
@@ -34,7 +34,7 @@ export function Footer() {
                   e.preventDefault();
                   scrollToSection(link.href);
                 }}
-                className="relative rounded text-xs text-[#66758b] transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-[#2878f0] after:content-[''] after:transition-[width] after:duration-300 after:ease-out hover:text-[#2878f0] hover:after:w-full focus-ring"
+                className="relative rounded text-xs text-text-muted transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-blue after:content-[''] after:transition-[width] after:duration-300 after:ease-out hover:text-blue hover:after:w-full focus-ring"
               >
                 {link.label}
               </a>
@@ -50,7 +50,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                className="text-[#66758b] transition-[translate,scale,color] duration-300 ease-out hover:-translate-y-0.5 hover:scale-110 hover:text-[#2878f0]"
+                className="text-text-muted transition-[translate,scale,color] duration-300 ease-out hover:-translate-y-0.5 hover:scale-110 hover:text-blue"
               >
                 <Icon size={16} />
               </a>
@@ -58,18 +58,18 @@ export function Footer() {
             <a
               href={`mailto:${personalInfo.email}`}
               aria-label="Send email"
-              className="relative rounded font-mono text-xs text-[#66758b] transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-[#2878f0] after:content-[''] after:transition-[width] after:duration-300 after:ease-out hover:text-[#2878f0] hover:after:w-full focus-ring"
+              className="relative rounded font-mono text-xs text-text-muted transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-blue after:content-[''] after:transition-[width] after:duration-300 after:ease-out hover:text-blue hover:after:w-full focus-ring"
             >
               Email
             </a>
-            <span className="h-3.5 w-px bg-[#192437]" />
+            <span className="h-3.5 w-px bg-border" />
             <button
               onClick={() => scrollToSection("#top")}
-              className="group flex items-center gap-1.5 text-xs text-[#66758b] transition-colors hover:text-[#2878f0] focus-ring rounded"
+              className="group flex items-center gap-1.5 text-xs text-text-muted transition-colors hover:text-blue focus-ring rounded"
               aria-label="Scroll back to top"
             >
               Top
-              <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[#192437] transition-all group-hover:border-[#2878f0]/40 group-hover:bg-[#2878f0]/5">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full border border-border transition-all group-hover:border-blue/40 group-hover:bg-blue/5">
                 <ArrowUp size={11} className="transition-transform group-hover:-translate-y-0.5" />
               </span>
             </button>
@@ -77,8 +77,8 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-6 border-t border-[#192437] pt-4 text-center sm:text-left">
-          <p className="text-[11px] text-[#66758b]">
+        <div className="mt-6 border-t border-border pt-4 text-center sm:text-left">
+          <p className="text-[11px] text-text-muted">
             © {year} {personalInfo.name}. Built with curiosity.
           </p>
         </div>

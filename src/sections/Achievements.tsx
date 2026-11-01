@@ -39,7 +39,7 @@ function ColumnLabel({ children, count }: { children: string; count?: string }) 
       <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
         {children}
       </span>
-      <span className="h-px flex-1 bg-white/[0.06]" aria-hidden />
+      <span className="h-px flex-1 bg-white/6" aria-hidden />
       {count && <span className="shrink-0 font-mono text-[10px] text-[#3d4a5c]">{count}</span>}
     </div>
   );
@@ -68,28 +68,28 @@ function CategoryRow({
         ease: EASE,
       }}
     >
-      <div className="group/row -mx-2 flex items-center gap-3.5 border-b border-white/[0.04] px-2 py-3.5 transition-colors duration-300 last:border-b-0 hover:bg-white/[0.02]">
-        <span className="w-5 shrink-0 font-mono text-[10px] text-[#3d4a5c] transition-colors duration-300 group-hover/row:text-[#2878f0]">
+      <div className="group/row -mx-2 flex items-center gap-3.5 border-b border-white/4 px-2 py-3.5 transition-colors duration-300 last:border-b-0 hover:bg-white/2">
+        <span className="w-5 shrink-0 font-mono text-[10px] text-[#3d4a5c] transition-colors duration-300 group-hover/row:text-blue">
           {pad(index + 1)}
         </span>
 
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/[0.06] bg-[#0a0f1a] transition-colors duration-300 group-hover/row:border-[#2878f0]/30">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/6 bg-[#0a0f1a] transition-colors duration-300 group-hover/row:border-blue/30">
           <Icon
             size={14}
-            className="text-[#66758b] transition-colors duration-300 group-hover/row:text-[#2878f0]"
+            className="text-text-muted transition-colors duration-300 group-hover/row:text-blue"
           />
         </span>
 
         <span className="min-w-0 flex-1">
-          <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover/row:text-[#f4f7fc]">
+          <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover/row:text-text-primary">
             {category.name}
           </span>
-          <span className="mt-0.5 block text-[11.5px] leading-snug text-[#66758b] transition-colors duration-300 group-hover/row:text-[#8b9ab1]">
+          <span className="mt-0.5 block text-[11.5px] leading-snug text-text-muted transition-colors duration-300 group-hover/row:text-[#8b9ab1]">
             {category.summary}
           </span>
         </span>
 
-        <span className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.16em] text-[#3d4a5c] transition-colors duration-300 group-hover/row:text-[#2878f0] sm:block">
+        <span className="hidden shrink-0 font-mono text-[9px] uppercase tracking-[0.16em] text-[#3d4a5c] transition-colors duration-300 group-hover/row:text-blue sm:block">
           Tracking
         </span>
       </div>
@@ -112,14 +112,14 @@ function LogPanel({ reduceMotion }: { reduceMotion: boolean }) {
       viewport={{ once: true, margin: "0px 0px -15% 0px" }}
       transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.12, ease: EASE }}
     >
-      <div className="relative overflow-hidden border border-white/[0.07] bg-[#0d1220]/40 p-5 sm:p-6">
+      <div className="relative overflow-hidden border border-white/7 bg-[#0d1220]/40 p-5 sm:p-6">
         <div className="pointer-events-none absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
         <span
-          className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l border-t border-[#2878f0]/30"
+          className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l border-t border-blue/30"
           aria-hidden
         />
         <span
-          className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-[#2878f0]/30"
+          className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-blue/30"
           aria-hidden
         />
 
@@ -127,8 +127,8 @@ function LogPanel({ reduceMotion }: { reduceMotion: boolean }) {
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
             Achievement log
           </span>
-          <span className="inline-flex shrink-0 items-center gap-1.5 border border-[#2878f0]/25 bg-[#2878f0]/[0.06] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] text-[#2878f0]">
-            <span className="h-1 w-1 rounded-full bg-[#2878f0]" aria-hidden />
+          <span className="inline-flex shrink-0 items-center gap-1.5 border border-blue/25 bg-blue/6 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] text-blue">
+            <span className="h-1 w-1 rounded-full bg-blue" aria-hidden />
             In progress
           </span>
         </div>
@@ -138,7 +138,7 @@ function LogPanel({ reduceMotion }: { reduceMotion: boolean }) {
           happen. These are the areas currently being tracked.
         </p>
 
-        <dl className="relative mt-6 divide-y divide-white/[0.04] border-t border-white/[0.06]">
+        <dl className="relative mt-6 divide-y divide-white/4 border-t border-white/6">
           {stats.map((stat) => (
             <div key={stat.label} className="flex items-center justify-between gap-4 py-3">
               <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#4a5768]">
@@ -206,27 +206,27 @@ function EntryCard({
       className="h-full"
     >
       {/* Lift sits on a plain child so it never fights Motion's transform. */}
-      <div className="group h-full border border-white/[0.07] bg-[#0d1220]/30 p-5 transition-[transform,border-color,background-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-[#2878f0]/25 hover:bg-[#0d1220]/50">
+      <div className="group h-full border border-white/7 bg-[#0d1220]/30 p-5 transition-[transform,border-color,background-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-blue/25 hover:bg-[#0d1220]/50">
         <div className="flex items-start gap-3.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-[#2878f0]/15 bg-[#2878f0]/[0.04] transition-colors duration-300 group-hover:border-[#2878f0]/35">
-            <Icon size={14} className="text-[#2878f0]" />
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-blue/15 bg-blue/4 transition-colors duration-300 group-hover:border-blue/35">
+            <Icon size={14} className="text-blue" />
           </span>
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-3">
-              <span className="truncate font-mono text-[10px] uppercase tracking-[0.16em] text-[#66758b]">
+              <span className="truncate font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted">
                 {entry.category}
               </span>
-              <span className="shrink-0 font-mono text-[11px] tabular-nums text-[#2878f0]">
+              <span className="shrink-0 font-mono text-[11px] tabular-nums text-blue">
                 {entry.year}
               </span>
             </div>
 
-            <h3 className="mt-1.5 font-display text-[15px] font-semibold leading-snug tracking-tight text-[#f4f7fc]">
+            <h3 className="mt-1.5 font-display text-[15px] font-semibold leading-snug tracking-tight text-text-primary">
               {entry.title}
             </h3>
 
-            <p className="mt-1.5 text-[13px] leading-relaxed text-[#66758b] transition-colors duration-300 group-hover:text-[#8b9ab1]">
+            <p className="mt-1.5 text-[13px] leading-relaxed text-text-muted transition-colors duration-300 group-hover:text-[#8b9ab1]">
               {entry.description}
             </p>
           </div>
@@ -243,11 +243,11 @@ export function Achievements() {
   return (
     <section
       id="achievements"
-      className="relative section-padding overflow-x-clip border-y border-white/[0.04] bg-[#0a0f1a]/80"
+      className="relative section-padding overflow-x-clip border-y border-white/4 bg-[#0a0f1a]/80"
     >
       <div className="absolute inset-0 bg-grid-fine opacity-15" aria-hidden />
       <div
-        className="pointer-events-none absolute top-1/2 left-1/2 h-[320px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2878f0]/[0.02] blur-[120px]"
+        className="pointer-events-none absolute top-1/2 left-1/2 h-80 w-130 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue/2 blur-[120px]"
         aria-hidden
       />
 

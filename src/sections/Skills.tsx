@@ -53,25 +53,25 @@ function CategoryIntro({
   const Icon = iconMap[category.icon] ?? Monitor;
 
   return (
-    <div className="flex min-h-[300px] flex-col lg:min-h-[330px]">
-      <p className="font-mono text-[11px] tracking-[0.14em] text-[#66758b]">
+    <div className="flex min-h-75 flex-col lg:min-h-82.5">
+      <p className="font-mono text-[11px] tracking-[0.14em] text-text-muted">
         {pad(index + 1)} <span className="text-[#3d4a5c]">/</span> {pad(total)}
       </p>
 
       <div className="mt-4 flex items-center gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/[0.08] bg-white/[0.02]">
-          <Icon size={18} className="text-[#2878f0]" />
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/8 bg-white/2">
+          <Icon size={18} className="text-blue" />
         </span>
         <div className="min-w-0">
-          <h3 className="font-display text-xl font-bold tracking-tight text-[#f4f7fc] sm:text-2xl">
+          <h3 className="font-display text-xl font-bold tracking-tight text-text-primary sm:text-2xl">
             {category.title}
           </h3>
-          <p className="mt-0.5 text-[13px] text-[#66758b]">{category.subtitle}</p>
+          <p className="mt-0.5 text-[13px] text-text-muted">{category.subtitle}</p>
         </div>
       </div>
 
       <span
-        className="mt-5 block h-px w-16 bg-gradient-to-r from-[#2878f0] to-transparent"
+        className="mt-5 block h-px w-16 bg-linear-to-r from-blue to-transparent"
         aria-hidden
       />
 
@@ -90,7 +90,7 @@ function CategoryIntro({
               delay: reduceMotion ? 0 : 0.12 + i * 0.04,
               ease: EASE,
             }}
-            className="border border-white/[0.06] bg-white/[0.02] px-2.5 py-1 font-mono text-[11px] text-[#8b9ab1] transition-colors duration-300 hover:border-[#2878f0]/25 hover:text-[#2878f0]"
+            className="border border-white/6 bg-white/2 px-2.5 py-1 font-mono text-[11px] text-[#8b9ab1] transition-colors duration-300 hover:border-blue/25 hover:text-blue"
           >
             {tech.name}
           </motion.span>
@@ -118,7 +118,7 @@ function Controls({
           type="button"
           onClick={onPrev}
           aria-label="Previous skill category"
-          className="flex h-10 w-10 items-center justify-center border border-white/[0.08] text-[#8b9ab1] transition-[color,background-color,border-color,transform] duration-300 hover:border-[#2878f0]/35 hover:bg-[#2878f0]/[0.06] hover:text-[#2878f0] active:scale-95 focus-ring"
+          className="flex h-10 w-10 items-center justify-center border border-white/8 text-[#8b9ab1] transition-[color,background-color,border-color,transform] duration-300 hover:border-blue/35 hover:bg-blue/6 hover:text-blue active:scale-95 focus-ring"
         >
           <ArrowLeft size={15} />
         </button>
@@ -126,7 +126,7 @@ function Controls({
           type="button"
           onClick={onNext}
           aria-label="Next skill category"
-          className="flex h-10 w-10 items-center justify-center border border-white/[0.08] text-[#8b9ab1] transition-[color,background-color,border-color,transform] duration-300 hover:border-[#2878f0]/35 hover:bg-[#2878f0]/[0.06] hover:text-[#2878f0] active:scale-95 focus-ring"
+          className="flex h-10 w-10 items-center justify-center border border-white/8 text-[#8b9ab1] transition-[color,background-color,border-color,transform] duration-300 hover:border-blue/35 hover:bg-blue/6 hover:text-blue active:scale-95 focus-ring"
         >
           <ArrowRight size={15} />
         </button>
@@ -146,9 +146,9 @@ function Controls({
               className="group/ind flex items-center px-1 py-3 focus-ring"
             >
               <span
-                className={`block h-[3px] transition-[width,background-color] duration-300 ease-out ${
+                className={`block h-0.75 transition-[width,background-color] duration-300 ease-out ${
                   isActive
-                    ? "w-9 bg-gradient-to-r from-[#2878f0] to-[#38bdf8]"
+                    ? "w-9 bg-linear-to-r from-blue to-cyan"
                     : "w-3.5 bg-white/10 group-hover/ind:bg-white/25"
                 }`}
               />
@@ -178,13 +178,13 @@ function TechRow({
         delay: reduceMotion ? 0 : 0.06 + index * 0.05,
         ease: EASE,
       }}
-      className="group/tech -mx-2 flex items-center gap-3 border-b border-white/[0.04] px-2 py-3 transition-colors duration-300 last:border-b-0 hover:bg-white/[0.02]"
+      className="group/tech -mx-2 flex items-center gap-3 border-b border-white/4 px-2 py-3 transition-colors duration-300 last:border-b-0 hover:bg-white/2"
     >
-      <span className="w-5 shrink-0 font-mono text-[10px] text-[#3d4a5c] transition-colors duration-300 group-hover/tech:text-[#2878f0]">
+      <span className="w-5 shrink-0 font-mono text-[10px] text-[#3d4a5c] transition-colors duration-300 group-hover/tech:text-blue">
         {pad(index + 1)}
       </span>
 
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/[0.06] bg-[#0a0f1a] transition-colors duration-300 group-hover/tech:border-[#2878f0]/30">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/6 bg-[#0a0f1a] transition-colors duration-300 group-hover/tech:border-blue/30">
         <img
           src={tech.icon}
           alt=""
@@ -196,10 +196,10 @@ function TechRow({
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover/tech:text-[#f4f7fc]">
+        <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover/tech:text-text-primary">
           {tech.name}
         </span>
-        <span className="mt-0.5 block text-[11.5px] leading-snug text-[#66758b] transition-colors duration-300 group-hover/tech:text-[#8b9ab1]">
+        <span className="mt-0.5 block text-[11.5px] leading-snug text-text-muted transition-colors duration-300 group-hover/tech:text-[#8b9ab1]">
           {tech.description}
         </span>
       </span>
@@ -219,7 +219,7 @@ function TechPanel({
   const Icon = iconMap[category.icon] ?? Monitor;
 
   return (
-    <div className="relative flex min-h-[330px] flex-col border border-white/[0.07] bg-[#0d1220]/30 p-5 sm:p-7">
+    <div className="relative flex min-h-82.5 flex-col border border-white/[0.07] bg-[#0d1220]/30 p-5 sm:p-7">
       <div className="pointer-events-none absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
 
       {/* Watermark is derived from the selected category. */}
@@ -231,8 +231,8 @@ function TechPanel({
       </span>
 
       <div className="relative flex items-start justify-between gap-4">
-        <div className="flex h-14 w-14 items-center justify-center border border-[#2878f0]/15 bg-[#2878f0]/[0.05]">
-          <Icon size={24} className="text-[#2878f0]/70" />
+        <div className="flex h-14 w-14 items-center justify-center border border-blue/15 bg-blue/5">
+          <Icon size={24} className="text-blue/70" />
         </div>
         <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#3d4a5c]">
           {category.title}
