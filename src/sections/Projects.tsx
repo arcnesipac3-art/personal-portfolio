@@ -98,7 +98,7 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[100] flex items-start justify-center overscroll-contain overflow-y-auto bg-[#080b14]/85 backdrop-blur-md p-3 sm:p-6 lg:p-10"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#080b14]/85 backdrop-blur-md p-3 sm:p-6 lg:p-10"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -110,11 +110,12 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 16, opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.3, ease: EASE }}
-        className="relative my-auto w-full max-w-3xl border border-white/[0.08] bg-[#0a0f1a] shadow-2xl"
+        className="relative flex max-h-full w-full max-w-3xl flex-col border border-white/[0.08] bg-[#0a0f1a] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/[0.08] bg-[#0a0f1a]/95 px-5 py-3.5 backdrop-blur-xl">
+        {/* Header — static, so it stays welded to the card instead of detaching
+            from it the way a `sticky top-0` element does inside a padded scroller. */}
+        <div className="flex shrink-0 items-center justify-between border-b border-white/[0.08] bg-[#0a0f1a] px-5 py-3.5">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-widest text-blue-400">
               Case Study
@@ -132,8 +133,8 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Body */}
-        <div className="px-5 py-7 sm:px-8">
+        {/* Body — the only part that scrolls, so the header never moves. */}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-7 sm:px-8">
           <p className="mb-8 text-[15px] leading-[1.65] text-slate-300">
             {trackProject.description}
           </p>
