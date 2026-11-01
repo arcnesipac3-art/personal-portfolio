@@ -143,7 +143,7 @@ export function Contact() {
   const rise = (delay: number) => ({
     initial: reduceMotion ? false : { opacity: 0, y: 16 },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-60px" as const },
+    viewport: { once: true, margin: "0px 0px -15% 0px" as const },
     transition: { duration: 0.5, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] as const },
   });
 

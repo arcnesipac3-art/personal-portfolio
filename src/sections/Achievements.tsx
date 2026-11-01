@@ -61,7 +61,7 @@ function CategoryRow({
     <motion.li
       initial={reduceMotion ? false : { opacity: 0, x: -10 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
       transition={{
         duration: 0.35,
         delay: reduceMotion ? 0 : index * 0.05,
@@ -109,7 +109,7 @@ function LogPanel({ reduceMotion }: { reduceMotion: boolean }) {
     <motion.div
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
       transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.12, ease: EASE }}
     >
       <div className="relative overflow-hidden border border-white/[0.07] bg-[#0d1220]/40 p-5 sm:p-6">
@@ -197,7 +197,7 @@ function EntryCard({
     <motion.li
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
       transition={{
         duration: 0.4,
         delay: reduceMotion ? 0 : index * 0.06,

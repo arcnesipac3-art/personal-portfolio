@@ -27,7 +27,7 @@ export function About() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.5, delay: 0.05 }}
             className="lg:col-span-7"
           >
@@ -45,7 +45,7 @@ export function About() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.5, delay: 0.12 }}
             className="lg:col-span-5"
           >

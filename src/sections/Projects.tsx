@@ -230,7 +230,7 @@ function FeatureCard({
     <motion.li
       initial={reduceMotion ? false : { opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
       transition={{
         duration: 0.4,
         delay: reduceMotion ? 0 : Math.floor(index / 2) * 0.06 + (index % 2) * 0.05,
@@ -266,7 +266,7 @@ export function Projects() {
   const rise = (delay: number) => ({
     initial: reduceMotion ? (false as const) : { opacity: 0, y: 18 },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-60px" as const },
+    viewport: { once: true, margin: "0px 0px -15% 0px" as const },
     transition: { duration: 0.5, delay: reduceMotion ? 0 : delay, ease: EASE },
   });
 
