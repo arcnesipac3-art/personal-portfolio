@@ -55,7 +55,7 @@ export function BottomNav() {
           delay: reduceMotion ? 0 : 0.35,
           ease: [0.22, 1, 0.36, 1],
         }}
-        className="pointer-events-auto flex items-center gap-0.5 rounded-full border border-white/8 bg-bg-secondary/85 p-1.5 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+        className="pointer-events-auto flex items-center gap-0.5 rounded-full border border-white/8 bg-bg-secondary/85 p-1.5 shadow-[0_18px_40px_-16px_var(--shadow)] backdrop-blur-xl"
       >
         {navLinks.map((link) => {
           const id = link.href.replace("#", "");

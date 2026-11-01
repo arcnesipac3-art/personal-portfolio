@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useIsDesktop, usePrefersReducedMotion } from "../hooks/useMediaQuery";
+import { useTheme } from "../hooks/useTheme";
 
 const INTERACTIVE_SELECTOR =
   "a, button, input, textarea, [role='button'], [data-cursor='pointer']";
@@ -7,6 +8,14 @@ const INTERACTIVE_SELECTOR =
 /** Ring diameter in px — resting, then while over an interactive element. */
 const RING_SIZE = 24;
 const RING_SIZE_HOVER = 36;
+
+/* The ring is painted from inline styles, so it cannot use the theme tokens
+   directly. On paper the dark-theme alphas wash out to nothing, so the light
+   pair is deepened rather than merely lightened. */
+const RING_COLOR = {
+  dark: { rest: "rgba(59, 130, 246, 0.3)", hover: "rgba(56, 189, 248, 0.5)" },
+  light: { rest: "rgba(40, 120, 240, 0.4)", hover: "rgba(11, 143, 196, 0.55)" },
+} as const;
 
 /**
  * Optional custom cursor for desktop with pointer-fine support.
@@ -17,6 +26,8 @@ const RING_SIZE_HOVER = 36;
 export function CustomCursor() {
   const isDesktop = useIsDesktop();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const theme = useTheme();
+  const ring = RING_COLOR[theme];
 
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -115,7 +126,7 @@ export function CustomCursor() {
       {/* Dot — tracks the pointer exactly */}
       <div
         ref={dotRef}
-        className="fixed left-0 top-0 h-1.5 w-1.5 rounded-full bg-blue-400 transition-opacity duration-200 will-change-transform"
+        className="fixed left-0 top-0 h-1.5 w-1.5 rounded-full bg-blue transition-opacity duration-200 will-change-transform"
         style={{ opacity: visible ? 1 : 0 }}
       />
       {/* Ring — trails the pointer. Its transform is rewritten every frame, so the
@@ -129,7 +140,7 @@ export function CustomCursor() {
           opacity: visible ? 1 : 0,
           transition:
             "width 200ms ease, height 200ms ease, opacity 200ms ease, border-color 200ms ease, background-color 200ms ease",
-          borderColor: hovering ? "rgba(56, 189, 248, 0.5)" : "rgba(59, 130, 246, 0.3)",
+          borderColor: hovering ? ring.hover : ring.rest,
           backgroundColor: hovering ? "rgba(56, 189, 248, 0.05)" : "transparent",
         }}
       />

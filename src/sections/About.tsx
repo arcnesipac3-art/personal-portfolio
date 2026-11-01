@@ -31,11 +31,11 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.05 }}
             className="lg:col-span-7"
           >
-            <p className="font-display text-lg font-light leading-[1.55] text-slate-200 sm:text-xl">
+            <p className="font-display text-lg font-light leading-[1.55] text-text-secondary sm:text-xl">
               {aboutContent.paragraphs[0]}
             </p>
             <div className="mt-5 border-l border-white/10 pl-4">
-              <p className="text-[15px] leading-[1.65] text-slate-500">
+              <p className="text-[15px] leading-[1.65] text-text-muted">
                 {aboutContent.paragraphs[1]}
               </p>
             </div>
@@ -49,7 +49,7 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.12 }}
             className="lg:col-span-5"
           >
-            <div className="border border-white/7 bg-[#0d1220]/40 p-5 transition-colors duration-300 hover:border-white/12">
+            <div className="border border-white/7 bg-bg-secondary/40 p-5 transition-colors duration-300 hover:border-white/12">
               <div className="space-y-px">
                 {aboutContent.infoLabels.map((info) => {
                   const Icon = infoIcons[info.key] ?? Target;
@@ -60,12 +60,12 @@ export function About() {
                     >
                       <Icon
                         size={13}
-                        className="shrink-0 text-slate-600 transition-colors duration-300 group-hover/row:text-blue-400"
+                        className="shrink-0 text-text-muted transition-colors duration-300 group-hover/row:text-blue"
                       />
-                      <span className="w-20 shrink-0 text-[13px] text-slate-500 transition-colors duration-300 group-hover/row:text-slate-400">
+                      <span className="w-20 shrink-0 text-[13px] text-text-muted transition-colors duration-300 group-hover/row:text-text-muted">
                         {info.key}
                       </span>
-                      <span className="text-[13px] font-medium text-slate-200 transition-colors duration-300 group-hover/row:text-slate-50">
+                      <span className="text-[13px] font-medium text-text-secondary transition-colors duration-300 group-hover/row:text-text-primary">
                         {info.value}
                       </span>
                     </div>
@@ -73,10 +73,10 @@ export function About() {
                 })}
               </div>
               <div className="mt-3 border-t border-white/4 pt-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-slate-600">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                   Currently at
                 </p>
-                <p className="mt-0.5 text-[13px] font-medium text-slate-200">
+                <p className="mt-0.5 text-[13px] font-medium text-text-secondary">
                   {personalInfo.school}
                 </p>
               </div>

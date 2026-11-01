@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* The tokens below are always resolved through their `--color-*` variable, so
+   the whole palette can be re-pointed at runtime by re-declaring them inside
+   `.light` (see below). Dark is the base value: everything here is the theme
+   the site already shipped, so a failure to apply `.light` degrades to dark
+   rather than to an unstyled page. */
 @theme {
   --color-bg: #080b12;
   --color-bg-secondary: #0c111c;
@@ -10,21 +15,112 @@
   --color-text-secondary: #9aa8bd;
   --color-text-muted: #66758b;
   --color-border: #192437;
+  --color-border-strong: #243049;
+  /* Confirmation green — the "copied" state in Contact, brightened on dark
+     and deepened on paper so it clears contrast in both. */
+  --color-success: #34d399;
+  /* Text and icons that sit on a filled accent. Never inverted — a blue
+     button keeps white lettering in both themes. */
+  --color-on-accent: #ffffff;
 
   --font-sans: "Inter", sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
 
+/* Texture, wash and gradient values that are baked into plain CSS rules
+   rather than Tailwind utilities. Declared once here and overridden in
+   `.light`, so the dark rendering stays byte-identical to what shipped. */
 :root {
+  color-scheme: dark;
+
+  --grid-coarse: rgba(154, 168, 189, 0.028);
+  --grid-fine: rgba(154, 168, 189, 0.022);
+  --grid-dot: rgba(154, 168, 189, 0.05);
+  --grid-page: rgba(154, 168, 189, 0.03);
+  --glow-blue: rgba(40, 120, 240, 0.06);
+  --grad-from: #4d9bff;
+  --grad-to: #2878f0;
+
+  --page-wash-1: rgba(40, 120, 240, 0.13);
+  --page-wash-2: rgba(56, 189, 248, 0.06);
+  --page-wash-3: rgba(40, 120, 240, 0.055);
+  --page-top: #0b1220;
+  --page-bottom: #05070c;
+  --page-deep: rgba(56, 189, 248, 0.1);
+  --page-spot-1: rgba(40, 120, 240, 0.1);
+  --page-spot-2: rgba(40, 120, 240, 0.04);
+  --page-vignette: rgba(3, 5, 9, 0.62);
+  /* Elevation shadows. Plain black is right over a near-black ground, but it
+     reads as soot on paper, so the light theme shifts it to a warm ink. */
+  --shadow: rgba(0, 0, 0, 1);
+  /* Veil behind dialogs. Deliberately dark in *both* themes: a dialog reads as
+     lifted off the page because the page darkens, not because the panel
+     brightens. On paper the veil goes warm so it matches the ink. */
+  --scrim: rgba(3, 5, 9, 0.82);
+
   font-family: "Inter", sans-serif;
-  color: #f4f7fc;
-  background: #080b12;
+  color: var(--color-text-primary);
+  background: var(--color-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Light theme ─────────────────────────────────────────────────
+   Warm paper rather than a bleached white: the sections already read as a
+   printed registry, and an off-white ground keeps the hairlines and the
+   monospace labels in the same voice. Only the *token* values change; no
+   component needs to know which theme is active.
+
+   `--color-white` is deliberately flipped to ink. Every overlay in the app
+   is written as a translucent white (`bg-white/3`, `border-white/7`,
+   `ring-white/4`) because it was authored against a near-black ground. On
+   paper the same overlay has to darken instead of lighten, and re-pointing
+   the one variable converts all of them at once — a translucent white
+   overlay and a translucent ink overlay are the same idea seen from
+   opposite sides. Genuine white-on-accent text uses `--color-on-accent`,
+   which is not overridden here. */
+.light {
+  color-scheme: light;
+
+  --color-bg: #faf9f7;
+  --color-bg-secondary: #f4f1ea;
+  --color-surface: #ffffff;
+  --color-cyan: #0b8fc4;
+  --color-text-primary: #14181f;
+  --color-text-secondary: #4f5866;
+  --color-text-muted: #8a9199;
+  --color-border: #e4dfd5;
+  --color-border-strong: #cfc7b8;
+  --color-success: #0f7a4d;
+  --color-white: #14181f;
+
+  --grid-coarse: rgba(20, 24, 31, 0.05);
+  --grid-fine: rgba(20, 24, 31, 0.04);
+  --grid-dot: rgba(20, 24, 31, 0.07);
+  --grid-page: rgba(20, 24, 31, 0.05);
+  --glow-blue: rgba(40, 120, 240, 0.07);
+  --grad-from: #3b82f6;
+  --grad-to: #1d55c4;
+
+  /* The backdrop keeps its structure — a light at the top, a cooler light at
+     the foot, a warm vignette — but on paper the same alphas would read as
+     grime, so they are pulled back and the base gradient warms to cream
+     instead of cooling to near-black. */
+  --page-wash-1: rgba(40, 120, 240, 0.1);
+  --page-wash-2: rgba(11, 143, 196, 0.07);
+  --page-wash-3: rgba(40, 120, 240, 0.05);
+  --page-top: #fdfcfa;
+  --page-bottom: #f4f1ea;
+  --page-deep: rgba(11, 143, 196, 0.07);
+  --page-spot-1: rgba(40, 120, 240, 0.07);
+  --page-spot-2: rgba(40, 120, 240, 0.03);
+  --page-vignette: rgba(70, 62, 50, 0.13);
+  --shadow: rgba(20, 24, 31, 0.16);
+  --scrim: rgba(28, 23, 16, 0.55);
 }
 
 * {
@@ -56,14 +152,14 @@ a {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #080b12;
+  background: var(--color-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #192437;
+  background: var(--color-border);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #243049;
+  background: var(--color-border-strong);
 }
 
 /* Utility classes */
@@ -76,25 +172,19 @@ a {
 
 /* Grid texture */
 .bg-grid {
-  background-image: linear-gradient(
-      rgba(154, 168, 189, 0.028) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(154, 168, 189, 0.028) 1px, transparent 1px);
+  background-image: linear-gradient(var(--grid-coarse) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-coarse) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
 .bg-grid-fine {
-  background-image: linear-gradient(
-      rgba(154, 168, 189, 0.022) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(154, 168, 189, 0.022) 1px, transparent 1px);
+  background-image: linear-gradient(var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
 .bg-dots {
-  background-image: radial-gradient(rgba(154, 168, 189, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -102,7 +192,7 @@ a {
 .radial-glow {
   background: radial-gradient(
     ellipse 80% 50% at 50% 0%,
-    rgba(40, 120, 240, 0.06),
+    var(--glow-blue),
     transparent 70%
   );
 }
@@ -118,30 +208,15 @@ a {
    for `prefers-reduced-motion` to gate. */
 .page-backdrop {
   background:
-    radial-gradient(
-      ellipse 110% 70% at 50% -5%,
-      rgba(40, 120, 240, 0.13),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 80% 55% at 102% 18%,
-      rgba(56, 189, 248, 0.06),
-      transparent 64%
-    ),
-    radial-gradient(
-      ellipse 80% 60% at -2% 88%,
-      rgba(40, 120, 240, 0.055),
-      transparent 64%
-    ),
-    linear-gradient(180deg, #0b1220 0%, #080b12 42%, #05070c 100%);
+    radial-gradient(ellipse 110% 70% at 50% -5%, var(--page-wash-1), transparent 60%),
+    radial-gradient(ellipse 80% 55% at 102% 18%, var(--page-wash-2), transparent 64%),
+    radial-gradient(ellipse 80% 60% at -2% 88%, var(--page-wash-3), transparent 64%),
+    linear-gradient(180deg, var(--page-top) 0%, var(--color-bg) 42%, var(--page-bottom) 100%);
 }
 
 .page-grid {
-  background-image: linear-gradient(
-      rgba(154, 168, 189, 0.03) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(154, 168, 189, 0.03) 1px, transparent 1px);
+  background-image: linear-gradient(var(--grid-page) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-page) 1px, transparent 1px);
   background-size: 48px 48px;
   -webkit-mask-image: radial-gradient(
     ellipse 95% 75% at 50% 42%,
@@ -161,7 +236,7 @@ a {
 .page-backdrop-deep {
   background: radial-gradient(
     ellipse 90% 60% at 50% 108%,
-    rgba(56, 189, 248, 0.1),
+    var(--page-deep),
     transparent 62%
   );
 }
@@ -174,8 +249,8 @@ a {
 .page-spotlight {
   background: radial-gradient(
     circle,
-    rgba(40, 120, 240, 0.1),
-    rgba(40, 120, 240, 0.04) 45%,
+    var(--page-spot-1),
+    var(--page-spot-2) 45%,
     transparent 70%
   );
 }
@@ -184,8 +259,13 @@ a {
   background: radial-gradient(
     ellipse 105% 78% at 50% 42%,
     transparent 45%,
-    rgba(3, 5, 9, 0.62) 100%
+    var(--page-vignette) 100%
   );
+}
+
+/* Veil behind dialogs and the command palette. */
+.modal-scrim {
+  background: var(--scrim);
 }
 
 /* Section padding */
@@ -255,7 +335,7 @@ a {
 
 /* Focus ring */
 .focus-ring:focus-visible {
-  outline: 2px solid #2878f0;
+  outline: 2px solid var(--color-blue);
   outline-offset: 2px;
 }
 
@@ -265,7 +345,7 @@ a {
 a:focus-visible,
 button:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid #2878f0;
+  outline: 2px solid var(--color-blue);
   outline-offset: 2px;
 }
 
@@ -283,12 +363,12 @@ button:not(:disabled),
   left: 0.75rem;
   z-index: 300;
   transform: translateY(-200%);
-  border: 1px solid #2878f0;
-  background: #0e1522;
+  border: 1px solid var(--color-blue);
+  background: var(--color-surface);
   padding: 0.5rem 0.9rem;
   font-size: 12px;
   font-weight: 500;
-  color: #f4f7fc;
+  color: var(--color-text-primary);
   transition: transform 0.2s ease;
 }
 .skip-link:focus {
@@ -310,7 +390,7 @@ section[id] {
 
 /* Gradient text */
 .text-gradient {
-  background: linear-gradient(135deg, #4d9bff 0%, #2878f0 100%);
+  background: linear-gradient(135deg, var(--grad-from) 0%, var(--grad-to) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

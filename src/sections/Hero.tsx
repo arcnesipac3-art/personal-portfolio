@@ -94,7 +94,7 @@ function InteractiveName({
                     className="inline-block transition-[transform,color,text-shadow] duration-300 ease-out"
                     style={{
                       transform: `translateY(-${lift}px)`,
-                      color: distance === 0 ? "#2878f0" : distance === 1 ? "#4f8ee6" : undefined,
+                      color: distance === 0 ? "var(--color-blue)" : distance === 1 ? "var(--color-blue)" : undefined,
                       textShadow:
                         distance === 0 ? "0 0 30px rgba(40,120,240,0.45)" : undefined,
                     }}
@@ -255,7 +255,7 @@ export function Hero({ introDone = true }: HeroProps) {
             {/* Headline */}
             <motion.p
               {...reveal(0.28, { opacity: 0, y: 12 }, SETTLED, 0.5)}
-              className="mt-4 font-display text-[clamp(1.05rem,1.5vw,1.3rem)] font-medium leading-snug text-[#c3cddd]"
+              className="mt-4 font-display text-[clamp(1.05rem,1.5vw,1.3rem)] font-medium leading-snug text-text-secondary"
             >
               Curious by nature. Building through <span className="text-blue">code.</span>
             </motion.p>
@@ -374,7 +374,7 @@ export function Hero({ introDone = true }: HeroProps) {
                     overwrite it on every frame. */}
                 <div
                   ref={portraitRef}
-                  className="relative overflow-hidden border border-white/8 bg-bg-secondary shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)] transition-transform duration-300 ease-out will-change-transform"
+                  className="relative overflow-hidden border border-white/8 bg-bg-secondary shadow-[0_40px_90px_-50px_var(--shadow)] transition-transform duration-300 ease-out will-change-transform"
                 >
                   <div className="aspect-7/8 w-full">
                     {!imageFailed && (

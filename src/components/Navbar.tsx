@@ -7,6 +7,7 @@ import { useFocusTrap } from "../hooks/useFocusTrap";
 import { personalInfo, navLinks } from "../data/portfolio";
 import { scrollToSection } from "../utils/scroll";
 import { ScrollProgressBar } from "./ScrollProgressBar";
+import { ThemeToggle } from "./ThemeToggle";
 
 const sectionIds = navLinks.map((l) => l.href.replace("#", ""));
 
@@ -50,7 +51,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
         aria-label="Primary"
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
           scrolled
-            ? "border-b border-border bg-bg/90 shadow-[0_12px_32px_-24px_rgba(0,0,0,1)] backdrop-blur-xl"
+            ? "border-b border-border bg-bg/90 shadow-[0_12px_32px_-24px_var(--shadow)] backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
         }`}
       >
@@ -113,6 +114,8 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
 
           {/* Right controls */}
           <div className="flex items-center gap-1.5">
+            <ThemeToggle />
+
             {/* Palette trigger — the only way to reach it on touch devices */}
             <button
               onClick={onOpenPalette}
@@ -187,6 +190,17 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
                   </motion.a>
                 );
               })}
+
+              {/* The same control the top bar carries, spelled out — on a
+                  phone the glyph alone is easy to miss. */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04 * navLinks.length + 0.08, duration: 0.25 }}
+                className="mt-5"
+              >
+                <ThemeToggle labelled />
+              </motion.div>
             </motion.div>
           </motion.div>
         )}

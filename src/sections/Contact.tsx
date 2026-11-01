@@ -34,7 +34,7 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
       <span className="absolute left-0 top-0 h-full w-px bg-blue" aria-hidden />
 
       <div className="flex items-center gap-3 p-4 sm:gap-4">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-blue/25 bg-[#0a0f1a]">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-blue/25 bg-bg">
           <Mail size={15} className="text-blue" />
         </span>
 
@@ -44,7 +44,7 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
             role="status"
             aria-live="polite"
             className={`font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-300 ${
-              copied ? "text-emerald-400" : "text-text-muted"
+              copied ? "text-success" : "text-text-muted"
             }`}
           >
             {copied ? "Copied to clipboard" : "Email — primary"}
@@ -65,8 +65,8 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
             aria-label="Copy email address"
             className={`flex h-8 w-8 items-center justify-center border transition-colors duration-300 focus-ring ${
               copied
-                ? "border-emerald-500/30 text-emerald-400"
-                : "border-white/8 text-[#8b9ab1] hover:border-blue/35 hover:text-blue"
+                ? "border-success/30 text-success"
+                : "border-white/8 text-text-secondary hover:border-blue/35 hover:text-blue"
             }`}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -75,7 +75,7 @@ function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) 
           <a
             href={mailto}
             aria-label={`Compose an email to ${personalInfo.name}`}
-            className="flex h-8 w-8 items-center justify-center border border-white/8 text-[#8b9ab1] transition-colors duration-300 hover:border-blue/35 hover:text-blue focus-ring"
+            className="flex h-8 w-8 items-center justify-center border border-white/8 text-text-secondary transition-colors duration-300 hover:border-blue/35 hover:text-blue focus-ring"
           >
             <ArrowUpRight size={14} />
           </a>
@@ -95,22 +95,22 @@ function SocialRow({ label, href, Icon }: (typeof socials)[number]) {
         title={prettyUrl(href)}
         className="group flex items-center gap-3 px-4 py-3.5 transition-colors duration-300 hover:bg-white/2 focus-ring"
       >
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/6 bg-[#0a0f1a] transition-colors duration-300 group-hover:border-blue/30">
-          <Icon size={15} className="text-[#8b9ab1] transition-colors duration-300 group-hover:text-blue" />
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/6 bg-bg transition-colors duration-300 group-hover:border-blue/30">
+          <Icon size={15} className="text-text-secondary transition-colors duration-300 group-hover:text-blue" />
         </span>
 
         <span className="min-w-0 flex-1">
-          <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
+          <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
             {label}
           </span>
-          <span className="mt-0.5 block truncate text-[13px] text-[#8b9ab1] transition-colors duration-300 group-hover:text-text-primary">
+          <span className="mt-0.5 block truncate text-[13px] text-text-secondary transition-colors duration-300 group-hover:text-text-primary">
             {prettyUrl(href)}
           </span>
         </span>
 
         <ArrowUpRight
           size={14}
-          className="shrink-0 text-[#3d4a5c] transition-[transform,color] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue"
+          className="shrink-0 text-text-muted transition-[transform,color] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue"
         />
       </a>
     </li>
@@ -151,7 +151,7 @@ export function Contact() {
     <section id="contact" className="relative section-padding overflow-hidden">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
       <div
-        className="absolute bottom-0 left-1/2 h-64 w-125 -translate-x-1/2 rounded-full bg-blue-500/3 blur-[100px]"
+        className="absolute bottom-0 left-1/2 h-64 w-125 -translate-x-1/2 rounded-full bg-blue/3 blur-[100px]"
         aria-hidden
       />
 
@@ -189,7 +189,7 @@ export function Contact() {
               {contactContent.description}
             </p>
 
-            <p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#8b9ab1]">
+            <p className="mt-4 max-w-md text-[14px] leading-relaxed text-text-secondary">
               {contactContent.supporting}
             </p>
 
@@ -204,7 +204,7 @@ export function Contact() {
                   className="text-blue transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 />
               </a>
-              <p className="mt-3 max-w-xs text-[12px] leading-relaxed text-[#4a5768]">
+              <p className="mt-3 max-w-xs text-[12px] leading-relaxed text-text-muted">
                 {contactContent.ctaSupporting}
               </p>
             </div>
@@ -234,7 +234,7 @@ export function Contact() {
                 ))}
               </ul>
 
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#3d4a5c]">
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted">
                 {socials.length + 1} channels · no forms
               </p>
             </div>

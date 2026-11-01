@@ -58,7 +58,7 @@ function usePinnedJourney() {
 function PanelDecor() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute inset-0 bg-linear-to-br from-[#0d1728] via-[#0a1018] to-bg" />
+      <div className="absolute inset-0 bg-linear-to-br from-bg-secondary via-bg-secondary to-bg" />
       <div className="absolute -left-24 -top-28 h-72 w-72 rounded-full bg-blue/14 blur-[90px]" />
       <div className="absolute -bottom-32 -right-16 h-72 w-72 rounded-full bg-cyan/7 blur-[100px]" />
       <div className="absolute inset-0 bg-grid-fine opacity-30" />
@@ -87,7 +87,7 @@ function EntryBody({ entry, index }: { entry: EducationEntry; index: number }) {
 
       <div className="relative">
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center border border-blue/25 bg-[#0a0f1a]">
+          <span className="flex h-8 w-8 items-center justify-center border border-blue/25 bg-bg">
             <Icon size={14} className="text-blue" />
           </span>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
@@ -106,7 +106,7 @@ function EntryBody({ entry, index }: { entry: EducationEntry; index: number }) {
         <h3 className="mt-2 max-w-xl font-display text-[1.75rem] font-bold leading-[1.08] tracking-tight text-text-primary sm:text-4xl lg:text-[2.4rem]">
           {entry.school}
         </h3>
-        <p className="mt-3.5 max-w-lg text-[14px] leading-relaxed text-[#8b9ab1] sm:text-[15px]">
+        <p className="mt-3.5 max-w-lg text-[14px] leading-relaxed text-text-secondary sm:text-[15px]">
           {entry.description}
         </p>
 
@@ -115,7 +115,7 @@ function EntryBody({ entry, index }: { entry: EducationEntry; index: number }) {
             {entry.highlights.map((highlight) => (
               <li
                 key={highlight}
-                className="inline-flex items-center gap-2 border border-white/6 bg-white/2 px-2.5 py-1 font-mono text-[10px] text-[#8b9ab1]"
+                className="inline-flex items-center gap-2 border border-white/6 bg-white/2 px-2.5 py-1 font-mono text-[10px] text-text-secondary"
               >
                 <span className="h-1 w-1 shrink-0 bg-blue/70" aria-hidden />
                 {highlight}
@@ -174,7 +174,7 @@ function EntryPanel({ active, offset, className = "" }: { active: number; offset
   return (
     <div
       id="journey-panel"
-      className={`relative overflow-hidden border border-white/7 bg-[#0a0f1a] ${className}`}
+      className={`relative overflow-hidden border border-white/7 bg-bg ${className}`}
     >
       <PanelDecor />
       <EntryStage active={active} offset={offset} className="h-full" />
@@ -241,7 +241,7 @@ function TimelineRail({
                     className={`h-1.5 w-1.5 rotate-45 transition-[background-color,box-shadow] duration-300 ${
                       isActive
                         ? "bg-cyan shadow-[0_0_10px_2px_rgba(56,189,248,0.45)]"
-                        : "bg-[#243049]"
+                        : "bg-border-strong"
                     }`}
                   />
                 </span>
@@ -259,7 +259,7 @@ function TimelineRail({
                   className={`relative isolate block w-full cursor-pointer overflow-hidden border px-3.5 py-3 text-left transition-colors duration-300 lg:py-2.5 ${
                     isActive
                       ? "border-blue/45 bg-blue/7"
-                      : "border-white/6 bg-[#0d1220]/25 hover:border-white/14 hover:bg-white/2"
+                      : "border-white/6 bg-bg-secondary/25 hover:border-white/14 hover:bg-white/2"
                   }`}
                 >
                   <span
@@ -272,7 +272,7 @@ function TimelineRail({
                   <span className="flex items-center justify-between gap-3">
                     <span
                       className={`font-mono text-[10px] tabular-nums transition-colors duration-300 ${
-                        isActive ? "text-cyan" : "text-[#4a5768]"
+                        isActive ? "text-cyan" : "text-text-muted"
                       }`}
                     >
                       {entry.years}
@@ -288,7 +288,7 @@ function TimelineRail({
 
                   <span
                     className={`mt-1.5 block truncate font-display text-[14px] tracking-tight transition-colors duration-300 ${
-                      isActive ? "font-semibold text-text-primary" : "font-medium text-[#8b9ab1]"
+                      isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"
                     }`}
                   >
                     {entry.school}
@@ -296,7 +296,7 @@ function TimelineRail({
 
                   <span
                     className={`mt-0.5 block font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-300 ${
-                      isActive ? "text-text-muted" : "text-[#3d4a5c]"
+                      isActive ? "text-text-muted" : "text-text-muted"
                     }`}
                   >
                     {entry.level}
@@ -341,9 +341,9 @@ function JourneyHeader({ active }: { active: number }) {
       <div className="shrink-0 text-right" role="status" aria-live="polite">
         <p className="font-mono text-[26px] leading-none tabular-nums text-blue sm:text-[32px] lg:text-[40px]">
           {pad(active + 1)}
-          <span className="text-[#233149]">/{pad(TOTAL)}</span>
+          <span className="text-text-muted">/{pad(TOTAL)}</span>
         </p>
-        <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
+        <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
           Entry
         </p>
       </div>
@@ -376,7 +376,7 @@ function JourneyProgress({ active }: { active: number }) {
         >
           <ArrowDown size={12} className="text-blue" />
         </motion.span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
           Scroll to travel
         </span>
       </span>

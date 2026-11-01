@@ -24,11 +24,11 @@ export function Button({
 
   const variants = {
     primary:
-      "bg-blue-600 text-white hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/20",
+      "bg-blue text-on-accent hover:bg-blue/85 hover:shadow-lg hover:shadow-blue/20",
     secondary:
-      "border border-white/10 text-slate-200 hover:border-blue-500/50 hover:text-white hover:bg-white/5",
+      "border border-border-strong text-text-secondary hover:border-blue/50 hover:text-text-primary hover:bg-white/5",
     ghost:
-      "text-slate-400 hover:text-white",
+      "text-text-muted hover:text-text-primary",
   };
 
   return (

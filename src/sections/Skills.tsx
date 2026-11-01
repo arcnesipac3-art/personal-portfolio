@@ -55,7 +55,7 @@ function CategoryIntro({
   return (
     <div className="flex min-h-75 flex-col lg:min-h-82.5">
       <p className="font-mono text-[11px] tracking-[0.14em] text-text-muted">
-        {pad(index + 1)} <span className="text-[#3d4a5c]">/</span> {pad(total)}
+        {pad(index + 1)} <span className="text-text-muted">/</span> {pad(total)}
       </p>
 
       <div className="mt-4 flex items-center gap-3">
@@ -75,7 +75,7 @@ function CategoryIntro({
         aria-hidden
       />
 
-      <p className="mt-5 max-w-md text-[14px] leading-relaxed text-[#8b9ab1]">
+      <p className="mt-5 max-w-md text-[14px] leading-relaxed text-text-secondary">
         {category.description}
       </p>
 
@@ -90,7 +90,7 @@ function CategoryIntro({
               delay: reduceMotion ? 0 : 0.12 + i * 0.04,
               ease: EASE,
             }}
-            className="border border-white/6 bg-white/2 px-2.5 py-1 font-mono text-[11px] text-[#8b9ab1] transition-colors duration-300 hover:border-blue/25 hover:text-blue"
+            className="border border-white/6 bg-white/2 px-2.5 py-1 font-mono text-[11px] text-text-secondary transition-colors duration-300 hover:border-blue/25 hover:text-blue"
           >
             {tech.name}
           </motion.span>
@@ -118,7 +118,7 @@ function Controls({
           type="button"
           onClick={onPrev}
           aria-label="Previous skill category"
-          className="flex h-10 w-10 items-center justify-center border border-white/8 text-[#8b9ab1] transition-[color,background-color,border-color,transform] duration-300 hover:border-blue/35 hover:bg-blue/6 hover:text-blue active:scale-95 focus-ring"
+          className="flex h-10 w-10 items-center justify-center border border-white/8 text-text-secondary transition-[color,background-color,border-color,transform] duration-300 hover:border-blue/35 hover:bg-blue/6 hover:text-blue active:scale-95 focus-ring"
         >
           <ArrowLeft size={15} />
         </button>
@@ -126,7 +126,7 @@ function Controls({
           type="button"
           onClick={onNext}
           aria-label="Next skill category"
-          className="flex h-10 w-10 items-center justify-center border border-white/8 text-[#8b9ab1] transition-[color,background-color,border-color,transform] duration-300 hover:border-blue/35 hover:bg-blue/6 hover:text-blue active:scale-95 focus-ring"
+          className="flex h-10 w-10 items-center justify-center border border-white/8 text-text-secondary transition-[color,background-color,border-color,transform] duration-300 hover:border-blue/35 hover:bg-blue/6 hover:text-blue active:scale-95 focus-ring"
         >
           <ArrowRight size={15} />
         </button>
@@ -180,11 +180,11 @@ function TechRow({
       }}
       className="group/tech -mx-2 flex items-center gap-3 border-b border-white/4 px-2 py-3 transition-colors duration-300 last:border-b-0 hover:bg-white/2"
     >
-      <span className="w-5 shrink-0 font-mono text-[10px] text-[#3d4a5c] transition-colors duration-300 group-hover/tech:text-blue">
+      <span className="w-5 shrink-0 font-mono text-[10px] text-text-muted transition-colors duration-300 group-hover/tech:text-blue">
         {pad(index + 1)}
       </span>
 
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/6 bg-[#0a0f1a] transition-colors duration-300 group-hover/tech:border-blue/30">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-white/6 bg-bg transition-colors duration-300 group-hover/tech:border-blue/30">
         <img
           src={tech.icon}
           alt=""
@@ -196,10 +196,10 @@ function TechRow({
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover/tech:text-text-primary">
+        <span className="block text-[13.5px] font-medium text-text-primary transition-colors duration-300 group-hover/tech:text-text-primary">
           {tech.name}
         </span>
-        <span className="mt-0.5 block text-[11.5px] leading-snug text-text-muted transition-colors duration-300 group-hover/tech:text-[#8b9ab1]">
+        <span className="mt-0.5 block text-[11.5px] leading-snug text-text-muted transition-colors duration-300 group-hover/tech:text-text-secondary">
           {tech.description}
         </span>
       </span>
@@ -219,13 +219,13 @@ function TechPanel({
   const Icon = iconMap[category.icon] ?? Monitor;
 
   return (
-    <div className="relative flex min-h-82.5 flex-col border border-white/[0.07] bg-[#0d1220]/30 p-5 sm:p-7">
+    <div className="relative flex min-h-82.5 flex-col border border-white/7 bg-bg-secondary/30 p-5 sm:p-7">
       <div className="pointer-events-none absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
 
       {/* Watermark is derived from the selected category. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute right-4 top-1 select-none font-display text-[4.5rem] font-bold leading-none text-white/[0.035] sm:text-[6.5rem]"
+        className="pointer-events-none absolute right-4 top-1 select-none font-display text-[4.5rem] font-bold leading-none text-white/3.5 sm:text-[6.5rem]"
       >
         {pad(index + 1)}
       </span>
@@ -234,7 +234,7 @@ function TechPanel({
         <div className="flex h-14 w-14 items-center justify-center border border-blue/15 bg-blue/5">
           <Icon size={24} className="text-blue/70" />
         </div>
-        <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#3d4a5c]">
+        <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
           {category.title}
         </span>
       </div>
@@ -245,7 +245,7 @@ function TechPanel({
         ))}
       </ul>
 
-      <p className="relative mt-auto pt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#3d4a5c]">
+      <p className="relative mt-auto pt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted">
         {pad(category.technologies.length)}{" "}
         {category.technologies.length === 1 ? "technology" : "technologies"}
       </p>

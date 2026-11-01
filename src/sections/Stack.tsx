@@ -307,7 +307,7 @@ export function Stack() {
   return (
     <section
       id="stack"
-      className="relative section-padding overflow-x-clip border-y border-white/4 bg-[#0a0f1a]/80"
+      className="relative section-padding overflow-x-clip border-y border-white/4 bg-bg/80"
     >
       <div className="absolute inset-0 bg-grid-fine opacity-15" aria-hidden />
 
@@ -321,7 +321,7 @@ export function Stack() {
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3">
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted">
-            {pad(active + 1)} <span className="text-[#3d4a5c]">/</span> {pad(TOTAL)} ·{" "}
+            {pad(active + 1)} <span className="text-text-muted">/</span> {pad(TOTAL)} ·{" "}
             <span className="text-blue">{current.label}</span>
           </p>
 
@@ -329,7 +329,7 @@ export function Stack() {
             {/* Otherwise the rail reads as a diagram and neither the keys nor
                 the drag are discoverable. */}
             <p
-              className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-[#3d4a5c] sm:block"
+              className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-text-muted sm:block"
               aria-hidden
             >
               {canDrag ? "← → step · drag the rail" : "tap a stage"}
@@ -339,7 +339,7 @@ export function Stack() {
               <button
                 type="button"
                 onClick={run}
-                className="flex items-center gap-1.5 border border-white/8 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-[#8b9ab1] transition-colors duration-300 hover:border-blue/40 hover:bg-blue/6 hover:text-blue focus-ring"
+                className="flex items-center gap-1.5 border border-white/8 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-text-secondary transition-colors duration-300 hover:border-blue/40 hover:bg-blue/6 hover:text-blue focus-ring"
               >
                 <Play size={9} className={running ? "animate-pulse" : undefined} />
                 {running ? "In flight" : "Send request"}
@@ -460,7 +460,7 @@ export function Stack() {
                         <div className="flex items-center gap-2">
                           <span
                             className={`font-mono text-[10px] transition-colors duration-300 ${
-                              isActive ? "text-blue" : "text-[#3d4a5c]"
+                              isActive ? "text-blue" : "text-text-muted"
                             }`}
                           >
                             {pad(index + 1)}
@@ -489,7 +489,7 @@ export function Stack() {
                                 decoding="async"
                                 className="h-3.5 w-3.5 object-contain opacity-85"
                               />
-                              <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#8b9ab1]">
+                              <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-text-secondary">
                                 {name}
                               </span>
                             </li>

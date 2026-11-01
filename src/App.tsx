@@ -53,7 +53,7 @@ function App() {
       <main
         id="main-content"
         tabIndex={-1}
-        className="min-h-screen text-slate-50 no-scroll-x focus:outline-none"
+        className="min-h-screen text-text-primary no-scroll-x focus:outline-none"
       >
         <Hero introDone={introDone} />
         <About />

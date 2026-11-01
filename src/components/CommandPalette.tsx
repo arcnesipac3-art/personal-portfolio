@@ -113,7 +113,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
           onClick={onClose}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-[#0B1020]/80 backdrop-blur-md" />
+          <div className="modal-scrim absolute inset-0 backdrop-blur-md" />
 
           {/* Palette */}
           <motion.div
@@ -122,7 +122,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: -12, opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-lg overflow-hidden rounded-xl border border-white/10 bg-[#0d1421] shadow-2xl"
+            className="relative w-full max-w-lg overflow-hidden rounded-xl border border-white/10 bg-bg-secondary shadow-2xl"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -130,17 +130,17 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
           >
             {/* Search input */}
             <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
-              <Search size={16} className="text-slate-500 shrink-0" />
+              <Search size={16} className="text-text-muted shrink-0" />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search commands..."
-                className="flex-1 bg-transparent text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none"
+                className="flex-1 bg-transparent text-sm text-text-secondary placeholder:text-text-muted focus:outline-none"
                 aria-label="Search commands"
                 autoComplete="off"
               />
-              <kbd className="hidden sm:block rounded border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-[9px] text-slate-500">
+              <kbd className="hidden sm:block rounded border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-[9px] text-text-muted">
                 ESC
               </kbd>
             </div>
@@ -149,7 +149,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
             <div className="max-h-75 overflow-y-auto p-2">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center">
-                  <p className="text-sm text-slate-500">No results found</p>
+                  <p className="text-sm text-text-muted">No results found</p>
                 </div>
               ) : (
                 filtered.map((cmd, i) => {
@@ -164,15 +164,15 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
                       onMouseEnter={() => setSelected(i)}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
                         i === selected
-                          ? "bg-blue-500/10 text-slate-100"
-                          : "text-slate-400 hover:bg-white/2"
+                          ? "bg-blue/10 text-text-primary"
+                          : "text-text-muted hover:bg-white/2"
                       }`}
                     >
-                      <Icon size={15} className={i === selected ? "text-blue-400" : "text-slate-500"} />
+                      <Icon size={15} className={i === selected ? "text-blue" : "text-text-muted"} />
                       <span className="flex-1 text-sm">{cmd.label}</span>
-                      <span className="font-mono text-[10px] text-slate-600">{cmd.hint}</span>
+                      <span className="font-mono text-[10px] text-text-muted">{cmd.hint}</span>
                       {i === selected && (
-                        <CornerDownLeft size={13} className="text-blue-400 shrink-0" />
+                        <CornerDownLeft size={13} className="text-blue shrink-0" />
                       )}
                     </button>
                   );
@@ -181,7 +181,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between border-t border-white/10 px-4 py-2.5 text-[10px] text-slate-600">
+            <div className="flex items-center justify-between border-t border-white/10 px-4 py-2.5 text-[10px] text-text-muted">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
                   <ArrowUp size={10} />
