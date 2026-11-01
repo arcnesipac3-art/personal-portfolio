@@ -9,20 +9,20 @@ const CORNERS = [
   "right-5 bottom-5 border-r border-b",
 ];
 
-/** Diameter of the soft light that trails the cursor. */
-const SPOTLIGHT = 720;
+/** Diameter of the light that trails the cursor. */
+const SPOTLIGHT = 640;
 /** Slow, viscous follow — the light should lag the cursor, not stick to it. */
 const FOLLOW = { stiffness: 90, damping: 22, mass: 0.7 } as const;
-/** Even lazier spring for the parallax offset, so layers feel weighty. */
+/** Lazier still, so the tilt reads as weight rather than as jitter. */
 const DRIFT = { stiffness: 60, damping: 20, mass: 0.6 } as const;
 
-/* Scroll-driven travel, as a percentage of each layer's own height. Both
-   layers are over-sized by BLEED on every side, so the largest of these stays
-   inside the slack and no edge can appear. A 136%-tall layer moving 12% of
-   itself covers 16.3% of the viewport, which fits under the 18% bleed. */
-const BLEED = "inset-[-18%]";
-const DRIFT_WASH = "-6%";
-const DRIFT_GRID = "-12%";
+/* Scroll travel, as a percentage of each layer's own height. The layers are
+   over-sized by BLEED so the travel stays inside the slack and no edge can
+   appear: a 120%-tall layer moving 7% of itself covers 8.4% of the viewport,
+   comfortably under the 10% of bleed. */
+const BLEED = "inset-[-10%]";
+const DRIFT_WASH = "-4%";
+const DRIFT_GRID = "-7%";
 
 type Caps = { motionOk: boolean; finePointer: boolean };
 
@@ -75,17 +75,23 @@ const initialSpot = (axis: "x" | "y") =>
  * every other section is transparent and lets this show through, so the wash and
  * the grid read as one continuous surface rather than restarting per section.
  *
- * Motion, in two registers:
- *  - On scroll, the grid climbs and widens faster than the wash behind it, the
- *    wash's top light dims, and a cooler light rises from the foot of the page.
- *    The backdrop therefore changes character from hero to contact rather than
- *    repeating one texture for the whole document.
- *  - On pointer (fine pointers only), the wash and the grid tilt a few pixels
- *    against the cursor and a soft light trails it.
+ * Layout rule, and the reason an earlier pass stuttered: exactly one animated
+ * element per layer, and nothing animated nested inside it. A transform on a
+ * child is not a compositor op on the parent — it dirties the parent's paint,
+ * so the parent's full-screen texture gets re-rastered every frame. So each
+ * layer here is a motion wrapper around a *static* child, which is rastered
+ * once and then only translated. For the same reason there is no `scale` (a
+ * raster-scale change re-rasterizes) and the cursor light is a gradient rather
+ * than a blurred disc (see `.page-spotlight`).
  *
- * All of it is `transform`/`opacity` on absolutely positioned layers — no
- * layout, no React re-render per frame. Touch devices and reduced-motion users
- * get the static backdrop.
+ * Motion, in two registers:
+ *  - On scroll the grid climbs faster than the wash behind it, the wash's top
+ *    light dims, and a cooler light rises from the foot of the page, so the
+ *    backdrop changes character from hero to contact.
+ *  - On fine pointers the wash and grid tilt a few pixels in opposition, and
+ *    the light trails the cursor.
+ *
+ * Touch devices and reduced-motion users get the static backdrop.
  */
 export function PageBackground() {
   const { motionOk, finePointer } = useAmbientCaps();
@@ -95,15 +101,11 @@ export function PageBackground() {
   const washDrift = useTransform(scrollYProgress, [0, 1], ["0%", DRIFT_WASH]);
   const washFade = useTransform(scrollYProgress, [0, 0.6], [1, 0.5]);
   const gridDrift = useTransform(scrollYProgress, [0, 1], ["0%", DRIFT_GRID]);
-  const gridZoom = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
   const deepFade = useTransform(scrollYProgress, [0.35, 1], [0, 1]);
 
   const pointerX = useSpring(0, DRIFT);
-  const pointerY = useSpring(0, DRIFT);
   const washX = useTransform(pointerX, [-1, 1], [-14, 14]);
-  const washY = useTransform(pointerY, [-1, 1], [-9, 9]);
   const gridX = useTransform(pointerX, [-1, 1], [9, -9]);
-  const gridY = useTransform(pointerY, [-1, 1], [6, -6]);
 
   const spotX = useSpring(initialSpot("x"), FOLLOW);
   const spotY = useSpring(initialSpot("y"), FOLLOW);
@@ -113,25 +115,21 @@ export function PageBackground() {
 
     const onMove = (event: PointerEvent) => {
       pointerX.set((event.clientX / window.innerWidth) * 2 - 1);
-      pointerY.set((event.clientY / window.innerHeight) * 2 - 1);
       spotX.set(event.clientX);
       spotY.set(event.clientY);
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
-  }, [interactive, pointerX, pointerY, spotX, spotY]);
+  }, [interactive, pointerX, spotX, spotY]);
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
       <motion.div
-        className={`absolute ${BLEED}`}
-        style={motionOk ? { y: washDrift, opacity: washFade } : undefined}
+        className={`absolute ${BLEED} will-change-transform`}
+        style={motionOk ? { x: washX, y: washDrift, opacity: washFade } : undefined}
       >
-        <motion.div
-          className="page-backdrop absolute inset-0 will-change-transform"
-          style={interactive ? { x: washX, y: washY } : undefined}
-        />
+        <div className="page-backdrop absolute inset-0" />
       </motion.div>
 
       <motion.div
@@ -141,7 +139,7 @@ export function PageBackground() {
 
       {interactive && (
         <motion.div
-          className="absolute rounded-full bg-blue/5.5 blur-[140px] will-change-transform"
+          className="page-spotlight absolute will-change-transform"
           style={{
             x: spotX,
             y: spotY,
@@ -154,13 +152,10 @@ export function PageBackground() {
       )}
 
       <motion.div
-        className={`absolute ${BLEED}`}
-        style={motionOk ? { y: gridDrift, scale: gridZoom } : undefined}
+        className={`absolute ${BLEED} will-change-transform`}
+        style={motionOk ? { x: gridX, y: gridDrift } : undefined}
       >
-        <motion.div
-          className="page-grid absolute inset-0 will-change-transform"
-          style={interactive ? { x: gridX, y: gridY } : undefined}
-        />
+        <div className="page-grid absolute inset-0" />
       </motion.div>
 
       <div className="page-vignette absolute inset-0" />

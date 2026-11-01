@@ -166,6 +166,20 @@ a {
   );
 }
 
+/* The light that trails the cursor. A radial gradient rather than a
+   `filter: blur()` disc on purpose: a 140px blur over a 700px element is the
+   most expensive thing that can be put behind a pointer, and it is rebuilt
+   whenever the layer is re-rastered. Alpha stops give the same falloff for
+   the price of one cached looking-up texture. */
+.page-spotlight {
+  background: radial-gradient(
+    circle,
+    rgba(40, 120, 240, 0.1),
+    rgba(40, 120, 240, 0.04) 45%,
+    transparent 70%
+  );
+}
+
 .page-vignette {
   background: radial-gradient(
     ellipse 105% 78% at 50% 42%,
