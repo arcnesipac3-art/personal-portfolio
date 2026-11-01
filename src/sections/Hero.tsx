@@ -433,9 +433,9 @@ export function Hero({ introDone = true }: HeroProps) {
         </div>
       </div>
 
-      {/* Scroll indicator. A hairline track with a blue segment sweeping down it
-          and a label above — the old single gradient faded to transparent over
-          24px and read as nothing at all against the page. */}
+      {/* Scroll indicator. A mouse outline with a wheel sliding down it, plus a
+          label — the old single gradient faded to transparent over 24px and
+          read as nothing at all against the page. */}
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0 }}
         animate={{ opacity: introDone || prefersReducedMotion ? 1 : 0 }}
@@ -443,16 +443,16 @@ export function Hero({ introDone = true }: HeroProps) {
         className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2.5"
         aria-hidden
       >
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#66758b]">
-          Scroll
+        <span className="flex h-9 w-5 items-start justify-center rounded-full border border-white/[0.18]">
+          <motion.span
+            animate={prefersReducedMotion ? undefined : { y: [0, 9, 0], opacity: [1, 0.15, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className="mt-2 h-1.5 w-[3px] rounded-full bg-[#2878f0]"
+          />
         </span>
 
-        <span className="relative block h-7 w-px overflow-hidden bg-white/[0.14]">
-          <motion.span
-            animate={prefersReducedMotion ? undefined : { y: ["-100%", "100%"] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-x-0 top-0 block h-7 bg-gradient-to-b from-transparent via-[#2878f0] to-transparent"
-          />
+        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#66758b]">
+          Scroll
         </span>
       </motion.div>
     </section>
