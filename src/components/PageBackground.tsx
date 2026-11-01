@@ -15,10 +15,14 @@ const SPOTLIGHT = 720;
 const FOLLOW = { stiffness: 90, damping: 22, mass: 0.7 } as const;
 /** Even lazier spring for the parallax offset, so layers feel weighty. */
 const DRIFT = { stiffness: 60, damping: 20, mass: 0.6 } as const;
-/** Percent of the layer's own (over-sized) height the scroll drift covers.
- *  Must stay under the 8% bleed the layers are given, or an edge shows. */
-const DRIFT_WASH = "-3%";
-const DRIFT_GRID = "-6%";
+
+/* Scroll-driven travel, as a percentage of each layer's own height. Both
+   layers are over-sized by BLEED on every side, so the largest of these stays
+   inside the slack and no edge can appear. A 136%-tall layer moving 12% of
+   itself covers 16.3% of the viewport, which fits under the 18% bleed. */
+const BLEED = "inset-[-18%]";
+const DRIFT_WASH = "-6%";
+const DRIFT_GRID = "-12%";
 
 type Caps = { motionOk: boolean; finePointer: boolean };
 
@@ -55,7 +59,11 @@ function useAmbientCaps(): Caps {
 }
 
 const initialSpot = (axis: "x" | "y") =>
-  typeof window === "undefined" ? 0 : axis === "x" ? window.innerWidth / 2 : window.innerHeight * 0.42;
+  typeof window === "undefined"
+    ? 0
+    : axis === "x"
+      ? window.innerWidth / 2
+      : window.innerHeight * 0.42;
 
 /**
  * Fixed backdrop for the whole page, sitting behind every section at `-z-10`.
@@ -67,9 +75,15 @@ const initialSpot = (axis: "x" | "y") =>
  * every other section is transparent and lets this show through, so the wash and
  * the grid read as one continuous surface rather than restarting per section.
  *
- * Motion: the wash and the grid drift upward at different rates as the page
- * scrolls, and tilt a few pixels against the cursor, with a soft light trailing
- * it. Everything is `transform`-only on absolutely positioned layers — no
+ * Motion, in two registers:
+ *  - On scroll, the grid climbs and widens faster than the wash behind it, the
+ *    wash's top light dims, and a cooler light rises from the foot of the page.
+ *    The backdrop therefore changes character from hero to contact rather than
+ *    repeating one texture for the whole document.
+ *  - On pointer (fine pointers only), the wash and the grid tilt a few pixels
+ *    against the cursor and a soft light trails it.
+ *
+ * All of it is `transform`/`opacity` on absolutely positioned layers — no
  * layout, no React re-render per frame. Touch devices and reduced-motion users
  * get the static backdrop.
  */
@@ -79,7 +93,10 @@ export function PageBackground() {
 
   const { scrollYProgress } = useScroll();
   const washDrift = useTransform(scrollYProgress, [0, 1], ["0%", DRIFT_WASH]);
+  const washFade = useTransform(scrollYProgress, [0, 0.6], [1, 0.5]);
   const gridDrift = useTransform(scrollYProgress, [0, 1], ["0%", DRIFT_GRID]);
+  const gridZoom = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
+  const deepFade = useTransform(scrollYProgress, [0.35, 1], [0, 1]);
 
   const pointerX = useSpring(0, DRIFT);
   const pointerY = useSpring(0, DRIFT);
@@ -107,10 +124,9 @@ export function PageBackground() {
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
-      {/* 8% of bleed on every side gives the drift somewhere to travel. */}
       <motion.div
-        className="absolute -inset-[8%]"
-        style={motionOk ? { y: washDrift } : undefined}
+        className={`absolute ${BLEED}`}
+        style={motionOk ? { y: washDrift, opacity: washFade } : undefined}
       >
         <motion.div
           className="page-backdrop absolute inset-0 will-change-transform"
@@ -118,9 +134,14 @@ export function PageBackground() {
         />
       </motion.div>
 
+      <motion.div
+        className="page-backdrop-deep absolute inset-0"
+        style={motionOk ? { opacity: deepFade } : undefined}
+      />
+
       {interactive && (
         <motion.div
-          className="absolute rounded-full bg-[#2878f0]/[0.055] blur-[140px] will-change-transform"
+          className="absolute rounded-full bg-blue/5.5 blur-[140px] will-change-transform"
           style={{
             x: spotX,
             y: spotY,
@@ -133,8 +154,8 @@ export function PageBackground() {
       )}
 
       <motion.div
-        className="absolute -inset-[8%]"
-        style={motionOk ? { y: gridDrift } : undefined}
+        className={`absolute ${BLEED}`}
+        style={motionOk ? { y: gridDrift, scale: gridZoom } : undefined}
       >
         <motion.div
           className="page-grid absolute inset-0 will-change-transform"
@@ -147,7 +168,7 @@ export function PageBackground() {
       {CORNERS.map((corner) => (
         <span
           key={corner}
-          className={`absolute hidden h-6 w-6 border-[#2878f0]/20 lg:block ${corner}`}
+          className={`absolute hidden h-6 w-6 border-blue/20 lg:block ${corner}`}
         />
       ))}
     </div>

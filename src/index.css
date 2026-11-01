@@ -155,6 +155,17 @@ a {
   );
 }
 
+/* Cooler light anchored to the foot of the viewport. Faded in by scroll
+   progress (see PageBackground), so the page reads warm at the top and cold
+   by the time you reach the contact card. */
+.page-backdrop-deep {
+  background: radial-gradient(
+    ellipse 90% 60% at 50% 108%,
+    rgba(56, 189, 248, 0.1),
+    transparent 62%
+  );
+}
+
 .page-vignette {
   background: radial-gradient(
     ellipse 105% 78% at 50% 42%,
