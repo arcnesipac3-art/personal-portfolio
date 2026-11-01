@@ -29,19 +29,19 @@ export function SectionHeading({
           align === "center" ? "justify-center" : ""
         }`}
       >
-        <span className="font-mono text-xs text-[#66758b]">{number}</span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#66758b]">
+        <span className="font-mono text-xs text-text-muted">{number}</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
           {label}
         </span>
       </div>
 
-      <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-[#f4f7fc] sm:text-4xl md:text-[2.75rem]">
+      <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl md:text-[2.75rem]">
         {title}
       </h2>
 
       {description && (
         <p
-          className={`mt-4 text-[15px] leading-relaxed text-[#66758b] sm:text-base ${
+          className={`mt-4 text-[15px] leading-relaxed text-text-muted sm:text-base ${
             align === "center" ? "mx-auto max-w-2xl" : "max-w-2xl"
           }`}
         >
