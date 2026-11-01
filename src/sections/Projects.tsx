@@ -1,9 +1,7 @@
-import { useState, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowUpRight,
-  ArrowLeft,
-  ArrowRight,
   X,
   Layers,
   Target,
@@ -16,24 +14,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { SectionHeading } from "../components/SectionHeading";
-import { ProjectMockup, type MockupVariant } from "../components/ProjectMockup";
 import { useFocusTrap } from "../hooks/useFocusTrap";
-import { useSwipe } from "../hooks/useSwipe";
 import { trackProject } from "../data/portfolio";
-
-const mockupVariants: MockupVariant[] = [
-  "dashboard",
-  "requirements",
-  "attendance",
-  "notifications",
-];
-
-const mockupLabels: Record<MockupVariant, string> = {
-  dashboard: "Dashboard",
-  requirements: "Requirements",
-  attendance: "Attendance",
-  notifications: "Notifications",
-};
 
 function CaseStudyModal({ onClose }: { onClose: () => void }) {
   const cs = trackProject.caseStudy;
@@ -180,38 +162,11 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
 
 export function Projects() {
   const [caseStudyOpen, setCaseStudyOpen] = useState(false);
-  const [activeMockup, setActiveMockup] = useState<MockupVariant>("dashboard");
 
   useEffect(() => {
     document.body.style.overflow = caseStudyOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [caseStudyOpen]);
-
-  const goNext = () => {
-    setActiveMockup((prev) => {
-      const idx = mockupVariants.indexOf(prev);
-      return mockupVariants[(idx + 1) % mockupVariants.length];
-    });
-  };
-
-  const goPrev = () => {
-    setActiveMockup((prev) => {
-      const idx = mockupVariants.indexOf(prev);
-      return mockupVariants[(idx - 1 + mockupVariants.length) % mockupVariants.length];
-    });
-  };
-
-  const handleCarouselKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      goNext();
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      goPrev();
-    }
-  };
-
-  const swipe = useSwipe(goNext, goPrev);
 
   return (
     <section id="projects" className="relative section-padding overflow-x-hidden border-y border-white/[0.04] bg-[#0a0f1a]">
@@ -249,69 +204,22 @@ export function Projects() {
           </p>
         </motion.div>
 
-        {/* Carousel controls + counter */}
+        {/* Project Logo */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-8 flex flex-wrap items-center justify-between gap-3"
-          onKeyDown={handleCarouselKeyDown}
-          role="group"
-          aria-label="Project preview controls"
-        >
-          {/* Tabs */}
-          <div className="flex flex-wrap gap-1.5">
-            {mockupVariants.map((variant) => (
-              <button
-                key={variant}
-                onClick={() => setActiveMockup(variant)}
-                className={`relative border px-2.5 py-1 font-mono text-[10px] tracking-wide transition-all duration-200 focus-ring ${
-                  activeMockup === variant
-                    ? "border-blue-500/25 bg-blue-500/10 text-blue-400"
-                    : "border-white/[0.06] text-slate-500 hover:border-white/10 hover:text-slate-400"
-                }`}
-              >
-                {mockupLabels[variant]}
-              </button>
-            ))}
-          </div>
-
-          {/* Arrow controls + counter */}
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-[11px] text-slate-600">
-              {String(mockupVariants.indexOf(activeMockup) + 1).padStart(2, "0")} / {String(mockupVariants.length).padStart(2, "0")}
-            </span>
-            <div className="flex gap-1">
-              <button
-                onClick={goPrev}
-                className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-all hover:border-blue-500/20 hover:bg-white/[0.03] hover:text-blue-400 active:scale-90 focus-ring"
-                aria-label="Previous preview"
-              >
-                <ArrowLeft size={14} />
-              </button>
-              <button
-                onClick={goNext}
-                className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-all hover:border-blue-500/20 hover:bg-white/[0.03] hover:text-blue-400 active:scale-90 focus-ring"
-                aria-label="Next preview"
-              >
-                <ArrowRight size={14} />
-              </button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Mockup */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-30px" }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="mt-4"
-          style={{ touchAction: "pan-y" }}
-          {...swipe}
+          className="mt-8 flex justify-center"
         >
-          <ProjectMockup variant={activeMockup} />
+          <div className="relative w-full max-w-2xl overflow-hidden border border-white/[0.08] bg-[#070a12]/50 p-8 shadow-2xl shadow-black/30 sm:p-12 lg:p-16">
+            <div className="absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
+            <img
+              src="/images/track-logo.png"
+              alt="TRACK Logo"
+              className="relative z-10 mx-auto w-full max-w-[400px] object-contain transition-transform duration-500 hover:scale-[1.02]"
+            />
+          </div>
         </motion.div>
 
         {/* Features + tech + case study */}

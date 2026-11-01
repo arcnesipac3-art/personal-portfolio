@@ -146,7 +146,8 @@ export interface TrackCaseStudy {
 
 export const trackProject = {
   name: "TRACK",
-  expandedName: "Tracking Requirements and Attendance with Connected Knowledge",
+  expandedName:
+    "Technology for Registration, Attendance, and Compliance at Kiwalan National High School",
   category: "School Requirements & Attendance Monitoring System",
   institution: "Kiwalan National High School, Iligan City, Philippines",
   description:
