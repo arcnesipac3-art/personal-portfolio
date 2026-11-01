@@ -122,7 +122,7 @@ export function Skills() {
 
                 {/* Dot indicators */}
                 <div className="flex gap-1.5">
-                  {skillsData.map((_, i) => (
+                  {skillsData.map((item, i) => (
                     <button
                       key={i}
                       onClick={() => setActive(i)}
@@ -131,11 +131,17 @@ export function Skills() {
                           ? "w-6 bg-blue-400"
                           : "w-1.5 bg-slate-700 hover:bg-slate-600"
                       }`}
-                      aria-label={`Go to category ${i + 1}`}
+                      aria-label={`Go to ${item.title}`}
+                      aria-current={i === active ? "true" : undefined}
                     />
                   ))}
                 </div>
               </div>
+
+              {/* Announces the category change, which is otherwise visual only */}
+              <p className="sr-only" role="status" aria-live="polite">
+                {category.title} — category {active + 1} of {skillsData.length}
+              </p>
             </div>
 
             {/* Right: visual panel */}

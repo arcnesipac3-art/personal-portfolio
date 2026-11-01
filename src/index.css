@@ -126,6 +126,16 @@ a {
   outline-offset: 2px;
 }
 
+/* Baseline focus indicator for every control, not just the ones that opt in
+   with .focus-ring — otherwise keyboard users lose track of where they are.
+   Inputs keep their own border-based focus style, which wins on specificity. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #2878f0;
+  outline-offset: 2px;
+}
+
 /* Tailwind v4 no longer applies a pointer cursor to buttons by default,
    which makes icon controls feel inert. Restore it for real controls. */
 button:not(:disabled),
@@ -158,7 +168,10 @@ section[id] {
 }
 
 .no-scroll-x {
-  overflow-x: hidden;
+  /* `clip` instead of `hidden`: hidden forces the cross axis to `auto`, which
+     turns this into a scroll container and silently breaks `position: sticky`
+     for every pinned section inside it. */
+  overflow-x: clip;
   max-width: 100vw;
 }
 

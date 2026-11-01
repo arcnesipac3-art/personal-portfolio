@@ -9,7 +9,8 @@ export const personalInfo = {
   school: "Kiwalan National High School",
   email: "arcnesipac3@gmail.com",
   github: "https://github.com/arcnesipac3-art",
-  linkedin: "",
+  instagram: "https://www.instagram.com/cranoraa_/",
+  facebook: "https://www.facebook.com/profile.php?id=61596113160158",
   currentlyLearning: "Django REST Framework",
   tagline: "Curious by nature. Building through code.",
   footerTagline: "Student developer from the Philippines, building through code.",
@@ -86,41 +87,59 @@ export const skillsData: SkillCategory[] = [
 
 // ─── TECH STACK ───────────────────────────────────────────────
 
+export interface StackItem {
+  name: string;
+  description: string;
+  /** Points at a brand mark in `public/images/tech/`. */
+  icon: string;
+}
+
 export interface StackGroup {
   label: string;
   comment: string;
-  items: { name: string; description: string }[];
+  items: StackItem[];
 }
 
 export const stackData: StackGroup[] = [
   {
-    label: "Front-End",
+    label: "Frontend",
     comment: "// client",
     items: [
-      { name: "HTML", description: "Semantic markup & structure" },
-      { name: "CSS", description: "Styling, layout, animations" },
-      { name: "JavaScript", description: "Interactivity & logic" },
-      { name: "TypeScript", description: "Type-safe development" },
-      { name: "React", description: "Component-based UIs" },
+      { name: "HTML", description: "Semantic markup & structure", icon: "/images/tech/html5.svg" },
+      { name: "CSS", description: "Styling, layout, animations", icon: "/images/tech/css.svg" },
+      { name: "JavaScript", description: "Interactivity & logic", icon: "/images/tech/javascript.svg" },
+      { name: "TypeScript", description: "Type-safe development", icon: "/images/tech/typescript.svg" },
+      { name: "React", description: "Component-based UIs", icon: "/images/tech/react.svg" },
     ],
   },
   {
-    label: "Back-End",
-    comment: "// server",
+    label: "Backend & Database",
+    comment: "// server & data",
     items: [
-      { name: "Python", description: "Backend logic & scripting" },
-      { name: "Django", description: "Web framework & ORM" },
-      { name: "REST APIs", description: "Endpoint design & serialization" },
+      { name: "Python", description: "Backend logic & scripting", icon: "/images/tech/python.svg" },
+      { name: "Django", description: "Web framework & ORM", icon: "/images/tech/django.svg" },
+      { name: "REST APIs", description: "Endpoint design & serialization", icon: "/images/tech/openapi.svg" },
+      { name: "PostgreSQL", description: "Relational database", icon: "/images/tech/postgresql.svg" },
+      { name: "SQLite", description: "Lightweight local database", icon: "/images/tech/sqlite.svg" },
     ],
   },
   {
-    label: "Workflow",
-    comment: "// tools",
+    label: "Development Tools",
+    comment: "// workflow",
     items: [
-      { name: "VS Code", description: "Primary code editor" },
-      { name: "OpenCode", description: "Terminal-based AI coding agent" },
-      { name: "Git", description: "Version control" },
-      { name: "GitHub", description: "Collaboration & hosting" },
+      { name: "VS Code", description: "Primary code editor", icon: "/images/tech/vscode.svg" },
+      { name: "OpenCode", description: "Terminal-based AI coding agent", icon: "/images/tech/opencode.svg" },
+      { name: "Git", description: "Version control", icon: "/images/tech/git.svg" },
+      { name: "GitHub", description: "Collaboration & hosting", icon: "/images/tech/github.svg" },
+    ],
+  },
+  {
+    label: "Deployment & Services",
+    comment: "// ship",
+    items: [
+      { name: "Vercel", description: "Frontend hosting & previews", icon: "/images/tech/vercel.svg" },
+      { name: "Render", description: "Backend & API hosting", icon: "/images/tech/render.svg" },
+      { name: "Supabase", description: "Managed Postgres & auth", icon: "/images/tech/supabase.svg" },
     ],
   },
 ];
@@ -196,6 +215,10 @@ export interface EducationEntry {
   school: string;
   strand?: string;
   years: string;
+  /** One-line summary shown in the selected-entry panel. */
+  description: string;
+  /** Short academic highlights; keep each to a few words. */
+  highlights: string[];
 }
 
 export const educationData: EducationEntry[] = [
@@ -204,26 +227,41 @@ export const educationData: EducationEntry[] = [
     school: "Kiwalan National High School",
     strand: "STEM",
     years: "2025 — 2027",
+    description:
+      "Senior High School under the STEM strand, where I focus on programming, research, and building practical software for real school problems.",
+    highlights: ["STEM strand", "Software & research focus", "Building TRACK"],
   },
   {
     level: "Junior High School",
     school: "Kiwalan National High School",
     years: "2021 — 2025",
+    description:
+      "Junior High School years that shaped my foundation in science and mathematics and turned a general interest in computers into writing code.",
+    highlights: ["Science & mathematics", "Junior High School completion", "Early coding practice"],
   },
   {
     level: "Junior High School",
     school: "St. Therese Academy",
     years: "2020 — 2021",
+    description:
+      "A junior high school year at St. Therese Academy that continued my secondary schooling before moving to Kiwalan National High School.",
+    highlights: ["Junior High School year", "Core subjects foundation"],
   },
   {
     level: "Elementary",
     school: "St. Therese Academy",
     years: "2017 — 2020",
+    description:
+      "Upper elementary years spent building core academic skills in reading, mathematics, and science.",
+    highlights: ["Elementary education", "Foundational academics"],
   },
   {
     level: "Elementary",
     school: "Tomas Cabili Central School",
     years: "2015 — 2017",
+    description:
+      "Where formal schooling began — the earliest elementary years at Tomas Cabili Central School.",
+    highlights: ["First years of school", "Foundational learning"],
   },
 ];
 
@@ -254,6 +292,12 @@ export const contactContent = {
   heading: "Have an idea? Let's build.",
   description:
     "Whether it's a software idea, a creative project, or an opportunity to learn something new, I'm always interested in connecting with people who enjoy building things.",
+  supporting:
+    "Reach out with a project, a question, or simply to say hello — I read every message and reply as soon as I can.",
+  availability: "Open to collaboration",
+  ctaLabel: "Let's talk",
+  ctaSupporting:
+    "Have a project in mind or just want to connect? My inbox is open.",
 } as const;
 
 // ─── NAVIGATION ───────────────────────────────────────────────
@@ -264,5 +308,6 @@ export const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "Stack", href: "#stack" },
   { label: "Journey", href: "#journey" },
+  { label: "Activities", href: "#achievements" },
   { label: "Contact", href: "#contact" },
 ];

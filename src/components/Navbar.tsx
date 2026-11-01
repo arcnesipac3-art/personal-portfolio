@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { useScrollSpy } from "../hooks/useScrollSpy";
 import { useScrollPosition } from "../hooks/useScrollPosition";
 import { useFocusTrap } from "../hooks/useFocusTrap";
@@ -10,7 +10,13 @@ import { ScrollProgressBar } from "./ScrollProgressBar";
 
 const sectionIds = navLinks.map((l) => l.href.replace("#", ""));
 
-export function Navbar() {
+/** Shown on the palette trigger — the accelerator differs per platform. */
+const SHORTCUT_LABEL =
+  typeof navigator !== "undefined" && /Mac|iP(hone|ad|od)/.test(navigator.userAgent)
+    ? "⌘ K"
+    : "Ctrl K";
+
+export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const scrolled = useScrollPosition(20);
   const activeId = useScrollSpy(sectionIds, 80);
@@ -44,11 +50,15 @@ export function Navbar() {
         aria-label="Primary"
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
           scrolled
-            ? "border-b border-[#192437] bg-[#080b12]/90 backdrop-blur-xl"
+            ? "border-b border-[#192437] bg-[#080b12]/90 shadow-[0_12px_32px_-24px_rgba(0,0,0,1)] backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-6 lg:px-8">
+        <div
+          className={`mx-auto flex max-w-6xl items-center justify-between px-5 transition-[padding] duration-300 sm:px-6 lg:px-8 ${
+            scrolled ? "py-2.5" : "py-3.5"
+          }`}
+        >
           {/* Logo */}
           <a
             href="#home"
@@ -67,7 +77,7 @@ export function Navbar() {
           </a>
 
           {/* Desktop nav */}
-          <div className="hidden items-center gap-0.5 md:flex">
+          <div className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => {
               const id = link.href.replace("#", "");
               const isActive = activeId === id;
@@ -81,29 +91,51 @@ export function Navbar() {
                   }}
                   className={`relative rounded px-2.5 py-1.5 text-[13px] font-medium transition-colors duration-200 focus-ring ${
                     isActive
-                      ? "bg-white/[0.04] text-[#f4f7fc]"
-                      : "text-[#66758b] hover:text-[#9aa8bd]"
+                      ? "text-[#f4f7fc]"
+                      : "text-[#66758b] hover:bg-white/[0.03] hover:text-[#9aa8bd]"
                   }`}
                   aria-current={isActive ? "location" : undefined}
                 >
-                  {link.label}
+                  {/* One shared element, so the highlight glides between links */}
                   {isActive && (
-                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-px w-3 bg-[#2878f0]" />
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      className="absolute inset-0 rounded border border-[#2878f0]/20 bg-[#2878f0]/[0.08]"
+                      aria-hidden
+                    />
                   )}
+                  <span className="relative">{link.label}</span>
                 </a>
               );
             })}
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-8 w-8 items-center justify-center rounded text-[#9aa8bd] transition-all hover:text-[#f4f7fc] active:scale-90 md:hidden focus-ring"
-            aria-label="Toggle navigation menu"
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X size={17} /> : <Menu size={17} />}
-          </button>
+          {/* Right controls */}
+          <div className="flex items-center gap-1.5">
+            {/* Palette trigger — the only way to reach it on touch devices */}
+            <button
+              onClick={onOpenPalette}
+              className="flex h-8 items-center gap-1.5 rounded border border-[#192437] px-2 text-[#9aa8bd] transition-all hover:border-[#2878f0]/40 hover:text-[#2878f0] active:scale-95 focus-ring"
+              aria-label="Open command palette"
+              aria-keyshortcuts="Control+K Meta+K"
+            >
+              <Search size={13} />
+              <kbd className="hidden font-mono text-[10px] tracking-wider lg:inline">
+                {SHORTCUT_LABEL}
+              </kbd>
+            </button>
+
+            {/* Mobile toggle */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex h-8 w-8 items-center justify-center rounded text-[#9aa8bd] transition-all hover:text-[#f4f7fc] active:scale-90 md:hidden focus-ring"
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X size={17} /> : <Menu size={17} />}
+            </button>
+          </div>
         </div>
       </nav>
 

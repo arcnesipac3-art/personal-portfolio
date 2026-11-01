@@ -1,4 +1,4 @@
-import { useState, useRef, type MouseEvent } from "react";
+import { useRef, useState, type MouseEvent } from "react";
 import { motion } from "motion/react";
 import { ArrowUpRight, MapPin, Sparkles } from "lucide-react";
 import { GithubIcon } from "../components/SocialIcons";
@@ -7,7 +7,31 @@ import { heroContent, personalInfo } from "../data/portfolio";
 import { scrollToSection } from "../utils/scroll";
 import { useIsDesktop, usePrefersReducedMotion } from "../hooks/useMediaQuery";
 
-export function Hero() {
+type MotionTarget = Record<string, number | string>;
+
+interface RevealProps {
+  initial: MotionTarget | false;
+  animate: MotionTarget;
+  transition?: { duration: number; delay?: number; ease: [number, number, number, number] };
+}
+
+const SETTLED: MotionTarget = { opacity: 1, y: 0 };
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+/** Tech tags that float around the portrait — the only chrome on the photo. */
+const FLOATING_TAGS = [
+  { label: "REACT", tone: "text-[#2878f0]", position: "top-8 -left-2 sm:-left-4", from: -6, drift: "group-hover:-translate-x-1" },
+  { label: "TYPESCRIPT", tone: "text-[#38bdf8]", position: "top-1/3 -right-2 sm:-right-4", from: 6, drift: "group-hover:translate-x-1" },
+  { label: "DJANGO", tone: "text-[#2878f0]", position: "bottom-12 -left-2 sm:-left-4", from: -6, drift: "group-hover:-translate-x-1" },
+  { label: "PYTHON", tone: "text-[#38bdf8]", position: "bottom-8 -right-2 sm:-right-4", from: 6, drift: "group-hover:translate-x-1" },
+];
+
+interface HeroProps {
+  /** False while the intro overlay is on screen, holding the entrance stagger. */
+  introDone?: boolean;
+}
+
+export function Hero({ introDone = true }: HeroProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
   const isDesktop = useIsDesktop();
@@ -17,6 +41,27 @@ export function Hero() {
   const spotlightRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Entrance props for a single staggered item. Targets stay pinned to their
+   * start values until the intro curtain clears, so the stagger begins the
+   * moment the reveal happens instead of playing hidden behind the overlay.
+   * Reduced-motion visitors skip straight to the settled state — Motion does
+   * not honour `prefers-reduced-motion` on its own.
+   */
+  const reveal = (
+    delay: number,
+    from: MotionTarget,
+    to: MotionTarget = SETTLED,
+    duration = 0.5
+  ): RevealProps => {
+    if (prefersReducedMotion) return { initial: false, animate: to };
+    return {
+      initial: from,
+      animate: introDone ? to : from,
+      transition: { duration, delay, ease: EASE },
+    };
+  };
 
   const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
     if (!isDesktop || prefersReducedMotion) return;
@@ -53,33 +98,57 @@ export function Hero() {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-screen overflow-hidden pt-24 pb-12 flex items-center"
+      className="relative flex min-h-screen items-center overflow-hidden pt-28 pb-20 sm:pt-32"
     >
-      {/* Background */}
-      <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
-      <div className="absolute inset-0 radial-glow" aria-hidden />
+      {/* ── Background layers ─────────────────────────────────── */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-grid opacity-40 [mask-image:radial-gradient(ellipse_75%_65%_at_50%_45%,#000,transparent)]"
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-0 radial-glow" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[70vh] bg-[radial-gradient(ellipse_65%_50%_at_50%_0%,rgba(40,120,240,0.07),transparent_70%)]"
+        aria-hidden
+      />
       <div ref={spotlightRef} className="absolute inset-0" aria-hidden />
-      <div className="absolute top-1/3 -right-32 h-96 w-96 rounded-full bg-[#2878f0]/[0.025] blur-[120px]" aria-hidden />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080b12]" aria-hidden />
+
+      {/* Thin technical markers */}
+      <div
+        className="pointer-events-none absolute right-[6%] top-[18%] hidden h-3 w-3 lg:block"
+        aria-hidden
+      >
+        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/[0.1]" />
+        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/[0.1]" />
+      </div>
+      <div
+        className="pointer-events-none absolute bottom-[16%] left-[4%] hidden h-3 w-3 xl:block"
+        aria-hidden
+      >
+        <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-white/[0.08]" />
+        <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/[0.08]" />
+      </div>
 
       {/* Floating dots with parallax */}
-      <div ref={parallaxRef} className="absolute inset-0" aria-hidden>
+      <div ref={parallaxRef} className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="absolute left-[10%] top-[22%] h-1.5 w-1.5 rounded-full bg-[#2878f0]/10" />
         <div className="absolute right-[14%] top-[35%] h-1 w-1 rounded-full bg-[#38bdf8]/15" />
         <div className="absolute left-[18%] bottom-[28%] h-1 w-1 rounded-full bg-[#2878f0]/15" />
         <div className="absolute right-[10%] bottom-[32%] h-1.5 w-1.5 rounded-full bg-[#38bdf8]/10" />
       </div>
 
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080b12]" aria-hidden />
+
+      {/* ── Content ───────────────────────────────────────────── */}
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 xl:gap-20">
           {/* Left: text */}
           <div>
             {/* Label */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
+            <motion.div {...reveal(0.1, { opacity: 0, y: 12 })} className="flex items-center gap-3">
+              <span
+                className="h-px w-8 bg-gradient-to-r from-[#2878f0] to-transparent"
+                aria-hidden
+              />
               <span className="font-mono text-[11px] tracking-[0.15em] text-[#2878f0]">
                 {heroContent.label}
               </span>
@@ -87,38 +156,30 @@ export function Hero() {
 
             {/* Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 font-display text-[2.25rem] font-bold leading-[1.05] tracking-tight text-[#f4f7fc] sm:text-5xl md:text-[3.5rem]"
+              {...reveal(0.15, { opacity: 0, y: 14 }, SETTLED, 0.6)}
+              className="mt-5 font-display text-[clamp(2rem,3.6vw,3.4rem)] font-bold leading-[1.05] tracking-tight text-[#f4f7fc]"
             >
               Curious by nature.
               <motion.span
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                {...reveal(0.3, { opacity: 0, y: 14 }, SETTLED, 0.6)}
                 className="block"
               >
-                Building through code.
+                Building through <span className="text-[#2878f0]">code.</span>
               </motion.span>
             </motion.h1>
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="mt-6 max-w-md text-[15px] leading-[1.65] text-[#9aa8bd]"
+              {...reveal(0.4, { opacity: 0, y: 12 })}
+              className="mt-6 max-w-[34rem] text-[15px] leading-[1.75] text-[#9aa8bd]"
             >
               {heroContent.description}
             </motion.p>
 
             {/* CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="mt-8 flex flex-wrap items-center gap-3"
+              {...reveal(0.5, { opacity: 0, y: 12 })}
+              className="mt-9 flex flex-wrap items-center gap-3"
             >
               <MagneticButton
                 href={heroContent.ctaPrimary.href}
@@ -126,7 +187,7 @@ export function Hero() {
                   e.preventDefault();
                   scrollToSection(heroContent.ctaPrimary.href);
                 }}
-                className="group gap-1.5 border border-[#192437] bg-[#0e1522] px-4 py-2 text-sm font-medium text-[#f4f7fc] hover:border-[#2878f0]/30 hover:bg-[#0e1522]/80 focus-ring rounded"
+                className="group gap-2 rounded border border-[#2878f0]/40 bg-[#2878f0]/10 px-5 py-2.5 text-sm font-medium text-[#f4f7fc] hover:border-[#2878f0]/70 hover:bg-[#2878f0]/[0.18] hover:shadow-[0_10px_30px_-16px_rgba(40,120,240,0.9)] focus-ring"
               >
                 {heroContent.ctaPrimary.label}
                 <span className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -139,7 +200,7 @@ export function Hero() {
                   e.preventDefault();
                   scrollToSection(heroContent.ctaSecondary.href);
                 }}
-                className="group inline-flex items-center gap-1.5 text-sm font-medium text-[#9aa8bd] transition-colors hover:text-[#2878f0] focus-ring rounded"
+                className="group inline-flex items-center gap-2 rounded border border-white/[0.08] px-5 py-2.5 text-sm font-medium text-[#9aa8bd] transition-colors duration-300 hover:border-white/[0.18] hover:text-[#f4f7fc] focus-ring"
               >
                 {heroContent.ctaSecondary.label}
                 <span className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -150,28 +211,26 @@ export function Hero() {
 
             {/* Meta info row */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#192437] pt-5"
+              {...reveal(0.6, { opacity: 0, y: 12 })}
+              className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-[#192437] pt-6"
             >
               <a
                 href={personalInfo.github}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 text-[13px] text-[#66758b] transition-colors hover:text-[#2878f0]"
+                className="flex items-center gap-2 rounded text-[13px] text-[#66758b] transition-colors duration-300 hover:text-[#2878f0]"
               >
-                <GithubIcon size={13} />
+                <GithubIcon size={13} className="shrink-0" />
                 GitHub
               </a>
-              <span className="text-[#192437]">·</span>
-              <span className="flex items-center gap-1.5 text-[13px] text-[#66758b]">
-                <MapPin size={13} />
+              <span className="hidden h-3.5 w-px bg-white/[0.08] sm:block" aria-hidden />
+              <span className="flex items-center gap-2 text-[13px] text-[#66758b]">
+                <MapPin size={13} className="shrink-0" />
                 {personalInfo.location}
               </span>
-              <span className="text-[#192437]">·</span>
-              <span className="flex items-center gap-1.5 text-[13px] text-[#66758b]">
-                <Sparkles size={13} className="text-[#2878f0]/50" />
+              <span className="hidden h-3.5 w-px bg-white/[0.08] sm:block" aria-hidden />
+              <span className="flex items-center gap-2 text-[13px] text-[#66758b]">
+                <Sparkles size={13} className="shrink-0 text-[#2878f0]/60" />
                 <span className="font-mono text-[11px] text-[#2878f0]">
                   {personalInfo.currentlyLearning}
                 </span>
@@ -181,29 +240,40 @@ export function Hero() {
 
           {/* Right: portrait */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, x: 16 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            {...reveal(0.2, { opacity: 0, scale: 0.96, x: 16 }, { opacity: 1, scale: 1, x: 0 }, 0.8)}
             className="relative"
           >
-            <div className="group relative mx-auto max-w-sm lg:max-w-none">
-              {/* Decorative offset border */}
+            <div className="group relative mx-auto w-full max-w-sm lg:max-w-[28rem]">
+              {/* Radial lighting behind the portrait */}
               <div
-                className="absolute -top-3 -left-3 right-6 bottom-6 border border-[#192437]"
-                aria-hidden
-              />
-              {/* Dot accent */}
-              <div
-                className="absolute -top-5 -right-5 h-20 w-20 bg-dots opacity-30"
+                className="pointer-events-none absolute -inset-16 rounded-full bg-[radial-gradient(circle,rgba(40,120,240,0.12),transparent_65%)] blur-2xl"
                 aria-hidden
               />
 
-              {/* Photo container */}
+              {/* Offset frame + corner brackets */}
+              <div
+                className="pointer-events-none absolute -bottom-7 -right-7 h-24 w-24 bg-dots opacity-30"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute -inset-4 border border-white/[0.05]"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute -left-4 -top-4 h-8 w-8 border-l border-t border-[#2878f0]/40"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute -bottom-4 -right-4 h-8 w-8 border-b border-r border-[#2878f0]/40"
+                aria-hidden
+              />
+
+              {/* Photo */}
               <div
                 ref={portraitRef}
-                className="relative overflow-hidden border border-[#192437] shadow-2xl shadow-black/40 transition-transform duration-300 ease-out will-change-transform"
+                className="relative overflow-hidden border border-white/[0.08] bg-[#0c111c] shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)] transition-transform duration-300 ease-out will-change-transform"
               >
-                <div className="aspect-[4/5] w-full bg-gradient-to-br from-[#0c111c] to-[#080b12]">
+                <div className="aspect-[7/8] w-full">
                   {!imageFailed && (
                     <img
                       src="/images/profile.jpg"
@@ -226,46 +296,34 @@ export function Hero() {
                     </div>
                   )}
                 </div>
-                {/* Gradient overlay */}
+
+                {/* Blue rim light */}
                 <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#080b12]/25 via-transparent to-transparent transition-opacity duration-500 group-hover:opacity-60"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#2878f0]/[0.12] via-transparent to-[#38bdf8]/10"
+                  aria-hidden
+                />
+                {/* Base fade */}
+                <div
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#080b12]/70 via-[#080b12]/20 to-transparent transition-opacity duration-500 group-hover:opacity-60"
+                  aria-hidden
+                />
+                {/* Inner hairline */}
+                <div
+                  className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/[0.04]"
                   aria-hidden
                 />
               </div>
 
-              {/* Floating labels */}
-              <motion.span
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-                className="absolute -left-2 top-8 border border-[#192437] bg-[#080b12]/95 px-2 py-1 font-mono text-[8px] tracking-wider text-[#2878f0] backdrop-blur-sm transition-transform duration-300 group-hover:-translate-x-1 sm:-left-4"
-              >
-                REACT
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, x: 6 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6, duration: 0.4 }}
-                className="absolute -right-2 top-1/3 border border-[#192437] bg-[#080b12]/95 px-2 py-1 font-mono text-[8px] tracking-wider text-[#38bdf8] backdrop-blur-sm transition-transform duration-300 group-hover:translate-x-1 sm:-right-4"
-              >
-                TYPESCRIPT
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7, duration: 0.4 }}
-                className="absolute -left-2 bottom-12 border border-[#192437] bg-[#080b12]/95 px-2 py-1 font-mono text-[8px] tracking-wider text-[#2878f0] backdrop-blur-sm transition-transform duration-300 group-hover:-translate-x-1 sm:-left-4"
-              >
-                DJANGO
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, x: 6 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8, duration: 0.4 }}
-                className="absolute -right-2 bottom-8 border border-[#192437] bg-[#080b12]/95 px-2 py-1 font-mono text-[8px] tracking-wider text-[#38bdf8] backdrop-blur-sm transition-transform duration-300 group-hover:translate-x-1 sm:-right-4"
-              >
-                PYTHON
-              </motion.span>
+              {/* Floating tech labels */}
+              {FLOATING_TAGS.map((tag, i) => (
+                <motion.span
+                  key={tag.label}
+                  {...reveal(0.5 + i * 0.1, { opacity: 0, x: tag.from }, { opacity: 1, x: 0 }, 0.4)}
+                  className={`absolute ${tag.position} border border-white/[0.08] bg-[#080b12]/90 px-2.5 py-1 font-mono text-[9px] tracking-[0.12em] backdrop-blur-sm transition-[translate] duration-300 ${tag.tone} ${tag.drift}`}
+                >
+                  {tag.label}
+                </motion.span>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -273,14 +331,14 @@ export function Hero() {
 
       {/* Scroll indicator */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
+        animate={{ opacity: introDone || prefersReducedMotion ? 1 : 0 }}
+        transition={{ delay: prefersReducedMotion ? 0 : 1, duration: 0.5 }}
         className="absolute bottom-5 left-1/2 -translate-x-1/2"
         aria-hidden
       >
         <motion.span
-          animate={{ y: [0, 5, 0] }}
+          animate={prefersReducedMotion ? undefined : { y: [0, 5, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           className="block h-6 w-px bg-gradient-to-b from-[#66758b] to-transparent"
         />

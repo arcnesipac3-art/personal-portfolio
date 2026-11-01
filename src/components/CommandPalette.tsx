@@ -18,6 +18,12 @@ interface CommandPaletteProps {
   onNavigate: (href: string) => void;
 }
 
+/** The accelerator differs per platform; showing the wrong one is worse than none. */
+const SHORTCUT_LABEL =
+  typeof navigator !== "undefined" && /Mac|iP(hone|ad|od)/.test(navigator.userAgent)
+    ? "⌘ K"
+    : "Ctrl+K";
+
 export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
@@ -83,6 +89,17 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
   useEffect(() => {
     setSelected(0);
   }, [query]);
+
+  // Lock background scrolling while open, matching the mobile menu and modal.
+  // Restores the previous value so overlapping locks don't clobber each other.
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
 
   return (
     <AnimatePresence>
@@ -176,7 +193,7 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
                   Select
                 </span>
               </div>
-              <span className="font-mono">Ctrl+K</span>
+              <span className="font-mono">{SHORTCUT_LABEL}</span>
             </div>
           </motion.div>
         </motion.div>

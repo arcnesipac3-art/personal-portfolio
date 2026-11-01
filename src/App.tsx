@@ -3,6 +3,7 @@ import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { CustomCursor } from "./components/CustomCursor";
 import { CommandPalette } from "./components/CommandPalette";
+import { IntroOverlay } from "./components/IntroOverlay";
 import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
 import { Projects } from "./sections/Projects";
@@ -12,9 +13,16 @@ import { Education } from "./sections/Education";
 import { Achievements } from "./sections/Achievements";
 import { Contact } from "./sections/Contact";
 import { scrollToSection } from "./utils/scroll";
+import { shouldShowIntro } from "./utils/intro";
 
 function App() {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  // Seeded from the same check the overlay makes, so repeat visits and
+  // reduced-motion users get an un-gated hero without waiting for a signal
+  // that is never coming.
+  const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
+
+  const handleIntroDone = useCallback(() => setIntroDone(true), []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -37,13 +45,14 @@ function App() {
         Skip to content
       </a>
       <CustomCursor />
-      <Navbar />
+      <IntroOverlay onDone={handleIntroDone} />
+      <Navbar onOpenPalette={() => setPaletteOpen(true)} />
       <main
         id="main-content"
         tabIndex={-1}
         className="min-h-screen bg-[#080b14] text-slate-50 no-scroll-x focus:outline-none"
       >
-        <Hero />
+        <Hero introDone={introDone} />
         <About />
         <Projects />
         <Skills />

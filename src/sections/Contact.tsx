@@ -1,62 +1,129 @@
-import { useState, type FormEvent } from "react";
-import { motion } from "motion/react";
-import { ArrowUpRight, Send, CheckCircle2, AlertCircle, Copy, Check } from "lucide-react";
-import { GithubIcon } from "../components/SocialIcons";
-import { SectionHeading } from "../components/SectionHeading";
+import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
+import { GithubIcon, InstagramIcon, FacebookIcon } from "../components/SocialIcons";
 import { contactContent, personalInfo } from "../data/portfolio";
 
-type FormStatus = "idle" | "success" | "error";
+const socials = [
+  { label: "GitHub", href: personalInfo.github, Icon: GithubIcon },
+  { label: "Instagram", href: personalInfo.instagram, Icon: InstagramIcon },
+  { label: "Facebook", href: personalInfo.facebook, Icon: FacebookIcon },
+];
+
+/** Drops the protocol, `www.`, and any trailing slash so links read as handles. */
+const prettyUrl = (url: string) =>
+  url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+
+const mailto = `mailto:${personalInfo.email}`;
+
+/** Faint label with a hairline that runs to the edge of the panel. */
+function Rule({ children }: { children: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#66758b]">
+        {children}
+      </span>
+      <span className="h-px flex-1 bg-white/[0.06]" aria-hidden />
+    </div>
+  );
+}
+
+function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) {
+  return (
+    <div className="group relative border border-[#2878f0]/30 bg-[#2878f0]/[0.06] transition-colors duration-300 hover:border-[#2878f0]/55 hover:bg-[#2878f0]/[0.09]">
+      <span className="absolute left-0 top-0 h-full w-px bg-[#2878f0]" aria-hidden />
+
+      <div className="flex items-center gap-3 p-4 sm:gap-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-[#2878f0]/25 bg-[#0a0f1a]">
+          <Mail size={15} className="text-[#2878f0]" />
+        </span>
+
+        <div className="min-w-0 flex-1">
+          {/* Doubles as the copy confirmation, so nothing shifts on click. */}
+          <p
+            role="status"
+            aria-live="polite"
+            className={`font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-300 ${
+              copied ? "text-emerald-400" : "text-[#66758b]"
+            }`}
+          >
+            {copied ? "Copied to clipboard" : "Email — primary"}
+          </p>
+          <a
+            href={mailto}
+            title={`Email ${personalInfo.email}`}
+            className="mt-1 block truncate text-[15px] font-medium text-[#f4f7fc] transition-colors duration-300 hover:text-[#2878f0] focus-ring"
+          >
+            {personalInfo.email}
+          </a>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={onCopy}
+            aria-label="Copy email address"
+            className={`flex h-8 w-8 items-center justify-center border transition-colors duration-300 focus-ring ${
+              copied
+                ? "border-emerald-500/30 text-emerald-400"
+                : "border-white/[0.08] text-[#8b9ab1] hover:border-[#2878f0]/35 hover:text-[#2878f0]"
+            }`}
+          >
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+          </button>
+
+          <a
+            href={mailto}
+            aria-label={`Compose an email to ${personalInfo.name}`}
+            className="flex h-8 w-8 items-center justify-center border border-white/[0.08] text-[#8b9ab1] transition-colors duration-300 hover:border-[#2878f0]/35 hover:text-[#2878f0] focus-ring"
+          >
+            <ArrowUpRight size={14} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SocialRow({ label, href, Icon }: (typeof socials)[number]) {
+  return (
+    <li>
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        title={prettyUrl(href)}
+        className="group flex items-center gap-3 px-4 py-3.5 transition-colors duration-300 hover:bg-white/[0.02] focus-ring"
+      >
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-white/[0.06] bg-[#0a0f1a] transition-colors duration-300 group-hover:border-[#2878f0]/30">
+          <Icon size={15} className="text-[#8b9ab1] transition-colors duration-300 group-hover:text-[#2878f0]" />
+        </span>
+
+        <span className="min-w-0 flex-1">
+          <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
+            {label}
+          </span>
+          <span className="mt-0.5 block truncate text-[13px] text-[#8b9ab1] transition-colors duration-300 group-hover:text-[#f4f7fc]">
+            {prettyUrl(href)}
+          </span>
+        </span>
+
+        <ArrowUpRight
+          size={14}
+          className="shrink-0 text-[#3d4a5c] transition-[transform,color] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2878f0]"
+        />
+      </a>
+    </li>
+  );
+}
 
 export function Contact() {
-  const [status, setStatus] = useState<FormStatus>("idle");
-  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [copied, setCopied] = useState(false);
-
-  const validate = (data: FormData) => {
-    const errs: typeof errors = {};
-    const name = (data.get("name") as string)?.trim();
-    const email = (data.get("email") as string)?.trim();
-    const message = (data.get("message") as string)?.trim();
-
-    if (!name) errs.name = "Please enter your name";
-    if (!email) errs.email = "Please enter your email";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Please enter a valid email";
-    if (!message) errs.message = "Please enter a message";
-
-    return errs;
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const errs = validate(data);
-
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      setStatus("error");
-      return;
-    }
-
-    const name = (data.get("name") as string).trim();
-    const email = (data.get("email") as string).trim();
-    const message = (data.get("message") as string).trim();
-
-    const subject = encodeURIComponent(`Portfolio contact from ${name}`);
-    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-    window.location.href = `mailto:${personalInfo.email}?subject=${subject}&body=${body}`;
-
-    setErrors({});
-    setStatus("success");
-    form.reset();
-    setTimeout(() => setStatus("idle"), 5000);
-  };
+  const reduceMotion = useReducedMotion() ?? false;
 
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(personalInfo.email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
       const ta = document.createElement("textarea");
       ta.value = personalInfo.email;
@@ -64,200 +131,113 @@ export function Contact() {
       ta.select();
       try {
         document.execCommand("copy");
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch { /* ignore */ }
+      } catch {
+        /* clipboard unavailable — the address is still visible and mailto works */
+      }
       document.body.removeChild(ta);
     }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
+
+  const rise = (delay: number) => ({
+    initial: reduceMotion ? false : { opacity: 0, y: 16 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-60px" as const },
+    transition: { duration: 0.5, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] as const },
+  });
 
   return (
     <section id="contact" className="relative section-padding overflow-hidden">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
-      <div className="absolute bottom-0 left-1/2 h-64 w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.03] blur-[100px]" aria-hidden />
+      <div
+        className="absolute bottom-0 left-1/2 h-64 w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.03] blur-[100px]"
+        aria-hidden
+      />
 
       <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
-        <SectionHeading
-          number="07"
-          label="Contact"
-          title={contactContent.heading}
-          description={contactContent.description}
-        />
+        <div className="grid gap-10 md:grid-cols-2 md:gap-8 lg:grid-cols-12 lg:gap-12">
+          {/* ── Introduction ─────────────────────────────────────── */}
+          <motion.div {...rise(0)} className="min-w-0 lg:col-span-5">
+            <div className="flex items-center gap-2.5">
+              <span className="font-mono text-xs text-[#66758b]">07</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#66758b]">
+                Contact
+              </span>
+            </div>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Left: direct contact */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Email — primary CTA */}
-            <a
-              href={`mailto:${personalInfo.email}`}
-              className="group flex items-center justify-between border border-white/[0.07] bg-[#0d1220]/30 p-4 transition-colors hover:border-blue-500/20"
-            >
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-600">Email me</span>
-                <span className="text-[14px] font-medium text-slate-200 group-hover:text-blue-400 transition-colors">
-                  {personalInfo.email}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={(e) => { e.preventDefault(); handleCopyEmail(); }}
-                  className="flex h-7 w-7 items-center justify-center border border-white/[0.06] text-slate-400 transition-all hover:border-blue-500/20 hover:text-blue-400 active:scale-90 focus-ring"
-                  aria-label="Copy email address"
-                >
-                  {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                </button>
-                <ArrowUpRight size={14} className="text-slate-600 transition-colors group-hover:text-blue-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </div>
-            </a>
+            <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-[#f4f7fc] sm:text-4xl lg:text-[2.6rem]">
+              {contactContent.heading}
+            </h2>
 
-            {/* GitHub */}
-            <a
-              href={personalInfo.github}
-              target="_blank"
-              rel="noreferrer"
-              className="group mt-2 flex items-center justify-between border border-white/[0.07] bg-[#0d1220]/30 p-4 transition-colors hover:border-blue-500/20"
-            >
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-600">GitHub</span>
-                <span className="text-[14px] font-medium text-slate-200 group-hover:text-blue-400 transition-colors">
-                  {personalInfo.github.replace("https://", "")}
-                </span>
-              </div>
-              <GithubIcon size={14} className="text-slate-600 transition-colors group-hover:text-blue-400" />
-            </a>
+            <span
+              className="mt-6 block h-px w-24 bg-gradient-to-r from-[#2878f0] via-[#2878f0]/50 to-transparent"
+              aria-hidden
+            />
 
-            {/* Copy feedback */}
-            {copied && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                role="status"
-                aria-live="polite"
-                className="mt-2 flex items-center gap-1.5 border border-emerald-500/15 bg-emerald-500/[0.04] px-3 py-1.5 text-[12px] text-emerald-400"
+            <p className="mt-6 inline-flex items-center gap-2 border border-[#38bdf8]/20 bg-[#38bdf8]/[0.04] px-2.5 py-1">
+              <span className="relative flex h-1.5 w-1.5" aria-hidden>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#38bdf8] opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#38bdf8]" />
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#38bdf8]">
+                {contactContent.availability}
+              </span>
+            </p>
+
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#66758b]">
+              {contactContent.description}
+            </p>
+
+            <p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#8b9ab1]">
+              {contactContent.supporting}
+            </p>
+
+            <div className="mt-8">
+              <a
+                href={mailto}
+                className="group inline-flex w-full items-center justify-center gap-2.5 border border-[#2878f0]/40 bg-[#2878f0]/[0.07] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[#f4f7fc] transition-colors duration-300 hover:border-[#2878f0]/70 hover:bg-[#2878f0]/[0.13] focus-ring sm:w-auto"
               >
-                <Check size={11} /> Email copied to clipboard
-              </motion.div>
-            )}
+                {contactContent.ctaLabel}
+                <ArrowUpRight
+                  size={13}
+                  className="text-[#2878f0] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
+              <p className="mt-3 max-w-xs text-[12px] leading-relaxed text-[#4a5768]">
+                {contactContent.ctaSupporting}
+              </p>
+            </div>
           </motion.div>
 
-          {/* Right: form */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <form
-              onSubmit={handleSubmit}
-              className="border border-white/[0.07] bg-[#0d1220]/30 p-5 sm:p-6"
-              noValidate
-            >
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="name" className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-slate-600">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Your name"
-                    className="w-full border border-white/[0.07] bg-[#080b14] px-3.5 py-2.5 text-[13px] text-slate-200 placeholder:text-slate-600 transition-colors focus:border-blue-500/40 focus:outline-none"
-                    aria-invalid={!!errors.name}
-                    aria-describedby={errors.name ? "name-error" : undefined}
-                  />
-                  {errors.name && (
-                    <p id="name-error" className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
-                      <AlertCircle size={10} /> {errors.name}
-                    </p>
-                  )}
-                </div>
+          {/* ── Contact panel ────────────────────────────────────── */}
+          <motion.div {...rise(0.08)} className="relative min-w-0 lg:col-span-7">
+            <div
+              className="pointer-events-none absolute -inset-x-6 -bottom-12 -top-10 bg-[radial-gradient(ellipse_60%_55%_at_70%_15%,rgba(40,120,240,0.10),transparent_70%)]"
+              aria-hidden
+            />
 
-                <div>
-                  <label htmlFor="email" className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-slate-600">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="your.email@example.com"
-                    className="w-full border border-white/[0.07] bg-[#080b14] px-3.5 py-2.5 text-[13px] text-slate-200 placeholder:text-slate-600 transition-colors focus:border-blue-500/40 focus:outline-none"
-                    aria-invalid={!!errors.email}
-                    aria-describedby={errors.email ? "email-error" : undefined}
-                  />
-                  {errors.email && (
-                    <p id="email-error" className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
-                      <AlertCircle size={10} /> {errors.email}
-                    </p>
-                  )}
-                </div>
+            <div className="relative">
+              <Rule>Direct channels</Rule>
 
-                <div>
-                  <label htmlFor="message" className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-slate-600">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    placeholder="Tell me about your idea or project..."
-                    className="w-full resize-none border border-white/[0.07] bg-[#080b14] px-3.5 py-2.5 text-[13px] text-slate-200 placeholder:text-slate-600 transition-colors focus:border-blue-500/40 focus:outline-none"
-                    aria-invalid={!!errors.message}
-                    aria-describedby={errors.message ? "message-error" : undefined}
-                  />
-                  {errors.message && (
-                    <p id="message-error" className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
-                      <AlertCircle size={10} /> {errors.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <button
-                    type="submit"
-                    className="group inline-flex items-center gap-1.5 bg-blue-600 px-5 py-2.5 text-[13px] font-medium text-white transition-all hover:bg-blue-500 active:scale-[0.97] focus-ring"
-                  >
-                    <span className="transition-transform group-hover:translate-x-0.5">
-                      <Send size={13} />
-                    </span>
-                    Send Message
-                  </button>
-
-                  {status === "success" && (
-                    <motion.span
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      role="status"
-                      aria-live="polite"
-                      className="flex items-center gap-1.5 text-[12px] text-emerald-400"
-                    >
-                      <CheckCircle2 size={13} /> Opening your email app
-                    </motion.span>
-                  )}
-                  {status === "error" && (
-                    <motion.span
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      role="alert"
-                      className="flex items-center gap-1.5 text-[12px] text-rose-400"
-                    >
-                      <AlertCircle size={13} /> Fix errors above
-                    </motion.span>
-                  )}
-                </div>
-
-                <p className="border-t border-white/[0.04] pt-3 text-[11px] text-slate-600">
-                  Send Message opens your email app with your message pre-filled. Prefer to write
-                  directly? Use the address above.
-                </p>
+              <div className="mt-5">
+                <EmailCard copied={copied} onCopy={handleCopyEmail} />
               </div>
-            </form>
+
+              <div className="mt-6">
+                <Rule>Elsewhere</Rule>
+              </div>
+
+              <ul className="mt-2.5 divide-y divide-white/[0.05] border border-white/[0.07]">
+                {socials.map((social) => (
+                  <SocialRow key={social.label} {...social} />
+                ))}
+              </ul>
+
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#3d4a5c]">
+                {socials.length + 1} channels · no forms
+              </p>
+            </div>
           </motion.div>
         </div>
       </div>

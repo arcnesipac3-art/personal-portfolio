@@ -1,14 +1,16 @@
 import { ArrowUp } from "lucide-react";
-import { GithubIcon } from "./SocialIcons";
+import { GithubIcon, InstagramIcon, FacebookIcon } from "./SocialIcons";
 import { personalInfo, navLinks } from "../data/portfolio";
 import { scrollToSection } from "../utils/scroll";
 
+const socials = [
+  { label: "GitHub profile", href: personalInfo.github, Icon: GithubIcon },
+  { label: "Instagram profile", href: personalInfo.instagram, Icon: InstagramIcon },
+  { label: "Facebook profile", href: personalInfo.facebook, Icon: FacebookIcon },
+];
+
 export function Footer() {
   const year = new Date().getFullYear();
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <footer className="relative border-t border-[#192437] bg-[#080b12] px-5 py-10 sm:px-6 lg:px-8">
@@ -41,15 +43,18 @@ export function Footer() {
 
           {/* Right: social + back to top */}
           <div className="flex items-center gap-4">
-            <a
-              href={personalInfo.github}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub profile"
-              className="text-[#66758b] transition-colors hover:text-[#2878f0]"
-            >
-              <GithubIcon size={16} />
-            </a>
+            {socials.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                className="text-[#66758b] transition-[translate,scale,color] duration-300 ease-out hover:-translate-y-0.5 hover:scale-110 hover:text-[#2878f0]"
+              >
+                <Icon size={16} />
+              </a>
+            ))}
             <a
               href={`mailto:${personalInfo.email}`}
               aria-label="Send email"
@@ -59,7 +64,7 @@ export function Footer() {
             </a>
             <span className="h-3.5 w-px bg-[#192437]" />
             <button
-              onClick={scrollToTop}
+              onClick={() => scrollToSection("#top")}
               className="group flex items-center gap-1.5 text-xs text-[#66758b] transition-colors hover:text-[#2878f0] focus-ring rounded"
               aria-label="Scroll back to top"
             >
