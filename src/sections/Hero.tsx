@@ -433,19 +433,27 @@ export function Hero({ introDone = true }: HeroProps) {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator. A hairline track with a blue segment sweeping down it
+          and a label above — the old single gradient faded to transparent over
+          24px and read as nothing at all against the page. */}
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0 }}
         animate={{ opacity: introDone || prefersReducedMotion ? 1 : 0 }}
         transition={{ delay: prefersReducedMotion ? 0 : 1, duration: 0.5 }}
-        className="absolute bottom-5 left-1/2 -translate-x-1/2"
+        className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2.5"
         aria-hidden
       >
-        <motion.span
-          animate={prefersReducedMotion ? undefined : { y: [0, 5, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          className="block h-6 w-px bg-gradient-to-b from-[#66758b] to-transparent"
-        />
+        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#66758b]">
+          Scroll
+        </span>
+
+        <span className="relative block h-7 w-px overflow-hidden bg-white/[0.14]">
+          <motion.span
+            animate={prefersReducedMotion ? undefined : { y: ["-100%", "100%"] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-x-0 top-0 block h-7 bg-gradient-to-b from-transparent via-[#2878f0] to-transparent"
+          />
+        </span>
       </motion.div>
     </section>
   );
