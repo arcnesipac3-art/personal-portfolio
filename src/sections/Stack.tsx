@@ -75,7 +75,7 @@ export function Stack() {
     <section id="stack" className="relative section-padding overflow-hidden border-y border-white/[0.04] bg-[#0a0f1a]">
       <div className="absolute inset-0 bg-grid-fine opacity-15" aria-hidden />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="shell relative z-10">
         <SectionHeading
           number="04 /"
           label="Technology Stack"

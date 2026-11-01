@@ -155,7 +155,7 @@ export function Contact() {
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="shell relative z-10">
         <div className="grid gap-10 md:grid-cols-2 md:gap-8 lg:grid-cols-12 lg:gap-12">
           {/* ── Introduction ─────────────────────────────────────── */}
           <motion.div {...rise(0)} className="min-w-0 lg:col-span-5">

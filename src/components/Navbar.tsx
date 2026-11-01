@@ -55,7 +55,7 @@ export function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
         }`}
       >
         <div
-          className={`mx-auto flex max-w-6xl items-center justify-between px-5 transition-[padding] duration-300 sm:px-6 lg:px-8 ${
+          className={`shell flex items-center justify-between transition-[padding] duration-300 ${
             scrolled ? "py-2.5" : "py-3.5"
           }`}
         >

@@ -286,7 +286,7 @@ export function Skills() {
     <section id="skills" className="relative section-padding overflow-x-clip">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="shell relative z-10">
         <SectionHeading
           number="03"
           label="What I Work With"

@@ -392,7 +392,7 @@ function StaticJourney() {
     <section id="journey" className="relative section-padding overflow-hidden">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="shell relative z-10">
         <JourneyHeader active={active} />
 
         <div className="mt-8 grid gap-5 md:grid-cols-12 md:gap-6">
@@ -507,11 +507,17 @@ function PinnedJourney() {
           aria-hidden
         />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-6xl flex-col px-5 pt-24 pb-8 sm:px-6 lg:px-8">
+        <div className="shell relative z-10 flex h-full flex-col pt-24 pb-8">
           <JourneyHeader active={active} />
 
           <div className="mt-6 grid min-h-0 flex-1 gap-6 lg:grid-cols-12 lg:grid-rows-1 lg:gap-10">
-            <EntryPanel active={active} offset={46} className="min-h-0 lg:col-span-7" />
+            {/* Fills the row on short viewports but stops short of stretching into
+                a tall void on large ones, where it would dwarf the entry inside. */}
+            <EntryPanel
+              active={active}
+              offset={46}
+              className="min-h-0 lg:col-span-7 lg:h-full lg:max-h-[30rem] lg:self-center"
+            />
 
             <div className="flex min-h-0 flex-col justify-center lg:col-span-5">
               <TimelineRail active={active} onSelect={goTo} />

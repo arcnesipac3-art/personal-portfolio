@@ -13,8 +13,8 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-[#192437] bg-[#080b12] px-5 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <footer className="relative border-t border-[#192437] bg-[#080b12] py-10">
+      <div className="shell">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           {/* Left: name + tagline */}
           <div className="text-center sm:text-left">

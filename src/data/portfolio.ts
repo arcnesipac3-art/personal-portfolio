@@ -319,16 +319,22 @@ export interface AchievementEntry {
   year: string;
 }
 
+export interface AchievementCategory {
+  name: string;
+  /** What this category tracks, kept to a single line. */
+  summary: string;
+}
+
 export const achievementsData: AchievementEntry[] = [];
 
-export const achievementCategories = [
-  "Academic Honors",
-  "Research Activities",
-  "Science Quiz Competitions",
-  "Chess Competitions",
-  "Campus Journalism",
-  "Student Government",
-  "Other School Activities",
+export const achievementCategories: AchievementCategory[] = [
+  { name: "Academic Honors", summary: "Recognition for academic performance and standing" },
+  { name: "Research Activities", summary: "Papers, proposals, and investigative work" },
+  { name: "Science Quiz Competitions", summary: "Science and mathematics quiz bees" },
+  { name: "Chess Competitions", summary: "Board matches and tournament play" },
+  { name: "Campus Journalism", summary: "School paper writing, editing, and publication" },
+  { name: "Student Government", summary: "Leadership roles and student council work" },
+  { name: "Other School Activities", summary: "Programs, seminars, and school events" },
 ];
 
 // ─── CONTACT SECTION ──────────────────────────────────────────

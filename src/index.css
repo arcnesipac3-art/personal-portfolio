@@ -120,6 +120,58 @@ a {
   }
 }
 
+/* Once the content column widens the sections need more vertical air, or the
+   text starts to read as cramped against the taller page. */
+@media (min-width: 1280px) {
+  .section-padding {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+/* Shared page shell. The navbar, every section and the footer all use it, so
+   their content edges line up down the page. The cap steps up with the
+   viewport — a fixed 1152px left a wide band of dead space on 1440p/4K.
+   Changes here are global: keep the padding steps in sync with the caps. */
+.shell {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .shell {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .shell {
+    max-width: 76rem;
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .shell {
+    max-width: 86rem;
+    padding-inline: 3rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .shell {
+    max-width: 96rem;
+  }
+}
+
 /* Focus ring */
 .focus-ring:focus-visible {
   outline: 2px solid #2878f0;

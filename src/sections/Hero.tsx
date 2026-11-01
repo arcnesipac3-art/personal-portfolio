@@ -224,7 +224,7 @@ export function Hero({ introDone = true }: HeroProps) {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080b12]" aria-hidden />
 
       {/* ── Content ───────────────────────────────────────────── */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="shell relative z-10">
         <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 xl:gap-20">
           {/* Left: text */}
           <div>

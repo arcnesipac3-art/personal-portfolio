@@ -275,7 +275,7 @@ export function Projects() {
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
       <div className="pointer-events-none absolute top-1/3 left-1/2 h-[400px] w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.02] blur-[120px]" aria-hidden />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="shell relative z-10">
         <SectionHeading
           number="02"
           label="Selected Work"
