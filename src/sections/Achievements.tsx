@@ -253,7 +253,7 @@ export function Achievements() {
 
       <div className="shell relative z-10">
         <SectionHeading
-          number="05"
+          number="06"
           label="Activities"
           title="Achievements & activities."
           description="Honors, competitions, and school involvement — recorded here as they happen."

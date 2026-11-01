@@ -318,7 +318,7 @@ function JourneyHeader({ active }: { active: number }) {
     <div className="flex shrink-0 items-start justify-between gap-5 sm:gap-8">
       <div className="min-w-0">
         <div className="flex items-center gap-2.5">
-          <span className="font-mono text-xs text-text-muted">04</span>
+          <span className="font-mono text-xs text-text-muted">05</span>
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
             Journey
           </span>
