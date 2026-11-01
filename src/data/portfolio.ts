@@ -130,65 +130,6 @@ export const skillsData: SkillCategory[] = [
   },
 ];
 
-// ─── TECH STACK ───────────────────────────────────────────────
-
-export interface StackItem {
-  name: string;
-  description: string;
-  /** Points at a brand mark in `public/images/tech/`. */
-  icon: string;
-}
-
-export interface StackGroup {
-  label: string;
-  comment: string;
-  items: StackItem[];
-}
-
-export const stackData: StackGroup[] = [
-  {
-    label: "Frontend",
-    comment: "// client",
-    items: [
-      { name: "HTML", description: "Semantic markup & structure", icon: "/images/tech/html5.svg" },
-      { name: "CSS", description: "Styling, layout, animations", icon: "/images/tech/css.svg" },
-      { name: "JavaScript", description: "Interactivity & logic", icon: "/images/tech/javascript.svg" },
-      { name: "TypeScript", description: "Type-safe development", icon: "/images/tech/typescript.svg" },
-      { name: "React", description: "Component-based UIs", icon: "/images/tech/react.svg" },
-    ],
-  },
-  {
-    label: "Backend & Database",
-    comment: "// server & data",
-    items: [
-      { name: "Python", description: "Backend logic & scripting", icon: "/images/tech/python.svg" },
-      { name: "Django", description: "Web framework & ORM", icon: "/images/tech/django.svg" },
-      { name: "REST APIs", description: "Endpoint design & serialization", icon: "/images/tech/openapi.svg" },
-      { name: "PostgreSQL", description: "Relational database", icon: "/images/tech/postgresql.svg" },
-      { name: "SQLite", description: "Lightweight local database", icon: "/images/tech/sqlite.svg" },
-    ],
-  },
-  {
-    label: "Development Tools",
-    comment: "// workflow",
-    items: [
-      { name: "VS Code", description: "Primary code editor", icon: "/images/tech/vscode.svg" },
-      { name: "OpenCode", description: "Terminal-based AI coding agent", icon: "/images/tech/opencode.svg" },
-      { name: "Git", description: "Version control", icon: "/images/tech/git.svg" },
-      { name: "GitHub", description: "Collaboration & hosting", icon: "/images/tech/github.svg" },
-    ],
-  },
-  {
-    label: "Deployment & Services",
-    comment: "// ship",
-    items: [
-      { name: "Vercel", description: "Frontend hosting & previews", icon: "/images/tech/vercel.svg" },
-      { name: "Render", description: "Backend & API hosting", icon: "/images/tech/render.svg" },
-      { name: "Supabase", description: "Managed Postgres & auth", icon: "/images/tech/supabase.svg" },
-    ],
-  },
-];
-
 // ─── PROJECTS SECTION ─────────────────────────────────────────
 
 export interface ProjectFeature {
@@ -357,7 +298,6 @@ export const navLinks = [
   { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
-  { label: "Stack", href: "#stack" },
   { label: "Journey", href: "#journey" },
   { label: "Activities", href: "#achievements" },
   { label: "Contact", href: "#contact" },

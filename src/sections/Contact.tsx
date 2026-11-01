@@ -160,7 +160,7 @@ export function Contact() {
           {/* ── Introduction ─────────────────────────────────────── */}
           <motion.div {...rise(0)} className="min-w-0 lg:col-span-5">
             <div className="flex items-center gap-2.5">
-              <span className="font-mono text-xs text-[#66758b]">07</span>
+              <span className="font-mono text-xs text-[#66758b]">06</span>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#66758b]">
                 Contact
               </span>

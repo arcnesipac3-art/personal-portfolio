@@ -8,7 +8,6 @@ import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
 import { Projects } from "./sections/Projects";
 import { Skills } from "./sections/Skills";
-import { Stack } from "./sections/Stack";
 import { Education } from "./sections/Education";
 import { Achievements } from "./sections/Achievements";
 import { Contact } from "./sections/Contact";
@@ -56,7 +55,6 @@ function App() {
         <About />
         <Projects />
         <Skills />
-        <Stack />
         <Education />
         <Achievements />
         <Contact />
