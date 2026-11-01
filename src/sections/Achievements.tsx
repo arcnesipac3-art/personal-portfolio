@@ -27,21 +27,26 @@ export function Achievements() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.4, delay: i * 0.06 }}
-                  className="group border border-white/[0.07] bg-[#0d1220]/30 p-5 transition-colors hover:border-blue-500/15"
+                  className="h-full"
                 >
-                  <div className="flex items-start gap-2.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center border border-blue-500/15 bg-blue-500/[0.04]">
-                      <Award size={14} className="text-blue-400" />
-                    </div>
-                    <div className="flex-1">
-                      <span className="font-mono text-[9px] uppercase tracking-wider text-slate-600">
-                        {entry.category}
-                      </span>
-                      <h3 className="mt-0.5 font-display text-sm font-semibold text-slate-100">
-                        {entry.title}
-                      </h3>
-                      <p className="mt-1.5 text-[13px] text-slate-500">{entry.description}</p>
-                      <span className="mt-2 inline-block font-mono text-[11px] text-blue-400">{entry.year}</span>
+                  {/* Lift sits on a plain child so it never fights Motion's transform. */}
+                  <div className="group h-full border border-white/[0.07] bg-[#0d1220]/30 p-5 transition-[transform,border-color,background-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-500/25 hover:bg-[#0d1220]/50">
+                    <div className="flex items-start gap-2.5">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center border border-blue-500/15 bg-blue-500/[0.04] transition-colors duration-300 group-hover:border-blue-500/35">
+                        <Award size={14} className="text-blue-400" />
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-mono text-[9px] uppercase tracking-wider text-slate-600">
+                          {entry.category}
+                        </span>
+                        <h3 className="mt-0.5 font-display text-sm font-semibold text-slate-100">
+                          {entry.title}
+                        </h3>
+                        <p className="mt-1.5 text-[13px] text-slate-500 transition-colors duration-300 group-hover:text-slate-400">
+                          {entry.description}
+                        </p>
+                        <span className="mt-2 inline-block font-mono text-[11px] text-blue-400">{entry.year}</span>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -53,7 +58,7 @@ export function Achievements() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5 }}
-              className="relative overflow-hidden border border-dashed border-white/[0.09] bg-[#0d1220]/20 p-5 sm:p-7"
+              className="relative overflow-hidden border border-dashed border-white/[0.09] bg-[#0d1220]/20 p-5 transition-colors duration-300 hover:border-white/[0.16] sm:p-7"
             >
               <div className="absolute left-0 top-0 h-full w-px bg-gradient-to-b from-blue-500/30 via-blue-500/5 to-transparent" aria-hidden />
 

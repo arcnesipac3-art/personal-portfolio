@@ -49,18 +49,25 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.12 }}
             className="lg:col-span-5"
           >
-            <div className="border border-white/[0.07] bg-[#0d1220]/40 p-5">
+            <div className="border border-white/[0.07] bg-[#0d1220]/40 p-5 transition-colors duration-300 hover:border-white/[0.12]">
               <div className="space-y-px">
                 {aboutContent.infoLabels.map((info) => {
                   const Icon = infoIcons[info.key] ?? Target;
                   return (
                     <div
                       key={info.key}
-                      className="flex items-center gap-3 py-2.5 border-b border-white/[0.04] last:border-0"
+                      className="group/row -mx-2 flex items-center gap-3 rounded-sm border-b border-white/[0.04] px-2 py-2.5 transition-colors duration-300 last:border-0 hover:bg-white/[0.02]"
                     >
-                      <Icon size={13} className="shrink-0 text-slate-600" />
-                      <span className="text-[13px] text-slate-500 w-20 shrink-0">{info.key}</span>
-                      <span className="text-[13px] font-medium text-slate-200">{info.value}</span>
+                      <Icon
+                        size={13}
+                        className="shrink-0 text-slate-600 transition-colors duration-300 group-hover/row:text-blue-400"
+                      />
+                      <span className="w-20 shrink-0 text-[13px] text-slate-500 transition-colors duration-300 group-hover/row:text-slate-400">
+                        {info.key}
+                      </span>
+                      <span className="text-[13px] font-medium text-slate-200 transition-colors duration-300 group-hover/row:text-slate-50">
+                        {info.value}
+                      </span>
                     </div>
                   );
                 })}

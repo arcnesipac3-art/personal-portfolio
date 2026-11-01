@@ -236,19 +236,22 @@ function FeatureCard({
         delay: reduceMotion ? 0 : Math.floor(index / 2) * 0.06 + (index % 2) * 0.05,
         ease: EASE,
       }}
-      className="group flex items-start gap-3.5 border border-white/[0.07] bg-[#0d1220]/30 p-4 transition-colors duration-300 hover:border-[#2878f0]/25 hover:bg-[#0d1220]/50 sm:p-5"
+      className="h-full"
     >
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-[#2878f0]/15 bg-[#2878f0]/[0.04] transition-colors duration-300 group-hover:border-[#2878f0]/35">
-        <Icon size={14} className="text-[#2878f0]" />
-      </span>
-      <span className="min-w-0">
-        <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover:text-[#f4f7fc]">
-          {feature.title}
+      {/* Lift sits on a plain child so it never fights Motion's transform. */}
+      <div className="group flex h-full items-start gap-3.5 border border-white/[0.07] bg-[#0d1220]/30 p-4 transition-[transform,border-color,background-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-[#2878f0]/25 hover:bg-[#0d1220]/50 sm:p-5">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-[#2878f0]/15 bg-[#2878f0]/[0.04] transition-colors duration-300 group-hover:border-[#2878f0]/35">
+          <Icon size={14} className="text-[#2878f0]" />
         </span>
-        <span className="mt-1 block text-[12px] leading-relaxed text-[#66758b] transition-colors duration-300 group-hover:text-[#8b9ab1]">
-          {feature.description}
+        <span className="min-w-0">
+          <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover:text-[#f4f7fc]">
+            {feature.title}
+          </span>
+          <span className="mt-1 block text-[12px] leading-relaxed text-[#66758b] transition-colors duration-300 group-hover:text-[#8b9ab1]">
+            {feature.description}
+          </span>
         </span>
-      </span>
+      </div>
     </motion.li>
   );
 }

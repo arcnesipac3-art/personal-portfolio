@@ -46,20 +46,24 @@ function StackCard({
         delay: reduceMotion ? 0 : index * 0.07,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="h-full border border-white/[0.07] bg-[#0d1220]/40 p-5 transition-colors duration-300 hover:border-blue-500/25"
+      className="h-full"
     >
-      <div className="mb-2 flex items-baseline justify-between gap-3 border-b border-white/[0.05] pb-3">
-        <h3 className="font-display text-base font-semibold tracking-tight text-slate-100">
-          {group.label}
-        </h3>
-        <span className="shrink-0 font-mono text-[10px] text-slate-600">{group.comment}</span>
-      </div>
+      {/* The lift lives on a plain child: Motion owns `transform` on the element
+          it animates, so a CSS hover transform there would simply be ignored. */}
+      <div className="h-full border border-white/[0.07] bg-[#0d1220]/40 p-5 transition-[transform,border-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-500/25">
+        <div className="mb-2 flex items-baseline justify-between gap-3 border-b border-white/[0.05] pb-3">
+          <h3 className="font-display text-base font-semibold tracking-tight text-slate-100">
+            {group.label}
+          </h3>
+          <span className="shrink-0 font-mono text-[10px] text-slate-600">{group.comment}</span>
+        </div>
 
-      <ul className="divide-y divide-white/[0.04]">
-        {group.items.map((item) => (
-          <StackRow key={item.name} item={item} />
-        ))}
-      </ul>
+        <ul className="divide-y divide-white/[0.04]">
+          {group.items.map((item) => (
+            <StackRow key={item.name} item={item} />
+          ))}
+        </ul>
+      </div>
     </motion.div>
   );
 }

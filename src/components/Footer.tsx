@@ -34,7 +34,7 @@ export function Footer() {
                   e.preventDefault();
                   scrollToSection(link.href);
                 }}
-                className="text-xs text-[#66758b] transition-colors hover:text-[#2878f0]"
+                className="relative rounded text-xs text-[#66758b] transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-[#2878f0] after:content-[''] after:transition-[width] after:duration-300 after:ease-out hover:text-[#2878f0] hover:after:w-full focus-ring"
               >
                 {link.label}
               </a>
@@ -58,7 +58,7 @@ export function Footer() {
             <a
               href={`mailto:${personalInfo.email}`}
               aria-label="Send email"
-              className="font-mono text-xs text-[#66758b] transition-colors hover:text-[#2878f0]"
+              className="relative rounded font-mono text-xs text-[#66758b] transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-[#2878f0] after:content-[''] after:transition-[width] after:duration-300 after:ease-out hover:text-[#2878f0] hover:after:w-full focus-ring"
             >
               Email
             </a>
