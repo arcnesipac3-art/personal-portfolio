@@ -12,8 +12,10 @@ const socials = [
 export function Footer() {
   const year = new Date().getFullYear();
 
+  // The extra bottom room on mobile keeps the floating nav bar off the
+  // copyright line; from `md` up the inline nav takes over.
   return (
-    <footer className="relative border-t border-border bg-bg py-10">
+    <footer className="relative border-t border-border bg-bg pt-10 pb-24 md:pb-10">
       <div className="shell">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           {/* Left: name + tagline */}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Navbar } from "./components/Navbar";
+import { BottomNav } from "./components/BottomNav";
 import { Footer } from "./components/Footer";
 import { PageBackground } from "./components/PageBackground";
 import { CustomCursor } from "./components/CustomCursor";
@@ -62,6 +63,9 @@ function App() {
         <Contact />
       </main>
       <Footer />
+      {/* Outside `main`, which clips on the x axis and would anchor a fixed
+          child to itself rather than to the viewport. */}
+      <BottomNav />
       <CommandPalette
         open={paletteOpen}
         onClose={() => setPaletteOpen(false)}
