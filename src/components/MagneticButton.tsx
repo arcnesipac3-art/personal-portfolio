@@ -6,7 +6,7 @@ interface MagneticButtonProps {
   className?: string;
   strength?: number;
   href: string;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
   ariaLabel?: string;
   external?: boolean;
 }
@@ -48,7 +48,7 @@ export function MagneticButton({
       onClick={onClick}
       aria-label={ariaLabel}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-      className={`inline-flex transition-transform duration-200 ease-out ${className}`}
+      className={`inline-flex items-center transition-all duration-200 ease-out ${className}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >

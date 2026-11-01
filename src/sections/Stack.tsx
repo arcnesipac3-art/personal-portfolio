@@ -26,14 +26,14 @@ function StackColumn({ group, index }: { group: StackGroup; index: number }) {
         {group.items.map((item) => (
           <div
             key={item.name}
-            className="group/item flex items-baseline gap-2 py-1.5 border-b border-white/[0.03] transition-colors hover:border-blue-500/10"
+            className="group/item border-b border-white/[0.03] py-2 transition-colors hover:border-blue-500/10"
           >
             <span className="text-[14px] font-medium text-slate-300 transition-colors group-hover/item:text-blue-400">
               {item.name}
             </span>
-            <span className="text-[11px] text-slate-600 opacity-0 transition-opacity group-hover/item:opacity-100">
-              — {item.description}
-            </span>
+            <p className="mt-0.5 text-[11px] leading-relaxed text-slate-600 transition-colors group-hover/item:text-slate-500">
+              {item.description}
+            </p>
           </div>
         ))}
       </div>
@@ -46,7 +46,7 @@ export function Stack() {
     <section id="stack" className="relative section-padding overflow-hidden border-y border-white/[0.04] bg-[#0a0f1a]">
       <div className="absolute inset-0 bg-grid-fine opacity-15" aria-hidden />
 
-      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           number="04"
           label="Stack"

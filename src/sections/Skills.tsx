@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, ArrowRight, Monitor, Server, Database, Wrench, Sparkles, type LucideIcon } from "lucide-react";
 import { SectionHeading } from "../components/SectionHeading";
+import { useSwipe } from "../hooks/useSwipe";
 import { skillsData } from "../data/portfolio";
 
 const iconMap: Record<string, LucideIcon> = {
@@ -20,11 +21,23 @@ export function Skills() {
   const goNext = () => setActive((a) => (a + 1) % skillsData.length);
   const goPrev = () => setActive((a) => (a - 1 + skillsData.length) % skillsData.length);
 
+  const swipe = useSwipe(goNext, goPrev);
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      goNext();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      goPrev();
+    }
+  };
+
   return (
     <section id="skills" className="relative section-padding overflow-x-hidden">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
 
-      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           number="03"
           label="What I Work With"
@@ -33,7 +46,11 @@ export function Skills() {
 
         <div className="mt-10">
           {/* Carousel layout */}
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+          <div
+            className="grid gap-6 lg:grid-cols-12 lg:gap-8"
+            style={{ touchAction: "pan-y" }}
+            {...swipe}
+          >
             {/* Left: category info */}
             <div className="lg:col-span-5">
               <AnimatePresence mode="wait">
@@ -80,18 +97,23 @@ export function Skills() {
               </AnimatePresence>
 
               {/* Controls */}
-              <div className="mt-6 flex items-center gap-3">
+              <div
+                className="mt-6 flex items-center gap-3"
+                onKeyDown={handleKeyDown}
+                role="group"
+                aria-label="Skill category controls"
+              >
                 <div className="flex gap-1.5">
                   <button
                     onClick={goPrev}
-                    className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-colors hover:border-blue-500/20 hover:text-blue-400 focus-ring"
+                    className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-all hover:border-blue-500/20 hover:bg-white/[0.03] hover:text-blue-400 active:scale-90 focus-ring"
                     aria-label="Previous category"
                   >
                     <ArrowLeft size={15} />
                   </button>
                   <button
                     onClick={goNext}
-                    className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-colors hover:border-blue-500/20 hover:text-blue-400 focus-ring"
+                    className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-all hover:border-blue-500/20 hover:bg-white/[0.03] hover:text-blue-400 active:scale-90 focus-ring"
                     aria-label="Next category"
                   >
                     <ArrowRight size={15} />

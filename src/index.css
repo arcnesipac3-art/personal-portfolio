@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #080b14;
-  --color-bg-secondary: #0d1220;
-  --color-surface: #111827;
-  --color-blue: #3b82f6;
+  --color-bg: #080b12;
+  --color-bg-secondary: #0c111c;
+  --color-surface: #0e1522;
+  --color-blue: #2878f0;
   --color-cyan: #38bdf8;
-  --color-text-primary: #f5f7fc;
-  --color-text-secondary: #929caf;
-  --color-border: rgba(255, 255, 255, 0.09);
+  --color-text-primary: #f4f7fc;
+  --color-text-secondary: #9aa8bd;
+  --color-text-muted: #66758b;
+  --color-border: #192437;
 
   --font-sans: "Inter", sans-serif;
   --font-display: "Space Grotesk", sans-serif;
@@ -17,8 +18,8 @@
 
 :root {
   font-family: "Inter", sans-serif;
-  color: #f5f7fc;
-  background: #080b14;
+  color: #f4f7fc;
+  background: #080b12;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -47,7 +48,7 @@ a {
 }
 
 ::selection {
-  background: #3b82f6;
+  background: #2878f0;
   color: white;
 }
 
@@ -55,14 +56,14 @@ a {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #080b14;
+  background: #080b12;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #192437;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #243049;
 }
 
 /* Utility classes */
@@ -76,24 +77,24 @@ a {
 /* Grid texture */
 .bg-grid {
   background-image: linear-gradient(
-      rgba(148, 163, 184, 0.025) 1px,
+      rgba(154, 168, 189, 0.02) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.025) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(154, 168, 189, 0.02) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
 .bg-grid-fine {
   background-image: linear-gradient(
-      rgba(148, 163, 184, 0.015) 1px,
+      rgba(154, 168, 189, 0.012) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.015) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(154, 168, 189, 0.012) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
 .bg-dots {
-  background-image: radial-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(154, 168, 189, 0.05) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -101,28 +102,59 @@ a {
 .radial-glow {
   background: radial-gradient(
     ellipse 80% 50% at 50% 0%,
-    rgba(59, 130, 246, 0.08),
+    rgba(40, 120, 240, 0.06),
     transparent 70%
   );
 }
 
 /* Section padding */
 .section-padding {
-  padding-top: 7rem;
-  padding-bottom: 7rem;
+  padding-top: 6.5rem;
+  padding-bottom: 6.5rem;
 }
 
 @media (max-width: 768px) {
   .section-padding {
-    padding-top: 4.5rem;
-    padding-bottom: 4.5rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
   }
 }
 
 /* Focus ring */
 .focus-ring:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid #2878f0;
   outline-offset: 2px;
+}
+
+/* Tailwind v4 no longer applies a pointer cursor to buttons by default,
+   which makes icon controls feel inert. Restore it for real controls. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+/* Keyboard-only skip link */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 300;
+  transform: translateY(-200%);
+  border: 1px solid #2878f0;
+  background: #0e1522;
+  padding: 0.5rem 0.9rem;
+  font-size: 12px;
+  font-weight: 500;
+  color: #f4f7fc;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Keep deep links (direct #hash loads) clear of the fixed navbar */
+section[id] {
+  scroll-margin-top: 5.5rem;
 }
 
 .no-scroll-x {
@@ -132,13 +164,12 @@ a {
 
 /* Gradient text */
 .text-gradient {
-  background: linear-gradient(135deg, #60a5fa 0%, #38bdf8 100%);
+  background: linear-gradient(135deg, #4d9bff 0%, #2878f0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Hide scrollbar for carousels */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

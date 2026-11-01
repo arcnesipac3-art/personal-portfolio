@@ -11,6 +11,7 @@ import { Stack } from "./sections/Stack";
 import { Education } from "./sections/Education";
 import { Achievements } from "./sections/Achievements";
 import { Contact } from "./sections/Contact";
+import { scrollToSection } from "./utils/scroll";
 
 function App() {
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -27,36 +28,37 @@ function App() {
   }, []);
 
   const handleNavigate = useCallback((href: string) => {
-    if (href === "#home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    const el = document.querySelector(href);
-    if (el) {
-      const top = (el as HTMLElement).offsetTop - 70;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
+    scrollToSection(href);
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#080b14] text-slate-50 no-scroll-x">
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
       <CustomCursor />
       <Navbar />
-      <Hero />
-      <About />
-      <Projects />
-      <Skills />
-      <Stack />
-      <Education />
-      <Achievements />
-      <Contact />
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="min-h-screen bg-[#080b14] text-slate-50 no-scroll-x focus:outline-none"
+      >
+        <Hero />
+        <About />
+        <Projects />
+        <Skills />
+        <Stack />
+        <Education />
+        <Achievements />
+        <Contact />
+      </main>
       <Footer />
       <CommandPalette
         open={paletteOpen}
         onClose={() => setPaletteOpen(false)}
         onNavigate={handleNavigate}
       />
-    </main>
+    </>
   );
 }
 

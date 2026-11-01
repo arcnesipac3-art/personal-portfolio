@@ -15,7 +15,7 @@ export function About() {
     <section id="about" className="relative section-padding overflow-hidden">
       <div className="absolute inset-0 bg-grid-fine opacity-30" aria-hidden />
 
-      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           number="01"
           label="About"

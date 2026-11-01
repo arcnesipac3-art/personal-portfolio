@@ -21,7 +21,7 @@ export const heroContent = {
   label: "STUDENT DEVELOPER — PHILIPPINES",
   headline: "Curious by nature. Building through code.",
   description:
-    "I'm a Senior High School STEM student interested in software development, technology, and problem-solving. I enjoy turning ideas into functional applications and learning through every project I build.",
+    "I'm a Senior High School STEM student interested in software development, web technologies, and problem-solving. I enjoy learning new ideas, building practical applications, and turning thoughtful ideas into working projects.",
   ctaPrimary: { label: "View My Work", href: "#projects" },
   ctaSecondary: { label: "Contact Me", href: "#contact" },
 } as const;

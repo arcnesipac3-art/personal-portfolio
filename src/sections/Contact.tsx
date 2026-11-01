@@ -28,7 +28,8 @@ export function Contact() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const data = new FormData(form);
     const errs = validate(data);
 
     if (Object.keys(errs).length > 0) {
@@ -37,9 +38,17 @@ export function Contact() {
       return;
     }
 
+    const name = (data.get("name") as string).trim();
+    const email = (data.get("email") as string).trim();
+    const message = (data.get("message") as string).trim();
+
+    const subject = encodeURIComponent(`Portfolio contact from ${name}`);
+    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+    window.location.href = `mailto:${personalInfo.email}?subject=${subject}&body=${body}`;
+
     setErrors({});
     setStatus("success");
-    e.currentTarget.reset();
+    form.reset();
     setTimeout(() => setStatus("idle"), 5000);
   };
 
@@ -67,7 +76,7 @@ export function Contact() {
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
       <div className="absolute bottom-0 left-1/2 h-64 w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.03] blur-[100px]" aria-hidden />
 
-      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           number="07"
           label="Contact"
@@ -127,6 +136,8 @@ export function Contact() {
               <motion.div
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
+                role="status"
+                aria-live="polite"
                 className="mt-2 flex items-center gap-1.5 border border-emerald-500/15 bg-emerald-500/[0.04] px-3 py-1.5 text-[12px] text-emerald-400"
               >
                 <Check size={11} /> Email copied to clipboard
@@ -158,9 +169,10 @@ export function Contact() {
                     placeholder="Your name"
                     className="w-full border border-white/[0.07] bg-[#080b14] px-3.5 py-2.5 text-[13px] text-slate-200 placeholder:text-slate-600 transition-colors focus:border-blue-500/40 focus:outline-none"
                     aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? "name-error" : undefined}
                   />
                   {errors.name && (
-                    <p className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
+                    <p id="name-error" className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
                       <AlertCircle size={10} /> {errors.name}
                     </p>
                   )}
@@ -177,9 +189,10 @@ export function Contact() {
                     placeholder="your.email@example.com"
                     className="w-full border border-white/[0.07] bg-[#080b14] px-3.5 py-2.5 text-[13px] text-slate-200 placeholder:text-slate-600 transition-colors focus:border-blue-500/40 focus:outline-none"
                     aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "email-error" : undefined}
                   />
                   {errors.email && (
-                    <p className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
+                    <p id="email-error" className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
                       <AlertCircle size={10} /> {errors.email}
                     </p>
                   )}
@@ -196,9 +209,10 @@ export function Contact() {
                     placeholder="Tell me about your idea or project..."
                     className="w-full resize-none border border-white/[0.07] bg-[#080b14] px-3.5 py-2.5 text-[13px] text-slate-200 placeholder:text-slate-600 transition-colors focus:border-blue-500/40 focus:outline-none"
                     aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? "message-error" : undefined}
                   />
                   {errors.message && (
-                    <p className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
+                    <p id="message-error" className="mt-1 flex items-center gap-1 text-[11px] text-rose-400">
                       <AlertCircle size={10} /> {errors.message}
                     </p>
                   )}
@@ -219,15 +233,18 @@ export function Contact() {
                     <motion.span
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
+                      role="status"
+                      aria-live="polite"
                       className="flex items-center gap-1.5 text-[12px] text-emerald-400"
                     >
-                      <CheckCircle2 size={13} /> Form validated
+                      <CheckCircle2 size={13} /> Opening your email app
                     </motion.span>
                   )}
                   {status === "error" && (
                     <motion.span
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
+                      role="alert"
                       className="flex items-center gap-1.5 text-[12px] text-rose-400"
                     >
                       <AlertCircle size={13} /> Fix errors above
@@ -236,7 +253,8 @@ export function Contact() {
                 </div>
 
                 <p className="border-t border-white/[0.04] pt-3 text-[11px] text-slate-600">
-                  Note: This form requires a backend to actually send. Use email above for direct contact.
+                  Send Message opens your email app with your message pre-filled. Prefer to write
+                  directly? Use the address above.
                 </p>
               </div>
             </form>

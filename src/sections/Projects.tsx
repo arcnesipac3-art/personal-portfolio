@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowUpRight,
@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { SectionHeading } from "../components/SectionHeading";
 import { ProjectMockup, type MockupVariant } from "../components/ProjectMockup";
+import { useFocusTrap } from "../hooks/useFocusTrap";
+import { useSwipe } from "../hooks/useSwipe";
 import { trackProject } from "../data/portfolio";
 
 const mockupVariants: MockupVariant[] = [
@@ -36,6 +38,7 @@ const mockupLabels: Record<MockupVariant, string> = {
 function CaseStudyModal({ onClose }: { onClose: () => void }) {
   const cs = trackProject.caseStudy;
   const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(modalRef, true);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -198,12 +201,24 @@ export function Projects() {
     });
   };
 
+  const handleCarouselKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      goNext();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      goPrev();
+    }
+  };
+
+  const swipe = useSwipe(goNext, goPrev);
+
   return (
     <section id="projects" className="relative section-padding overflow-x-hidden border-y border-white/[0.04] bg-[#0a0f1a]">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
       <div className="absolute top-1/3 left-1/2 h-[400px] w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.02] blur-[120px]" aria-hidden />
 
-      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           number="02"
           label="Selected Work"
@@ -241,6 +256,9 @@ export function Projects() {
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="mt-8 flex flex-wrap items-center justify-between gap-3"
+          onKeyDown={handleCarouselKeyDown}
+          role="group"
+          aria-label="Project preview controls"
         >
           {/* Tabs */}
           <div className="flex flex-wrap gap-1.5">
@@ -267,14 +285,14 @@ export function Projects() {
             <div className="flex gap-1">
               <button
                 onClick={goPrev}
-                className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-slate-400 transition-colors hover:border-blue-500/20 hover:text-blue-400 focus-ring"
+                className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-all hover:border-blue-500/20 hover:bg-white/[0.03] hover:text-blue-400 active:scale-90 focus-ring"
                 aria-label="Previous preview"
               >
                 <ArrowLeft size={14} />
               </button>
               <button
                 onClick={goNext}
-                className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-slate-400 transition-colors hover:border-blue-500/20 hover:text-blue-400 focus-ring"
+                className="flex h-9 w-9 items-center justify-center border border-white/[0.06] text-slate-400 transition-all hover:border-blue-500/20 hover:bg-white/[0.03] hover:text-blue-400 active:scale-90 focus-ring"
                 aria-label="Next preview"
               >
                 <ArrowRight size={14} />
@@ -290,6 +308,8 @@ export function Projects() {
           viewport={{ once: true, margin: "-30px" }}
           transition={{ duration: 0.6, delay: 0.15 }}
           className="mt-4"
+          style={{ touchAction: "pan-y" }}
+          {...swipe}
         >
           <ProjectMockup variant={activeMockup} />
         </motion.div>

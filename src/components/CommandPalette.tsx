@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Search, CornerDownLeft, ArrowUp, ArrowDown, Home, ArrowUpToLine } from "lucide-react";
 import { navLinks } from "../data/portfolio";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 
 interface Command {
   id: string;
@@ -21,6 +22,8 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const paletteRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(paletteRef, open);
 
   const commands: Command[] = [
     ...navLinks.map((link) => ({
@@ -97,12 +100,16 @@ export function CommandPalette({ open, onClose, onNavigate }: CommandPaletteProp
 
           {/* Palette */}
           <motion.div
+            ref={paletteRef}
             initial={{ y: -16, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: -12, opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-lg overflow-hidden rounded-xl border border-white/10 bg-[#0d1421] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command palette"
           >
             {/* Search input */}
             <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">

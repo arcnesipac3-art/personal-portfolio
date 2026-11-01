@@ -18,31 +18,30 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={align === "center" ? "text-center" : "text-left"}
     >
-      {/* Section number / label row */}
       <div
-        className={`flex items-center gap-3 mb-4 ${
+        className={`flex items-center gap-2.5 mb-3.5 ${
           align === "center" ? "justify-center" : ""
         }`}
       >
-        <span className="font-mono text-xs text-slate-600">{number}</span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">
+        <span className="font-mono text-xs text-[#66758b]">{number}</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#66758b]">
           {label}
         </span>
       </div>
 
-      <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-slate-50 sm:text-4xl md:text-5xl">
+      <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-[#f4f7fc] sm:text-4xl md:text-[2.75rem]">
         {title}
       </h2>
 
       {description && (
         <p
-          className={`mt-4 text-base leading-relaxed text-slate-500 sm:text-lg ${
+          className={`mt-4 text-[15px] leading-relaxed text-[#66758b] sm:text-base ${
             align === "center" ? "mx-auto max-w-2xl" : "max-w-2xl"
           }`}
         >

@@ -10,7 +10,7 @@ export function Achievements() {
     <section id="achievements" className="relative section-padding overflow-hidden border-y border-white/[0.04] bg-[#0a0f1a]">
       <div className="absolute inset-0 bg-grid-fine opacity-15" aria-hidden />
 
-      <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           number="06"
           label="Activities"
@@ -53,28 +53,41 @@ export function Achievements() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5 }}
-              className="border border-white/[0.06] bg-[#0d1220]/20 p-8"
+              className="relative overflow-hidden border border-dashed border-white/[0.09] bg-[#0d1220]/20 p-5 sm:p-7"
             >
-              <div className="flex items-center gap-2.5 mb-4">
-                <Sparkle size={14} className="text-slate-600" />
-                <h3 className="font-display text-base font-medium text-slate-300">
-                  Still in progress
-                </h3>
+              <div className="absolute left-0 top-0 h-full w-px bg-gradient-to-b from-blue-500/30 via-blue-500/5 to-transparent" aria-hidden />
+
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <div className="flex items-center gap-2.5">
+                  <Sparkle size={14} className="text-blue-400/60" />
+                  <h3 className="font-display text-base font-medium text-slate-300">
+                    Achievement log
+                  </h3>
+                </div>
+                <span className="border border-blue-500/15 bg-blue-500/[0.04] px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-blue-400">
+                  In progress
+                </span>
               </div>
-              <p className="text-[14px] text-slate-500 max-w-md leading-relaxed">
-                Academic honors, competitions, and extracurricular achievements will be
-                added here as they happen. Until then, the focus is on learning and building.
+
+              <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-slate-500">
+                Academic honors, competitions, and extracurricular milestones are logged here as
+                they happen. These are the areas being tracked.
               </p>
 
-              {/* Category tags */}
-              <div className="mt-5 flex flex-wrap gap-1.5">
-                {achievementCategories.map((cat) => (
-                  <span
+              {/* Tracked categories */}
+              <div className="mt-6 flex flex-wrap gap-1.5">
+                {achievementCategories.map((cat, i) => (
+                  <motion.span
                     key={cat}
-                    className="border border-white/[0.05] bg-white/[0.015] px-2.5 py-1 font-mono text-[9px] uppercase tracking-wider text-slate-600"
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.3, delay: i * 0.04 }}
+                    className="group/cat inline-flex items-center gap-2 border border-white/[0.06] bg-white/[0.015] px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-slate-500 transition-colors hover:border-blue-500/20 hover:text-slate-300"
                   >
+                    <span className="h-1 w-1 rounded-full bg-slate-700 transition-colors group-hover/cat:bg-blue-400" />
                     {cat}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </motion.div>
