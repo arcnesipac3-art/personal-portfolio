@@ -243,7 +243,7 @@ export function Achievements() {
   return (
     <section
       id="achievements"
-      className="relative section-padding overflow-x-clip border-y border-white/[0.04] bg-[#0a0f1a]"
+      className="relative section-padding overflow-x-clip border-y border-white/[0.04] bg-[#0a0f1a]/80"
     >
       <div className="absolute inset-0 bg-grid-fine opacity-15" aria-hidden />
       <div

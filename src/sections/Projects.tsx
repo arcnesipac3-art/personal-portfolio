@@ -271,7 +271,7 @@ export function Projects() {
   });
 
   return (
-    <section id="projects" className="relative section-padding overflow-x-clip border-y border-white/[0.04] bg-[#0a0f1a]">
+    <section id="projects" className="relative section-padding overflow-x-clip border-y border-white/[0.04] bg-[#0a0f1a]/80">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
       <div className="pointer-events-none absolute top-1/3 left-1/2 h-[400px] w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.02] blur-[120px]" aria-hidden />
 

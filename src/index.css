@@ -77,19 +77,19 @@ a {
 /* Grid texture */
 .bg-grid {
   background-image: linear-gradient(
-      rgba(154, 168, 189, 0.02) 1px,
+      rgba(154, 168, 189, 0.028) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(154, 168, 189, 0.02) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(154, 168, 189, 0.028) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
 .bg-grid-fine {
   background-image: linear-gradient(
-      rgba(154, 168, 189, 0.012) 1px,
+      rgba(154, 168, 189, 0.022) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(154, 168, 189, 0.012) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(154, 168, 189, 0.022) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
@@ -104,6 +104,62 @@ a {
     ellipse 80% 50% at 50% 0%,
     rgba(40, 120, 240, 0.06),
     transparent 70%
+  );
+}
+
+/* ── Page backdrop ───────────────────────────────────────────────
+   One fixed layer painted behind every section. The texture used to be
+   drawn per section (`bg-grid-fine` at 1.2% alpha, then cut again by
+   `opacity-15/20`), which compounded down to nothing — the page read as
+   a flat near-black field. Moving the wash, grid and vignette into a
+   single fixed layer makes the atmosphere continuous instead of
+   restarting at every section edge, and costs one paint rather than
+   one per section. Static by design: no animation, so there is nothing
+   for `prefers-reduced-motion` to gate. */
+.page-backdrop {
+  background:
+    radial-gradient(
+      ellipse 110% 70% at 50% -5%,
+      rgba(40, 120, 240, 0.13),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 80% 55% at 102% 18%,
+      rgba(56, 189, 248, 0.06),
+      transparent 64%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at -2% 88%,
+      rgba(40, 120, 240, 0.055),
+      transparent 64%
+    ),
+    linear-gradient(180deg, #0b1220 0%, #080b12 42%, #05070c 100%);
+}
+
+.page-grid {
+  background-image: linear-gradient(
+      rgba(154, 168, 189, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(154, 168, 189, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 95% 75% at 50% 42%,
+    #000 25%,
+    transparent 88%
+  );
+  mask-image: radial-gradient(
+    ellipse 95% 75% at 50% 42%,
+    #000 25%,
+    transparent 88%
+  );
+}
+
+.page-vignette {
+  background: radial-gradient(
+    ellipse 105% 78% at 50% 42%,
+    transparent 45%,
+    rgba(3, 5, 9, 0.62) 100%
   );
 }
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+import { PageBackground } from "./components/PageBackground";
 import { CustomCursor } from "./components/CustomCursor";
 import { CommandPalette } from "./components/CommandPalette";
 import { IntroOverlay } from "./components/IntroOverlay";
@@ -44,12 +45,13 @@ function App() {
         Skip to content
       </a>
       <CustomCursor />
+      <PageBackground />
       <IntroOverlay onDone={handleIntroDone} />
       <Navbar onOpenPalette={() => setPaletteOpen(true)} />
       <main
         id="main-content"
         tabIndex={-1}
-        className="min-h-screen bg-[#080b14] text-slate-50 no-scroll-x focus:outline-none"
+        className="min-h-screen text-slate-50 no-scroll-x focus:outline-none"
       >
         <Hero introDone={introDone} />
         <About />
