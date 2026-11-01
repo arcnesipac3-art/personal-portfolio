@@ -90,39 +90,39 @@
 .light {
   color-scheme: light;
 
-  --color-bg: #faf9f7;
-  --color-bg-secondary: #f4f1ea;
-  --color-surface: #ffffff;
+  --color-bg: #e7e3da;
+  --color-bg-secondary: #dcd7cc;
+  --color-surface: #f2f0ea;
   --color-cyan: #0b8fc4;
   --color-text-primary: #14181f;
-  --color-text-secondary: #4f5866;
-  --color-text-muted: #8a9199;
-  --color-border: #e4dfd5;
-  --color-border-strong: #cfc7b8;
+  --color-text-secondary: #4a525e;
+  --color-text-muted: #6f7883;
+  --color-border: #cec8bb;
+  --color-border-strong: #b6ae9d;
   --color-success: #0f7a4d;
   --color-white: #14181f;
 
-  --grid-coarse: rgba(20, 24, 31, 0.05);
-  --grid-fine: rgba(20, 24, 31, 0.04);
-  --grid-dot: rgba(20, 24, 31, 0.07);
-  --grid-page: rgba(20, 24, 31, 0.05);
+  --grid-coarse: rgba(20, 24, 31, 0.045);
+  --grid-fine: rgba(20, 24, 31, 0.035);
+  --grid-dot: rgba(20, 24, 31, 0.065);
+  --grid-page: rgba(20, 24, 31, 0.045);
   --glow-blue: rgba(40, 120, 240, 0.07);
   --grad-from: #3b82f6;
   --grad-to: #1d55c4;
 
   /* The backdrop keeps its structure — a light at the top, a cooler light at
      the foot, a warm vignette — but on paper the same alphas would read as
-     grime, so they are pulled back and the base gradient warms to cream
-     instead of cooling to near-black. */
+     grime, so they are pulled back and the base gradient warms to a stone
+     grey instead of cooling to near-black. */
   --page-wash-1: rgba(40, 120, 240, 0.1);
   --page-wash-2: rgba(11, 143, 196, 0.07);
   --page-wash-3: rgba(40, 120, 240, 0.05);
-  --page-top: #fdfcfa;
-  --page-bottom: #f4f1ea;
+  --page-top: #efebe4;
+  --page-bottom: #dfd9cd;
   --page-deep: rgba(11, 143, 196, 0.07);
   --page-spot-1: rgba(40, 120, 240, 0.07);
   --page-spot-2: rgba(40, 120, 240, 0.03);
-  --page-vignette: rgba(70, 62, 50, 0.13);
+  --page-vignette: rgba(70, 62, 50, 0.17);
   --shadow: rgba(20, 24, 31, 0.16);
   --scrim: rgba(28, 23, 16, 0.55);
 }

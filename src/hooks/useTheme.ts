@@ -5,7 +5,7 @@ export type Theme = "dark" | "light";
 const STORAGE_KEY = "theme";
 
 /** Chrome colours, kept in step with the `theme-color` meta in index.html. */
-const CHROME: Record<Theme, string> = { dark: "#080B12", light: "#FAF9F7" };
+const CHROME: Record<Theme, string> = { dark: "#080B12", light: "#E7E3DA" };
 
 /**
  * Read once at module load, which is after the pre-paint script in index.html
