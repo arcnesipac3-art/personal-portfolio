@@ -45,43 +45,87 @@ export const aboutContent = {
 
 // ─── SKILLS CAROUSEL ───────────────────────────────────────────
 
+export interface SkillTech {
+  name: string;
+  description: string;
+  /** Points at a brand mark in `public/images/tech/`. */
+  icon: string;
+}
+
 export interface SkillCategory {
   title: string;
   subtitle: string;
-  skills: string[];
+  /** What this category is used to build or accomplish. */
+  description: string;
+  /** Key of a Lucide icon resolved in `Skills.tsx`. */
   icon: string;
+  /** Single source for both the tag list and the numbered technology list. */
+  technologies: SkillTech[];
 }
 
 export const skillsData: SkillCategory[] = [
   {
     title: "Frontend Development",
     subtitle: "Websites • UIs • Interfaces",
+    description:
+      "Interfaces that stay readable under the hood — semantic markup, responsive layout, and typed React components built to be maintained rather than only shipped.",
     icon: "Monitor",
-    skills: ["HTML", "CSS", "JavaScript", "React", "TypeScript"],
+    technologies: [
+      { name: "HTML", description: "Semantic structure & accessibility", icon: "/images/tech/html5.svg" },
+      { name: "CSS", description: "Layout, theming, animation", icon: "/images/tech/css.svg" },
+      { name: "JavaScript", description: "Interactivity & browser logic", icon: "/images/tech/javascript.svg" },
+      { name: "React", description: "Component-driven interfaces", icon: "/images/tech/react.svg" },
+      { name: "TypeScript", description: "Typed, maintainable components", icon: "/images/tech/typescript.svg" },
+    ],
   },
   {
     title: "Backend Development",
     subtitle: "APIs • Logic • Systems",
+    description:
+      "Server-side logic and REST endpoints written in Python and Django, structured so the interface on top can trust the data underneath.",
     icon: "Server",
-    skills: ["Python", "Django", "REST APIs"],
+    technologies: [
+      { name: "Python", description: "Application logic & scripting", icon: "/images/tech/python.svg" },
+      { name: "Django", description: "Views, models & the ORM", icon: "/images/tech/django.svg" },
+      { name: "REST APIs", description: "Endpoint design & payloads", icon: "/images/tech/openapi.svg" },
+    ],
   },
   {
-    title: "Databases",
+    title: "Database & Storage",
     subtitle: "Storage • Queries • Schema",
+    description:
+      "Schema design and queries for structured data — relational storage that keeps records consistent as an application grows.",
     icon: "Database",
-    skills: ["PostgreSQL", "SQLite"],
+    technologies: [
+      { name: "PostgreSQL", description: "Primary relational database", icon: "/images/tech/postgresql.svg" },
+      { name: "SQLite", description: "Lightweight local storage", icon: "/images/tech/sqlite.svg" },
+    ],
   },
   {
     title: "Development Tools",
     subtitle: "Workflow • Version Control",
+    description:
+      "The daily loop of writing, versioning, and reviewing code — with version control keeping every change traceable and recoverable.",
     icon: "Wrench",
-    skills: ["Git", "GitHub", "VS Code"],
+    technologies: [
+      { name: "VS Code", description: "Editor & debugging", icon: "/images/tech/vscode.svg" },
+      { name: "Git", description: "Version control & history", icon: "/images/tech/git.svg" },
+      { name: "GitHub", description: "Repositories & collaboration", icon: "/images/tech/github.svg" },
+      { name: "OpenCode", description: "Terminal-based AI coding agent", icon: "/images/tech/opencode.svg" },
+    ],
   },
   {
-    title: "Other Interests",
-    subtitle: "Design • Research • Strategy",
-    icon: "Sparkles",
-    skills: ["UI/UX Design", "Responsive Web Design", "Research", "Problem-solving"],
+    title: "Deployment & Infrastructure",
+    subtitle: "Hosting • Shipping • Services",
+    description:
+      "Taking work off localhost — frontend and API hosting, previews, and managed services that keep every build reachable.",
+    icon: "Rocket",
+    technologies: [
+      { name: "Vercel", description: "Frontend hosting & previews", icon: "/images/tech/vercel.svg" },
+      { name: "Render", description: "Backend & API hosting", icon: "/images/tech/render.svg" },
+      { name: "Supabase", description: "Managed Postgres & auth", icon: "/images/tech/supabase.svg" },
+      { name: "Firebase", description: "Realtime data & hosting", icon: "/images/tech/firebase.svg" },
+    ],
   },
 ];
 
