@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
   X,
@@ -12,10 +12,28 @@ import {
   AlertTriangle,
   CircleDot,
   ChevronRight,
+  ListChecks,
+  FileCheck,
+  BellRing,
+  CalendarCheck,
+  ClipboardList,
+  type LucideIcon,
 } from "lucide-react";
 import { SectionHeading } from "../components/SectionHeading";
 import { useFocusTrap } from "../hooks/useFocusTrap";
-import { trackProject } from "../data/portfolio";
+import { trackProject, type ProjectFeature } from "../data/portfolio";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+/** One icon per documented feature — no feature is added or invented here. */
+const featureIcons: Record<string, LucideIcon> = {
+  "Student Requirements Tracking": ListChecks,
+  "Requirement Submission Monitoring": FileCheck,
+  "Incomplete Requirement Reminders": BellRing,
+  "Attendance Monitoring": CalendarCheck,
+  "Teacher Attendance Encoding": ClipboardList,
+  "Parent Access to Student Attendance": Users,
+};
 
 function CaseStudyModal({ onClose }: { onClose: () => void }) {
   const cs = trackProject.caseStudy;
@@ -72,7 +90,7 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
         initial={{ y: 24, opacity: 0, scale: 0.98 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 16, opacity: 0, scale: 0.98 }}
-        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
+        transition={{ duration: 0.3, ease: EASE }}
         className="relative my-auto w-full max-w-3xl border border-white/[0.08] bg-[#0a0f1a] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
@@ -160,16 +178,78 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+/** Faint eyebrow label with a hairline running to the edge of the column. */
+function ColumnLabel({ children, count }: { children: string; count?: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-[#4a5768]">
+        {children}
+      </span>
+      <span className="h-px flex-1 bg-white/[0.06]" aria-hidden />
+      {count && <span className="shrink-0 font-mono text-[10px] text-[#3d4a5c]">{count}</span>}
+    </div>
+  );
+}
+
+function FeatureCard({
+  feature,
+  index,
+  reduceMotion,
+}: {
+  feature: ProjectFeature;
+  index: number;
+  reduceMotion: boolean;
+}) {
+  const Icon = featureIcons[feature.title] ?? CircleDot;
+
+  return (
+    <motion.li
+      initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{
+        duration: 0.4,
+        delay: reduceMotion ? 0 : Math.floor(index / 2) * 0.06 + (index % 2) * 0.05,
+        ease: EASE,
+      }}
+      className="group flex items-start gap-3.5 border border-white/[0.07] bg-[#0d1220]/30 p-4 transition-colors duration-300 hover:border-[#2878f0]/25 hover:bg-[#0d1220]/50 sm:p-5"
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-[#2878f0]/15 bg-[#2878f0]/[0.04] transition-colors duration-300 group-hover:border-[#2878f0]/35">
+        <Icon size={14} className="text-[#2878f0]" />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-[13.5px] font-medium text-[#dbe3ee] transition-colors duration-300 group-hover:text-[#f4f7fc]">
+          {feature.title}
+        </span>
+        <span className="mt-1 block text-[12px] leading-relaxed text-[#66758b] transition-colors duration-300 group-hover:text-[#8b9ab1]">
+          {feature.description}
+        </span>
+      </span>
+    </motion.li>
+  );
+}
+
 export function Projects() {
   const [caseStudyOpen, setCaseStudyOpen] = useState(false);
+  const reduceMotion = useReducedMotion() ?? false;
 
   useEffect(() => {
     document.body.style.overflow = caseStudyOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [caseStudyOpen]);
 
+  const features = trackProject.caseStudy.features.slice(0, 6);
+  const stack = [...trackProject.techStack, trackProject.databaseTech];
+
+  const rise = (delay: number) => ({
+    initial: reduceMotion ? (false as const) : { opacity: 0, y: 18 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-60px" as const },
+    transition: { duration: 0.5, delay: reduceMotion ? 0 : delay, ease: EASE },
+  });
+
   return (
-    <section id="projects" className="relative section-padding overflow-x-hidden border-y border-white/[0.04] bg-[#0a0f1a]">
+    <section id="projects" className="relative section-padding overflow-x-clip border-y border-white/[0.04] bg-[#0a0f1a]">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
       <div className="absolute top-1/3 left-1/2 h-[400px] w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.02] blur-[120px]" aria-hidden />
 
@@ -180,127 +260,114 @@ export function Projects() {
           title="One project. Built with purpose."
         />
 
-        {/* Project header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="mt-8"
-        >
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-blue-400">
-              {trackProject.category}
-            </span>
-          </div>
-          <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-slate-50 sm:text-3xl">
-            {trackProject.name}
-          </h3>
-          <p className="mt-1 font-mono text-xs text-slate-500">
-            {trackProject.expandedName}
-          </p>
-          <p className="mt-4 max-w-2xl text-[15px] leading-[1.65] text-slate-400">
-            {trackProject.description}
-          </p>
-        </motion.div>
+        {/* Project information + mark */}
+        <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-8 lg:grid-cols-12 lg:gap-12">
+          <motion.div {...rise(0)} className="min-w-0 lg:col-span-7">
+            <div className="flex items-center gap-2.5">
+              <span className="h-1.5 w-1.5 bg-[#2878f0]" aria-hidden />
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#2878f0]">
+                {trackProject.category}
+              </span>
+            </div>
 
-        {/* Project Logo */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-30px" }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="mt-8 flex justify-center"
-        >
-          <div className="relative w-full max-w-2xl overflow-hidden border border-white/[0.08] bg-[#070a12]/50 p-8 shadow-2xl shadow-black/30 sm:p-12 lg:p-16">
-            <div className="absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
-            <img
-              src="/images/track-logo.png"
-              alt="TRACK Logo"
-              className="relative z-10 mx-auto w-full max-w-[400px] object-contain transition-transform duration-500 hover:scale-[1.02]"
-            />
-          </div>
-        </motion.div>
-
-        {/* Features + tech + case study */}
-        <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-8">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-            className="lg:col-span-7"
-          >
-            <h3 className="mb-3 font-mono text-[10px] uppercase tracking-wider text-slate-600">
-              Key Features
+            <h3 className="mt-5 font-display text-2xl font-bold leading-[1.1] tracking-tight text-[#f4f7fc] sm:text-3xl">
+              {trackProject.name}
             </h3>
-            <div className="grid gap-1.5 sm:grid-cols-2">
-              {trackProject.caseStudy.features.slice(0, 6).map((feature, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-2 border border-white/[0.04] bg-white/[0.015] px-3 py-2.5 transition-colors hover:border-blue-500/10"
-                >
-                  <ChevronRight size={13} className="mt-0.5 shrink-0 text-blue-400" />
-                  <div>
-                    <p className="text-[13px] font-medium text-slate-200">{feature.title}</p>
-                    <p className="mt-0.5 text-[11px] leading-relaxed text-slate-500">{feature.description}</p>
-                  </div>
-                </div>
-              ))}
+            <p className="mt-2.5 max-w-lg font-mono text-[11.5px] leading-relaxed text-[#66758b]">
+              {trackProject.expandedName}
+            </p>
+
+            <p className="mt-6 max-w-xl text-[15px] leading-[1.7] text-[#8b9ab1]">
+              {trackProject.description}
+            </p>
+
+            <div className="mt-9 max-w-xl">
+              <ColumnLabel count={String(stack.length)}>Built with</ColumnLabel>
+              <ul className="mt-3.5 flex flex-wrap gap-1.5">
+                {stack.map((tech) => (
+                  <li
+                    key={tech}
+                    className="border border-white/[0.07] bg-white/[0.02] px-2.5 py-1 font-mono text-[11px] text-[#8b9ab1] transition-colors duration-300 hover:border-[#2878f0]/30 hover:text-[#2878f0]"
+                  >
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-9">
+              <button
+                onClick={() => setCaseStudyOpen(true)}
+                className="group inline-flex w-full items-center justify-center gap-2.5 border border-[#2878f0]/35 bg-[#2878f0]/[0.07] px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-[#f4f7fc] transition-[background-color,border-color,transform] duration-300 hover:border-[#2878f0]/70 hover:bg-[#2878f0]/[0.14] active:scale-[0.98] focus-ring sm:w-auto"
+              >
+                View Case Study
+                <ArrowUpRight
+                  size={13}
+                  className="text-[#2878f0] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </button>
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-5"
-          >
-            {/* Tech */}
-            <div className="border border-white/[0.07] bg-[#0d1220]/40 p-4">
-              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-wider text-slate-600">
-                Tech Stack
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {[...trackProject.techStack, trackProject.databaseTech].map((tech) => (
-                  <span key={tech} className="border border-white/[0.06] bg-white/[0.02] px-2.5 py-1 font-mono text-[11px] text-slate-300">
-                    {tech}
-                  </span>
-                ))}
-              </div>
+          <motion.div {...rise(0.08)} className="min-w-0 lg:col-span-5">
+            {/* The mark itself is untouched — only its frame is tightened. */}
+            <div className="relative border border-white/[0.08] bg-[#0d1220]/40 p-6 sm:p-7">
+              <div className="pointer-events-none absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
+              <span className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l border-t border-[#2878f0]/30" aria-hidden />
+              <span className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-[#2878f0]/30" aria-hidden />
+
+              <img
+                src="/images/track-logo.png"
+                width={772}
+                height={259}
+                alt={`${trackProject.name} — ${trackProject.category}`}
+                decoding="async"
+                className="relative z-10 block w-full object-contain"
+              />
             </div>
 
-            {/* Details */}
-            <div className="mt-3 border border-white/[0.07] bg-[#0d1220]/40 p-4">
-              <h3 className="mb-2 font-mono text-[10px] uppercase tracking-wider text-slate-600">
-                Details
-              </h3>
-              <div className="space-y-px">
-                {[
-                  { label: "Status", value: trackProject.caseStudy.status },
-                  { label: "Institution", value: trackProject.institution },
-                ].map((d) => (
-                  <div key={d.label} className="flex justify-between gap-3 py-2 border-b border-white/[0.03] last:border-0">
-                    <span className="text-[13px] text-slate-500">{d.label}</span>
-                    <span className="text-[13px] font-medium text-slate-200 text-right">{d.value}</span>
-                  </div>
-                ))}
-              </div>
+            {/* Project details */}
+            <div className="mt-3 border border-white/[0.07] bg-[#0d1220]/40 p-5">
+              <ColumnLabel>Details</ColumnLabel>
+              <dl className="mt-4 divide-y divide-white/[0.04] border-t border-white/[0.05]">
+                <div className="flex items-center justify-between gap-4 py-3">
+                  <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#4a5768]">
+                    Status
+                  </dt>
+                  <dd className="inline-flex items-center gap-2 text-[13px] font-medium text-[#dbe3ee]">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#38bdf8]" aria-hidden />
+                    {trackProject.caseStudy.status}
+                  </dd>
+                </div>
+                <div className="flex items-start justify-between gap-4 py-3">
+                  <dt className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-[#4a5768]">
+                    Institution
+                  </dt>
+                  <dd className="max-w-[70%] text-right text-[13px] leading-snug text-[#dbe3ee]">
+                    {trackProject.institution}
+                  </dd>
+                </div>
+              </dl>
             </div>
-
-            {/* Case study button */}
-            <button
-              onClick={() => setCaseStudyOpen(true)}
-              className="group mt-3 flex w-full items-center justify-center gap-2 border border-blue-500/25 bg-blue-500/[0.06] px-5 py-3 text-[13px] font-medium text-blue-400 transition-all duration-300 hover:bg-blue-500/10 hover:border-blue-500/30 active:scale-[0.98] focus-ring"
-            >
-              View Case Study
-              <span className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                <ArrowUpRight size={14} />
-              </span>
-            </button>
           </motion.div>
         </div>
+
+        {/* Key features */}
+        <motion.div {...rise(0.05)} className="mt-14">
+          <ColumnLabel count={String(features.length).padStart(2, "0")}>
+            Key Features
+          </ColumnLabel>
+          <ul className="mt-5 grid gap-3 md:grid-cols-2">
+            {features.map((feature, i) => (
+              <FeatureCard
+                key={feature.title}
+                feature={feature}
+                index={i}
+                reduceMotion={reduceMotion}
+              />
+            ))}
+          </ul>
+        </motion.div>
       </div>
 
       <AnimatePresence>
