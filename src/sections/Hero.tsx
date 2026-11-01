@@ -35,7 +35,11 @@ interface HeroProps {
  * The name is the first thing a visitor is likely to poke at, so it answers:
  * pointing at a letter lifts it and tints it blue while its two nearest
  * neighbours follow at reduced strength, so the word reacts as a group instead
- * of one character twitching alone.
+ * of one character twitching alone. Each letter can also be dragged out of
+ * place and springs back to its slot on release.
+ *
+ * The hover lift and the drag both want `transform`, so they live on separate
+ * elements — the outer span is dragged, the inner one lifts.
  */
 function InteractiveName({ text, reduceMotion }: { text: string; reduceMotion: boolean }) {
   const [active, setActive] = useState<number | null>(null);
@@ -68,19 +72,31 @@ function InteractiveName({ text, reduceMotion }: { text: string; reduceMotion: b
                       : 0;
 
               return (
-                <span
+                <motion.span
                   key={charIndex}
+                  // `pan-y` lets the page still scroll vertically on touch while
+                  // a sideways swipe picks the letter up.
+                  style={{ touchAction: "pan-y" }}
+                  drag={!reduceMotion}
+                  dragSnapToOrigin
+                  dragMomentum={false}
+                  dragTransition={{ bounceStiffness: 420, bounceDamping: 28 }}
+                  whileDrag={{ scale: 1.18, zIndex: 30 }}
                   onMouseEnter={() => setActive(index)}
-                  className="inline-block transition-[transform,color,text-shadow] duration-300 ease-out"
-                  style={{
-                    transform: `translateY(-${lift}px)`,
-                    color: distance === 0 ? "#2878f0" : distance === 1 ? "#4f8ee6" : undefined,
-                    textShadow:
-                      distance === 0 ? "0 0 30px rgba(40,120,240,0.45)" : undefined,
-                  }}
+                  className="relative inline-block cursor-grab select-none active:cursor-grabbing"
                 >
-                  {char}
-                </span>
+                  <span
+                    className="inline-block transition-[transform,color,text-shadow] duration-300 ease-out"
+                    style={{
+                      transform: `translateY(-${lift}px)`,
+                      color: distance === 0 ? "#2878f0" : distance === 1 ? "#4f8ee6" : undefined,
+                      textShadow:
+                        distance === 0 ? "0 0 30px rgba(40,120,240,0.45)" : undefined,
+                    }}
+                  >
+                    {char}
+                  </span>
+                </motion.span>
               );
             })}
           </span>
