@@ -435,11 +435,13 @@ export function Hero({ introDone = true }: HeroProps) {
 
       {/* Scroll indicator. A mouse outline with a wheel sliding down it, plus a
           label — the old single gradient faded to transparent over 24px and
-          read as nothing at all against the page. */}
+          read as nothing at all against the page. Held back until the hero's
+          own stagger has settled (~1.3s) so it does not compete with the name
+          and the floating tags for attention. */}
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0 }}
         animate={{ opacity: introDone || prefersReducedMotion ? 1 : 0 }}
-        transition={{ delay: prefersReducedMotion ? 0 : 1, duration: 0.5 }}
+        transition={{ delay: prefersReducedMotion ? 0 : 1.9, duration: 0.5 }}
         className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2.5"
         aria-hidden
       >
