@@ -307,12 +307,15 @@ a {
 }
 
 /* Shared page shell. The navbar, every section and the footer all use it, so
-   their content edges line up down the page. The cap steps up with the
-   viewport — a fixed 1152px left a wide band of dead space on 1440p/4K.
-   Changes here are global: keep the padding steps in sync with the caps. */
+   their content edges line up down the page. The cap is deliberately fixed
+   rather than stepped up with the viewport: past roughly 1200px the extra
+   width only stretches the grids and pulls the text off its reading measure,
+   so on a large display the column simply stops growing and the margin takes
+   the space. Changes here are global: keep the padding steps in sync with the
+   cap. */
 .shell {
   width: 100%;
-  max-width: 72rem;
+  max-width: 70rem;
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
@@ -331,21 +334,13 @@ a {
 
 @media (min-width: 1280px) {
   .shell {
-    max-width: 76rem;
     padding-inline: 2.5rem;
   }
 }
 
 @media (min-width: 1536px) {
   .shell {
-    max-width: 86rem;
     padding-inline: 3rem;
-  }
-}
-
-@media (min-width: 1920px) {
-  .shell {
-    max-width: 96rem;
   }
 }
 
