@@ -118,6 +118,7 @@ export const stackData: StackGroup[] = [
     comment: "// tools",
     items: [
       { name: "VS Code", description: "Primary code editor" },
+      { name: "OpenCode", description: "Terminal-based AI coding agent" },
       { name: "Git", description: "Version control" },
       { name: "GitHub", description: "Collaboration & hosting" },
     ],
