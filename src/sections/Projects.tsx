@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
@@ -50,6 +51,24 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
+  // Lock background scrolling while the dialog is open. The previous values are
+  // restored on close so overlapping locks can't clobber one another, and the
+  // scrollbar width is padded back in to stop the page shifting sideways.
+  useEffect(() => {
+    const { body } = document;
+    const previousOverflow = body.style.overflow;
+    const previousPadding = body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`;
+    body.style.overflow = "hidden";
+
+    return () => {
+      body.style.overflow = previousOverflow;
+      body.style.paddingRight = previousPadding;
+    };
+  }, []);
+
   const sections = [
     { icon: Layers, title: "Overview", content: cs.overview },
     { icon: Target, title: "Problem", content: cs.problem },
@@ -73,13 +92,13 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
     { icon: CircleDot, title: "Project Status", content: cs.status },
   ];
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-[#080b14]/85 backdrop-blur-md p-3 sm:p-6 lg:p-10"
+      className="fixed inset-0 z-[100] flex items-start justify-center overscroll-contain overflow-y-auto bg-[#080b14]/85 backdrop-blur-md p-3 sm:p-6 lg:p-10"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -174,7 +193,11 @@ function CaseStudyModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    // Portalled to <body> so the fixed overlay isn't trapped by the clipped
+    // ancestor (`<main>` uses `overflow-x: clip`), which would otherwise
+    // anchor the dialog to the page top instead of the viewport.
+    document.body
   );
 }
 
@@ -233,11 +256,6 @@ export function Projects() {
   const [caseStudyOpen, setCaseStudyOpen] = useState(false);
   const reduceMotion = useReducedMotion() ?? false;
 
-  useEffect(() => {
-    document.body.style.overflow = caseStudyOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [caseStudyOpen]);
-
   const features = trackProject.caseStudy.features.slice(0, 6);
   const stack = [...trackProject.techStack, trackProject.databaseTech];
 
@@ -251,7 +269,7 @@ export function Projects() {
   return (
     <section id="projects" className="relative section-padding overflow-x-clip border-y border-white/[0.04] bg-[#0a0f1a]">
       <div className="absolute inset-0 bg-grid-fine opacity-20" aria-hidden />
-      <div className="absolute top-1/3 left-1/2 h-[400px] w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.02] blur-[120px]" aria-hidden />
+      <div className="pointer-events-none absolute top-1/3 left-1/2 h-[400px] w-[500px] -translate-x-1/2 rounded-full bg-blue-500/[0.02] blur-[120px]" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
