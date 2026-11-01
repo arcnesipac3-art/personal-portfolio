@@ -41,7 +41,15 @@ interface HeroProps {
  * The hover lift and the drag both want `transform`, so they live on separate
  * elements — the outer span is dragged, the inner one lifts.
  */
-function InteractiveName({ text, reduceMotion }: { text: string; reduceMotion: boolean }) {
+function InteractiveName({
+  text,
+  reduceMotion,
+  draggable,
+}: {
+  text: string;
+  reduceMotion: boolean;
+  draggable: boolean;
+}) {
   const [active, setActive] = useState<number | null>(null);
   const words = text.split(" ");
 
@@ -74,10 +82,7 @@ function InteractiveName({ text, reduceMotion }: { text: string; reduceMotion: b
               return (
                 <motion.span
                   key={charIndex}
-                  // `pan-y` lets the page still scroll vertically on touch while
-                  // a sideways swipe picks the letter up.
-                  style={{ touchAction: "pan-y" }}
-                  drag={!reduceMotion}
+                  drag={draggable}
                   dragSnapToOrigin
                   dragMomentum={false}
                   dragTransition={{ bounceStiffness: 420, bounceDamping: 28 }}
@@ -111,6 +116,11 @@ export function Hero({ introDone = true }: HeroProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const isDesktop = useIsDesktop();
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  // Both draggable things here are gated the same way as the spotlight and the
+  // parallax: Motion sets `touch-action: none` on anything it drags, which would
+  // otherwise trap a finger that lands on it mid-scroll.
+  const canDrag = isDesktop && !prefersReducedMotion;
 
   const sectionRef = useRef<HTMLElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
@@ -235,7 +245,11 @@ export function Hero({ introDone = true }: HeroProps) {
               className="mt-5 font-display text-[clamp(2.35rem,5.2vw,4rem)] font-bold leading-[1.02] tracking-tight text-[#f4f7fc]"
             >
               <span className="sr-only">{heroContent.name}</span>
-              <InteractiveName text={heroContent.name} reduceMotion={prefersReducedMotion} />
+              <InteractiveName
+                text={heroContent.name}
+                reduceMotion={prefersReducedMotion}
+                draggable={canDrag}
+              />
             </motion.h1>
 
             {/* Headline */}
@@ -328,69 +342,81 @@ export function Hero({ introDone = true }: HeroProps) {
                 aria-hidden
               />
 
-              {/* Offset frame + corner brackets */}
-              <div
-                className="pointer-events-none absolute -bottom-7 -right-7 h-24 w-24 bg-dots opacity-30"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute -inset-4 border border-white/[0.05]"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute -left-4 -top-4 h-8 w-8 border-l border-t border-[#2878f0]/40"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute -bottom-4 -right-4 h-8 w-8 border-b border-r border-[#2878f0]/40"
-                aria-hidden
-              />
-
-              {/* Photo */}
-              <div
-                ref={portraitRef}
-                className="relative overflow-hidden border border-white/[0.08] bg-[#0c111c] shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)] transition-transform duration-300 ease-out will-change-transform"
+              {/* Frame + mark as one draggable unit, so the whole framed print
+                  can be picked up and springs back into place on release. */}
+              <motion.div
+                drag={canDrag}
+                dragSnapToOrigin
+                dragMomentum={false}
+                dragTransition={{ bounceStiffness: 340, bounceDamping: 26 }}
+                whileDrag={{ scale: 1.02 }}
+                className="relative cursor-grab select-none active:cursor-grabbing"
               >
-                <div className="aspect-[7/8] w-full">
-                  {!imageFailed && (
-                    <img
-                      src="/images/profile.jpg"
-                      alt="Portrait of Arc Aaron R. Capisen, student developer"
-                      className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ${
-                        imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
-                      }`}
-                      loading="eager"
-                      fetchPriority="high"
-                      decoding="async"
-                      onLoad={() => setImageLoaded(true)}
-                      onError={() => setImageFailed(true)}
-                    />
-                  )}
-                  {!imageLoaded && (
-                    <div className="flex h-full w-full items-center justify-center">
-                      <span className="font-display text-5xl font-bold text-[#192437]">
-                        {personalInfo.monogram}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                <div
+                  className="pointer-events-none absolute -bottom-7 -right-7 h-24 w-24 bg-dots opacity-30"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute -inset-4 border border-white/[0.05]"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute -left-4 -top-4 h-8 w-8 border-l border-t border-[#2878f0]/40"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute -bottom-4 -right-4 h-8 w-8 border-b border-r border-[#2878f0]/40"
+                  aria-hidden
+                />
 
-                {/* Blue rim light */}
+                {/* The pointer tilt is written straight to this node's transform,
+                    so it has to sit on its own layer — the drag would otherwise
+                    overwrite it on every frame. */}
                 <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#2878f0]/[0.12] via-transparent to-[#38bdf8]/10"
-                  aria-hidden
-                />
-                {/* Base fade */}
-                <div
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#080b12]/70 via-[#080b12]/20 to-transparent transition-opacity duration-500 group-hover:opacity-60"
-                  aria-hidden
-                />
-                {/* Inner hairline */}
-                <div
-                  className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/[0.04]"
-                  aria-hidden
-                />
-              </div>
+                  ref={portraitRef}
+                  className="relative overflow-hidden border border-white/[0.08] bg-[#0c111c] shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)] transition-transform duration-300 ease-out will-change-transform"
+                >
+                  <div className="aspect-[7/8] w-full">
+                    {!imageFailed && (
+                      <img
+                        src="/images/profile.jpg"
+                        alt="Portrait of Arc Aaron R. Capisen, student developer"
+                        className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ${
+                          imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
+                        }`}
+                        loading="eager"
+                        fetchPriority="high"
+                        decoding="async"
+                        onLoad={() => setImageLoaded(true)}
+                        onError={() => setImageFailed(true)}
+                      />
+                    )}
+                    {!imageLoaded && (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <span className="font-display text-5xl font-bold text-[#192437]">
+                          {personalInfo.monogram}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Blue rim light */}
+                  <div
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#2878f0]/[0.12] via-transparent to-[#38bdf8]/10"
+                    aria-hidden
+                  />
+                  {/* Base fade */}
+                  <div
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#080b12]/70 via-[#080b12]/20 to-transparent transition-opacity duration-500 group-hover:opacity-60"
+                    aria-hidden
+                  />
+                  {/* Inner hairline */}
+                  <div
+                    className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/[0.04]"
+                    aria-hidden
+                  />
+                </div>
+              </motion.div>
 
               {/* Floating tech labels */}
               {FLOATING_TAGS.map((tag, i) => (
