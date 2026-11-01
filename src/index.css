@@ -22,6 +22,10 @@
   /* Text and icons that sit on a filled accent. Never inverted — a blue
      button keeps white lettering in both themes. */
   --color-on-accent: #ffffff;
+  /* A dark ground that is *not* inverted, for artwork baked against near-black
+     (the TRACK mark). Framed in paper it reads as a mistake, so its plate
+     stays dark in both themes. */
+  --color-plate: #080b12;
 
   --font-sans: "Inter", sans-serif;
   --font-display: "Space Grotesk", sans-serif;
@@ -266,6 +270,18 @@ a {
 /* Veil behind dialogs and the command palette. */
 .modal-scrim {
   background: var(--scrim);
+}
+
+/* ── Theme swap ──────────────────────────────────────────────────
+   `toggleTheme` hands the repaint to a view transition so the new palette can
+   be wiped in as a circle grown from the switch. The browser's default
+   cross-fade would run underneath that circle and dim it, so both snapshots
+   are pinned: the old one holds still, the incoming one is animated by script.
+   Browsers without view transitions never reach these rules. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* Section padding */

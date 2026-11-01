@@ -332,8 +332,11 @@ export function Projects() {
           </motion.div>
 
           <motion.div {...rise(0.08)} className="min-w-0 lg:col-span-5">
-            {/* The mark itself is untouched — only its frame is tightened. */}
-            <div className="relative border border-white/8 bg-bg-secondary/40 p-6 sm:p-7">
+            {/* The mark itself is untouched — only its frame is tightened.
+                The plate stays dark in both themes: the artwork is drawn
+                against near-black, so a paper frame around it would leave a
+                bright margin the mark was never composed for. */}
+            <div className="relative border border-white/8 bg-plate p-6 sm:p-7">
               <div className="pointer-events-none absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
               <span className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l border-t border-blue/30" aria-hidden />
               <span className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-blue/30" aria-hidden />

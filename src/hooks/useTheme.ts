@@ -37,15 +37,80 @@ function commit(theme: Theme) {
   for (const notify of listeners) notify();
 }
 
-/** Flip the theme and remember the choice. Only ever called from a click. */
-export function toggleTheme() {
+/** The subset of the View Transitions API we use, typed so the feature check
+ *  stays honest on browsers that have not shipped it. */
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => {
+    ready: Promise<void>;
+    finished: Promise<void>;
+  };
+};
+
+/** Where the reveal should start, in viewport pixels — normally the centre of
+ *  the switch that was clicked. */
+export interface RevealOrigin {
+  x: number;
+  y: number;
+}
+
+/**
+ * Flip the theme and remember the choice. Only ever called from a click.
+ *
+ * Changing the theme repaints every element on the page, so without help it
+ * reads as a hard cut. Where the browser supports view transitions the new
+ * palette is painted on the incoming snapshot and revealed by a circle grown
+ * from the switch, which turns the swap into something that looks intentional.
+ * Everywhere else — and for anyone who asked for less motion — the cut stays.
+ */
+export function toggleTheme(origin?: RevealOrigin) {
   const next: Theme = current === "dark" ? "light" : "dark";
-  commit(next);
-  try {
-    localStorage.setItem(STORAGE_KEY, next);
-  } catch {
-    /* Private mode or a locked-down localStorage: the session still switches. */
+
+  const commitChoice = () => {
+    commit(next);
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* Private mode or a locked-down localStorage: the session still switches. */
+    }
+  };
+
+  const viewTransition = (document as ViewTransitionDocument).startViewTransition;
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (calm || !viewTransition) {
+    commitChoice();
+    return;
   }
+
+  const transition = viewTransition.call(document, commitChoice);
+  transition.ready
+    .then(() => {
+      const x = origin?.x ?? window.innerWidth - 32;
+      const y = origin?.y ?? 32;
+      // Far enough to clear whichever corner is furthest from the switch.
+      const reach = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y),
+      );
+
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${reach}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 620,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        },
+      );
+    })
+    .catch(() => {
+      /* The transition was skipped (a second toggle, or a hidden document);
+         the new theme is already applied either way. */
+    });
 }
 
 /**

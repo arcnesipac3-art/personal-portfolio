@@ -1,4 +1,5 @@
 import { Moon, Sun } from "lucide-react";
+import type { MouseEvent } from "react";
 import { toggleTheme, useTheme } from "../hooks/useTheme";
 
 interface ThemeToggleProps {
@@ -21,10 +22,20 @@ export function ThemeToggle({ labelled = false }: ThemeToggleProps) {
   const Icon = toLight ? Sun : Moon;
   const label = toLight ? "Switch to light theme" : "Switch to dark theme";
 
+  // The new palette sweeps out from the control that was pressed, so the
+  // reveal starts under the pointer rather than in the middle of the screen.
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    toggleTheme({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
+  };
+
   return (
     <button
       type="button"
-      onClick={toggleTheme}
+      onClick={handleClick}
       aria-label={label}
       title={label}
       className={
