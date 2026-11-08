@@ -112,7 +112,9 @@ function Controls({
   onSelect: (index: number) => void;
 }) {
   return (
-    <div className="mt-7 flex flex-wrap items-center justify-between gap-4">
+    <div
+      className="mt-7 flex flex-wrap items-center justify-between gap-4"
+    >
       <div className="flex gap-1.5">
         <button
           type="button"
@@ -219,7 +221,9 @@ function TechPanel({
   const Icon = iconMap[category.icon] ?? Monitor;
 
   return (
-    <div className="relative flex min-h-82.5 flex-col border border-white/7 bg-bg-secondary/30 p-5 sm:p-7">
+    <div
+      className="relative flex min-h-82.5 flex-col border border-white/7 bg-bg-secondary/30 p-5 sm:p-7"
+    >
       <div className="pointer-events-none absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
 
       {/* Watermark is derived from the selected category. */}

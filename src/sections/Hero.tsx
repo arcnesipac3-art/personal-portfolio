@@ -229,7 +229,10 @@ export function Hero({ introDone = true }: HeroProps) {
           {/* Left: text */}
           <div>
             {/* Label */}
-            <motion.div {...reveal(0.1, { opacity: 0, y: 12 })} className="flex items-center gap-3">
+            <motion.div
+              {...reveal(0.1, { opacity: 0, y: 12 })}
+              className="flex items-center gap-3"
+            >
               <span
                 className="h-px w-8 bg-linear-to-r from-blue to-transparent"
                 aria-hidden
@@ -335,7 +338,9 @@ export function Hero({ introDone = true }: HeroProps) {
             {...reveal(0.2, { opacity: 0, scale: 0.96, x: 16 }, { opacity: 1, scale: 1, x: 0 }, 0.8)}
             className="relative"
           >
-            <div className="group relative mx-auto w-full max-w-sm lg:max-w-md">
+            <div
+              className="group relative mx-auto w-full max-w-sm lg:max-w-md"
+            >
               {/* Radial lighting behind the portrait */}
               <div
                 className="pointer-events-none absolute -inset-16 rounded-full bg-[radial-gradient(circle,rgba(40,120,240,0.12),transparent_65%)] blur-2xl"

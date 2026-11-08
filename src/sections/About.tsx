@@ -31,7 +31,9 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.05 }}
             className="lg:col-span-7"
           >
-            <p className="font-display text-lg font-light leading-[1.55] text-text-secondary sm:text-xl">
+            <p
+              className="font-display text-lg font-light leading-[1.55] text-text-secondary sm:text-xl"
+            >
               {aboutContent.paragraphs[0]}
             </p>
             <div className="mt-5 border-l border-white/10 pl-4">
@@ -49,7 +51,9 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.12 }}
             className="lg:col-span-5"
           >
-            <div className="border border-white/7 bg-bg-secondary/40 p-5 transition-colors duration-300 hover:border-white/12">
+            <div
+              className="border border-white/7 bg-bg-secondary/40 p-5 transition-colors duration-300 hover:border-white/12"
+            >
               <div className="space-y-px">
                 {aboutContent.infoLabels.map((info) => {
                   const Icon = infoIcons[info.key] ?? Target;

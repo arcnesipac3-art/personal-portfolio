@@ -292,14 +292,18 @@ export function Projects() {
               </span>
             </div>
 
-            <h3 className="mt-5 font-display text-2xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-3xl">
+            <h3
+              className="mt-5 font-display text-2xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-3xl"
+            >
               {trackProject.name}
             </h3>
             <p className="mt-2.5 max-w-lg font-mono text-[11.5px] leading-relaxed text-text-muted">
               {trackProject.expandedName}
             </p>
 
-            <p className="mt-6 max-w-xl text-[15px] leading-[1.7] text-text-secondary">
+            <p
+              className="mt-6 max-w-xl text-[15px] leading-[1.7] text-text-secondary"
+            >
               {trackProject.description}
             </p>
 
@@ -336,7 +340,9 @@ export function Projects() {
                 The plate stays dark in both themes: the artwork is drawn
                 against near-black, so a paper frame around it would leave a
                 bright margin the mark was never composed for. */}
-            <div className="relative border border-white/8 bg-plate p-6 sm:p-7">
+            <div
+              className="relative border border-white/8 bg-plate p-6 sm:p-7"
+            >
               <div className="pointer-events-none absolute inset-0 bg-grid-fine opacity-10" aria-hidden />
               <span className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l border-t border-blue/30" aria-hidden />
               <span className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-blue/30" aria-hidden />
@@ -352,7 +358,9 @@ export function Projects() {
             </div>
 
             {/* Project details */}
-            <div className="mt-3 border border-white/7 bg-bg-secondary/40 p-5">
+            <div
+              className="mt-3 border border-white/7 bg-bg-secondary/40 p-5"
+            >
               <ColumnLabel>Details</ColumnLabel>
               <dl className="mt-4 divide-y divide-white/4 border-t border-white/5">
                 <div className="flex items-center justify-between gap-4 py-3">

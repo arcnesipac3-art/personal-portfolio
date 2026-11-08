@@ -30,7 +30,9 @@ function Rule({ children }: { children: string }) {
 
 function EmailCard({ copied, onCopy }: { copied: boolean; onCopy: () => void }) {
   return (
-    <div className="group relative border border-blue/30 bg-blue/6 transition-colors duration-300 hover:border-blue/55 hover:bg-blue/9">
+    <div
+      className="group relative border border-blue/30 bg-blue/6 transition-colors duration-300 hover:border-blue/55 hover:bg-blue/9"
+    >
       <span className="absolute left-0 top-0 h-full w-px bg-blue" aria-hidden />
 
       <div className="flex items-center gap-3 p-4 sm:gap-4">
@@ -166,7 +168,9 @@ export function Contact() {
               </span>
             </div>
 
-            <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl lg:text-[2.6rem]">
+            <h2
+              className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl lg:text-[2.6rem]"
+            >
               {contactContent.heading}
             </h2>
 
@@ -175,7 +179,9 @@ export function Contact() {
               aria-hidden
             />
 
-            <p className="mt-6 inline-flex items-center gap-2 border border-cyan/20 bg-cyan/4 px-2.5 py-1">
+            <p
+              className="mt-6 inline-flex items-center gap-2 border border-cyan/20 bg-cyan/4 px-2.5 py-1"
+            >
               <span className="relative flex h-1.5 w-1.5" aria-hidden>
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan opacity-60" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan" />
@@ -185,7 +191,9 @@ export function Contact() {
               </span>
             </p>
 
-            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-text-muted">
+            <p
+              className="mt-6 max-w-md text-[15px] leading-relaxed text-text-muted"
+            >
               {contactContent.description}
             </p>
 
@@ -228,7 +236,9 @@ export function Contact() {
                 <Rule>Elsewhere</Rule>
               </div>
 
-              <ul className="mt-2.5 divide-y divide-white/5 border border-white/7">
+              <ul
+                className="mt-2.5 divide-y divide-white/5 border border-white/7"
+              >
                 {socials.map((social) => (
                   <SocialRow key={social.label} {...social} />
                 ))}
