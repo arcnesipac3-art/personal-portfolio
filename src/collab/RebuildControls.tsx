@@ -75,7 +75,7 @@ export function RebuildControls({
         type="button"
         className={`${button}${tour ? " text-text bg-white/8" : ""}`}
         onClick={onToggleTour}
-        title={tour ? "Stop auto tour" : "Auto tour — scroll while rebuilding"}
+        title={tour ? "Stop auto tour" : "Auto tour — the page follows the swarm"}
         aria-label={tour ? "Stop auto tour" : "Start auto tour"}
         aria-pressed={tour}
       >

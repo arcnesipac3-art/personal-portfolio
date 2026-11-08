@@ -31,6 +31,22 @@ const ARRIVE_PX = 26;
 const FORCE_ARM_MS = 2200;
 
 /**
+ * Auto tour: chase the work instead of the clock. The scroll follows the
+ * deepest unit under construction (`TOUR_HOLD` is where it sits on screen) and
+ * is capped so it never sweeps past work the swarm has not claimed yet
+ * (`TOUR_HEAD`). A dense stretch therefore nearly stops, empty ground is
+ * crossed at the hunt ceiling, and nothing gets finished unseen by the
+ * fast-forward rule above the band.
+ */
+const TOUR_HOLD = 0.6;
+const TOUR_HOLD_COMPACT = 0.52;
+const TOUR_HEAD = 0.18;
+const TOUR_EASE = 0.7;
+const TOUR_SPEED = 300;
+const TOUR_SPEED_COMPACT = 200;
+const TOUR_HUNT = 1.8;
+
+/**
  * Chip placement per agent, relative to its pointer. Collaborators often work
  * on adjacent lines, and a single shared offset stacks their labels on top of
  * each other; alternating above/below with a growing stride keeps all eight
@@ -114,6 +130,13 @@ interface BoxEntry {
   h: number;
 }
 
+/** A pending unit and the point a cursor works it from, in viewport space. */
+interface UnitSpot {
+  unit: BuildUnit;
+  x: number;
+  y: number;
+}
+
 /** One chip label's placement for this frame, before and after separation. */
 interface ChipPlace {
   id: AgentId;
@@ -133,7 +156,7 @@ interface CursorStageProps {
   enabled: boolean;
   /** Freezes the active clock: cursors hold, reveals hold. */
   paused: boolean;
-  /** Auto-scrolls the page while the swarm reconstructs. */
+  /** Scrolls with the swarm: paced to where the cursors are actually working. */
   tour: boolean;
   /** Fired when the tour reaches the page end or the visitor takes over. */
   onTourEnd: () => void;
@@ -249,7 +272,8 @@ export function CursorStage({
     let raf = 0;
     let last = 0;
     let lastDialog = 0;
-    let lastTourAcc = 0;
+    let tourAcc = 0;
+    let tourTarget = window.scrollY;
     let rescanTimer: number | null = null;
     let lastWidth = window.innerWidth;
     let stopped = false;
@@ -418,16 +442,40 @@ export function CursorStage({
         enabledRef.current && !pausedRef.current && !dialogRef.current && leadOk;
 
       // ── Reads ───────────────────────────────────────────────────────────
+      // One scroll read per frame, and the three positions the auto tour
+      // needs, all from the rect pass it would otherwise do again for.
+      const sy = window.scrollY;
       const rects = new Map<number, DOMRect>();
+      let buildFront = -1;
+      let huntTop = -1;
+      let headBottom = -1;
       for (const unit of bp.units) {
-        rects.set(unit.id, unit.el.getBoundingClientRect());
+        const rect = unit.el.getBoundingClientRect();
+        rects.set(unit.id, rect);
+        if (unit.state === "built") continue;
+        // Zero-box units are cleared by the fast-forward in the same frame,
+        // so they are not work the tour should ever wait for.
+        if (rect.width === 0 && rect.height === 0) continue;
+        const bottom = rect.bottom + sy;
+        if (unit.state === "building") {
+          buildFront = Math.max(buildFront, bottom);
+          if (headBottom < 0 || bottom < headBottom) headBottom = bottom;
+          continue;
+        }
+        if (headBottom < 0 || bottom < headBottom) headBottom = bottom;
+        if (!unit.parent || unit.parent.state === "built") {
+          // Same claimability rule as the work queue below: where the swarm
+          // would resume if the band reached it.
+          const top = rect.top + sy;
+          huntTop = huntTop < 0 ? top : Math.min(huntTop, top);
+        }
       }
 
-      const bandTop = window.scrollY <= 1 ? 0 : vh * 0.16;
+      const bandTop = sy <= 1 ? 0 : vh * 0.16;
       // At the very bottom of the page nothing can scroll further, so the
       // band must close at the viewport edge — otherwise units in the last
       // slice of screen could never enter the band and would stay hidden.
-      const atBottom = window.scrollY + vh >= document.documentElement.scrollHeight - 2;
+      const atBottom = sy + vh >= document.documentElement.scrollHeight - 2;
       const bandBottom = atBottom ? vh : vh * 0.86;
       let changed = false;
 
@@ -452,34 +500,66 @@ export function CursorStage({
         }
       }
 
-      // ── Claims: idle cursors take the next in-band unit in DOM order ────
-      if (running && !bp.allBuilt()) {
+      // ── Work on the table ───────────────────────────────────────────────
+      // Two views of the same pending units: what a cursor can start now, and
+      // what it will want next. Built in one pass because both the claims and
+      // the idle anchors read it, and a cursor that has to guess travels
+      // across the band to find out.
+      const inBand: UnitSpot[] = [];
+      const belowBand: UnitSpot[] = [];
+      const queue: UnitSpot[] = [];
+      for (const unit of bp.units) {
+        if (unit.state !== "pending") continue;
+        if (unit.parent && unit.parent.state !== "built") continue;
+        const rect = rects.get(unit.id)!;
+        const point = pointFor(unit.action, rect, 0);
+        const spot = { unit, x: point.x, y: point.y };
+        queue.push(spot);
+        if (rect.top >= bandBottom) {
+          if (rect.top < vh) belowBand.push(spot);
+        } else {
+          inBand.push(spot);
+        }
+      }
+
+      // The band is what keeps the reveal tied to the scroll, but it closes at
+      // 86% of the viewport, so a visitor who stops mid-page leaves a strip
+      // below it blank with eight cursors doing nothing. Out-of-band work is
+      // offered only once the band itself is empty.
+      const inReach = inBand.length > 0 ? inBand : belowBand;
+
+      // ── Claims: idle cursors take the work nearest them ─────────────────
+      // DOM order was the first rule, and it is what made the swarm slow: a
+      // cursor finishing at the foot of the band was handed the unit at its
+      // head, and crossed the screen to get there. That crossing is dead time
+      // the page pays for as lag.
+      if (running && inReach.length > 0) {
         const idle = AGENTS.filter((agent) => !motions[agent.id].task);
-        if (idle.length > 0) {
-          let runningCount = AGENTS.length - idle.length;
-          for (const agent of idle) {
-            // Small screens run two collaborators at a time: one alone
-            // leaves a section blank for seconds, four crowd a phone measure.
-            if (compact && runningCount > 1) break;
+        let runningCount = AGENTS.length - idle.length;
+        for (const agent of idle) {
+          // Small screens run two collaborators at a time: one alone
+          // leaves a section blank for seconds, four crowd a phone measure.
+          if (compact && runningCount > 1) break;
 
-            let candidate: BuildUnit | null = null;
-            for (const unit of bp.units) {
-              if (unit.state !== "pending") continue;
-              if (unit.parent && unit.parent.state !== "built") continue;
-              const rect = rects.get(unit.id)!;
-              if (rect.bottom <= bandTop || rect.top >= bandBottom) continue;
-              candidate = unit;
-              break;
+          let best = -1;
+          let bestDist = Infinity;
+          const motion = motions[agent.id];
+          for (let k = 0; k < inReach.length; k++) {
+            const spot = inReach[k];
+            const dist = Math.hypot(motion.x - spot.x, motion.y - spot.y);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = k;
             }
-            if (!candidate) break;
-
-            bp.claim(candidate, agent.id, clockRef.current);
-            const motion = motions[agent.id];
-            motion.task = candidate;
-            motion.baseDirty = true;
-            runningCount++;
-            changed = true;
           }
+          if (best < 0) break;
+
+          const candidate = inReach.splice(best, 1).pop()!;
+          bp.claim(candidate.unit, agent.id, clockRef.current);
+          motion.task = candidate.unit;
+          motion.baseDirty = true;
+          runningCount++;
+          changed = true;
         }
       }
 
@@ -487,22 +567,12 @@ export function CursorStage({
       const clock = clockRef.current;
 
       // ── Anchors ─────────────────────────────────────────────────────────
-      // Working cursors track their unit; idle cursors drift to the next
-      // pending unit (or an off-screen entry point when there is no work in
-      // reach), so nobody floats over finished sections.
+      // Working cursors track their unit. Idle ones each take a different
+      // entry from the queue instead of all converging on the first, so the
+      // swarm spreads across the work ahead and is already standing on it
+      // when the page scrolls into place.
       const anchors = new Map<AgentId, { x: number; y: number }>();
-      let nextPending: BuildUnit | null = null;
-      if (!bp.allBuilt()) {
-        for (const unit of bp.units) {
-          if (unit.state !== "pending") continue;
-          if (unit.parent && unit.parent.state !== "built") continue;
-          const rect = rects.get(unit.id)!;
-          if (rect.bottom <= bandTop || rect.top >= bandBottom) continue;
-          nextPending = unit;
-          break;
-        }
-      }
-
+      let waiting = 0;
       for (const agent of AGENTS) {
         const motion = motions[agent.id];
         if (motion.task && motion.task.state === "building") {
@@ -513,12 +583,14 @@ export function CursorStage({
             motion.task = null;
             motion.baseDirty = true;
           }
-          if (nextPending) {
-            const rect = rects.get(nextPending.id)!;
-            anchors.set(agent.id, pointFor(nextPending.action, rect, 0));
-          } else {
-            anchors.set(agent.id, ENTRY_POINTS[agent.id](vw, vh));
-          }
+          const spot = queue[Math.min(waiting, queue.length - 1)];
+          waiting++;
+          anchors.set(
+            agent.id,
+            spot
+              ? { x: spot.x, y: spot.y }
+              : ENTRY_POINTS[agent.id](vw, vh),
+          );
         }
       }
 
@@ -747,25 +819,42 @@ export function CursorStage({
       if (changed) syncRendered(bp);
 
       // ── Auto tour ───────────────────────────────────────────────────────
+      // The scroll chases the work rather than a fixed rate, so the page
+      // never runs ahead of the swarm: what the fast-forward above the band
+      // would have to finish unseen, the cursors finish on screen instead.
       if (tourRef.current && running) {
-        const speed = compact ? 180 : 260;
-        lastTourAcc += speed * dt;
-        if (lastTourAcc >= 1) {
-          const dy = Math.floor(lastTourAcc);
-          lastTourAcc -= dy;
-          const atEnd =
-            window.scrollY + vh >= document.documentElement.scrollHeight - 2;
-          if (atEnd) {
-            onTourEndRef.current();
-          } else {
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - vh);
+        const done = bp.allBuilt();
+        const hunting = !done && buildFront < 0;
+        let target = maxScroll;
+        if (!done) {
+          const hold = vh * (compact ? TOUR_HOLD_COMPACT : TOUR_HOLD);
+          const pace = (hunting ? huntTop : buildFront) - hold;
+          target = Math.min(pace, headBottom - vh * TOUR_HEAD, maxScroll);
+        }
+        // Monotonic: a cursor that drops back below the hold line as it
+        // finishes must not drag the page up after it.
+        tourTarget = clamp(Math.max(tourTarget, target), sy, maxScroll);
+        const gap = tourTarget - sy;
+        if (atBottom) {
+          onTourEndRef.current();
+        } else if (gap > 0.5) {
+          const ceiling = (compact ? TOUR_SPEED_COMPACT : TOUR_SPEED) * (hunting ? TOUR_HUNT : 1);
+          tourAcc += Math.min((gap / TOUR_EASE) * dt, ceiling * dt);
+          const dy = Math.floor(tourAcc);
+          if (dy >= 1) {
+            tourAcc -= dy;
             // Instant: `html` has `scroll-behavior: smooth`, and a smoothed
             // scrollBy re-animates from the previous target every frame, so
-            // the tour would crawl at a fraction of `speed`.
+            // the tour would crawl at a fraction of the rate it asks for.
             window.scrollBy({ top: dy, behavior: "instant" });
           }
+        } else {
+          tourAcc = 0;
         }
       } else {
-        lastTourAcc = 0;
+        tourAcc = 0;
+        tourTarget = sy;
       }
     };
 
