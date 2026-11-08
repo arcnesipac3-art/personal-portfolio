@@ -52,8 +52,6 @@
   --page-top: #0b1220;
   --page-bottom: #05070c;
   --page-deep: rgba(56, 189, 248, 0.1);
-  --page-spot-1: rgba(40, 120, 240, 0.1);
-  --page-spot-2: rgba(40, 120, 240, 0.04);
   --page-vignette: rgba(3, 5, 9, 0.62);
   /* Elevation shadows. Plain black is right over a near-black ground, but it
      reads as soot on paper, so the light theme shifts it to a warm ink. */
@@ -120,8 +118,6 @@
   --page-top: #efebe4;
   --page-bottom: #dfd9cd;
   --page-deep: rgba(11, 143, 196, 0.07);
-  --page-spot-1: rgba(40, 120, 240, 0.07);
-  --page-spot-2: rgba(40, 120, 240, 0.03);
   --page-vignette: rgba(70, 62, 50, 0.17);
   --shadow: rgba(20, 24, 31, 0.16);
   --scrim: rgba(28, 23, 16, 0.55);
@@ -242,20 +238,6 @@ a {
     ellipse 90% 60% at 50% 108%,
     var(--page-deep),
     transparent 62%
-  );
-}
-
-/* The light that trails the cursor. A radial gradient rather than a
-   `filter: blur()` disc on purpose: a 140px blur over a 700px element is the
-   most expensive thing that can be put behind a pointer, and it is rebuilt
-   whenever the layer is re-rastered. Alpha stops give the same falloff for
-   the price of one cached looking-up texture. */
-.page-spotlight {
-  background: radial-gradient(
-    circle,
-    var(--page-spot-1),
-    var(--page-spot-2) 45%,
-    transparent 70%
   );
 }
 

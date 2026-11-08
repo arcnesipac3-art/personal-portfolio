@@ -1,9 +1,9 @@
 /* ── Collaborative cursor stage ────────────────────────────────────────────
-   A fixed, pointer-events-free overlay that holds the four simulated
+   A fixed, pointer-events-free overlay that holds the eight simulated
    collaborators. Everything is positioned by script from live element rects;
    these rules only define how each piece looks.
 
-   Colour comes from four theme-aware pairs (--collab-<agent> and a matching
+   Colour comes from eight theme-aware pairs (--collab-<agent> and a matching
    soft tint), re-pointed in `.light` so the agents stay legible on paper.
    The chips use their own background variables rather than a theme token
    because they float over arbitrary content and need to stay opaque enough
@@ -18,6 +18,14 @@
   --collab-developer-soft: rgba(77, 155, 255, 0.16);
   --collab-editor: #fbbf24;
   --collab-editor-soft: rgba(251, 191, 36, 0.17);
+  --collab-artist: #34d399;
+  --collab-artist-soft: rgba(52, 211, 153, 0.16);
+  --collab-planner: #fb7185;
+  --collab-planner-soft: rgba(251, 113, 133, 0.16);
+  --collab-tester: #a3e635;
+  --collab-tester-soft: rgba(163, 230, 53, 0.16);
+  --collab-reviewer: #cbd5e1;
+  --collab-reviewer-soft: rgba(203, 213, 225, 0.16);
 
   --collab-chip-bg: rgba(8, 11, 18, 0.88);
   --collab-chip-border: rgba(244, 247, 252, 0.1);
@@ -32,6 +40,14 @@
   --collab-developer-soft: rgba(29, 85, 196, 0.13);
   --collab-editor: #b45309;
   --collab-editor-soft: rgba(180, 83, 9, 0.14);
+  --collab-artist: #059669;
+  --collab-artist-soft: rgba(5, 150, 105, 0.14);
+  --collab-planner: #e11d48;
+  --collab-planner-soft: rgba(225, 29, 72, 0.13);
+  --collab-tester: #65a30d;
+  --collab-tester-soft: rgba(101, 163, 13, 0.15);
+  --collab-reviewer: #475569;
+  --collab-reviewer-soft: rgba(71, 85, 105, 0.13);
 
   --collab-chip-bg: rgba(242, 240, 234, 0.92);
   --collab-chip-border: rgba(20, 24, 31, 0.14);
@@ -53,6 +69,22 @@
 [data-collab-agent="editor"] {
   --collab-agent: var(--collab-editor);
   --collab-agent-soft: var(--collab-editor-soft);
+}
+[data-collab-agent="artist"] {
+  --collab-agent: var(--collab-artist);
+  --collab-agent-soft: var(--collab-artist-soft);
+}
+[data-collab-agent="planner"] {
+  --collab-agent: var(--collab-planner);
+  --collab-agent-soft: var(--collab-planner-soft);
+}
+[data-collab-agent="tester"] {
+  --collab-agent: var(--collab-tester);
+  --collab-agent-soft: var(--collab-tester-soft);
+}
+[data-collab-agent="reviewer"] {
+  --collab-agent: var(--collab-reviewer);
+  --collab-agent-soft: var(--collab-reviewer-soft);
 }
 
 .collab-stage {

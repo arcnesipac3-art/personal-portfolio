@@ -9,10 +9,6 @@ const CORNERS = [
   "right-5 bottom-5 border-r border-b",
 ];
 
-/** Diameter of the light that trails the cursor. */
-const SPOTLIGHT = 640;
-/** Slow, viscous follow — the light should lag the cursor, not stick to it. */
-const FOLLOW = { stiffness: 90, damping: 22, mass: 0.7 } as const;
 /** Lazier still, so the tilt reads as weight rather than as jitter. */
 const DRIFT = { stiffness: 60, damping: 20, mass: 0.6 } as const;
 
@@ -58,13 +54,6 @@ function useAmbientCaps(): Caps {
   return caps;
 }
 
-const initialSpot = (axis: "x" | "y") =>
-  typeof window === "undefined"
-    ? 0
-    : axis === "x"
-      ? window.innerWidth / 2
-      : window.innerHeight * 0.42;
-
 /**
  * Fixed backdrop for the whole page, sitting behind every section at `-z-10`.
  * It lives at the app root rather than inside `<main>`: `main` carries
@@ -81,15 +70,13 @@ const initialSpot = (axis: "x" | "y") =>
  * so the parent's full-screen texture gets re-rastered every frame. So each
  * layer here is a motion wrapper around a *static* child, which is rastered
  * once and then only translated. For the same reason there is no `scale` (a
- * raster-scale change re-rasterizes) and the cursor light is a gradient rather
- * than a blurred disc (see `.page-spotlight`).
+ * raster-scale change re-rasterizes).
  *
  * Motion, in two registers:
  *  - On scroll the grid climbs faster than the wash behind it, the wash's top
  *    light dims, and a cooler light rises from the foot of the page, so the
  *    backdrop changes character from hero to contact.
- *  - On fine pointers the wash and grid tilt a few pixels in opposition, and
- *    the light trails the cursor.
+ *  - On fine pointers the wash and grid tilt a few pixels in opposition.
  *
  * Touch devices and reduced-motion users get the static backdrop.
  */
@@ -107,21 +94,16 @@ export function PageBackground() {
   const washX = useTransform(pointerX, [-1, 1], [-14, 14]);
   const gridX = useTransform(pointerX, [-1, 1], [9, -9]);
 
-  const spotX = useSpring(initialSpot("x"), FOLLOW);
-  const spotY = useSpring(initialSpot("y"), FOLLOW);
-
   useEffect(() => {
     if (!interactive) return;
 
     const onMove = (event: PointerEvent) => {
       pointerX.set((event.clientX / window.innerWidth) * 2 - 1);
-      spotX.set(event.clientX);
-      spotY.set(event.clientY);
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
-  }, [interactive, pointerX, spotX, spotY]);
+  }, [interactive, pointerX]);
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
@@ -136,20 +118,6 @@ export function PageBackground() {
         className="page-backdrop-deep absolute inset-0"
         style={motionOk ? { opacity: deepFade } : undefined}
       />
-
-      {interactive && (
-        <motion.div
-          className="page-spotlight absolute will-change-transform"
-          style={{
-            x: spotX,
-            y: spotY,
-            left: -SPOTLIGHT / 2,
-            top: -SPOTLIGHT / 2,
-            width: SPOTLIGHT,
-            height: SPOTLIGHT,
-          }}
-        />
-      )}
 
       <motion.div
         className={`absolute ${BLEED} will-change-transform`}

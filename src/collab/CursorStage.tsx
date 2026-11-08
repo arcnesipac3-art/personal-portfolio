@@ -31,16 +31,28 @@ const ARRIVE_PX = 26;
 const FORCE_ARM_MS = 2200;
 
 /**
- * Chip placement per agent, relative to its pointer. Two collaborators often
- * work on adjacent lines, and a single shared offset stacks their labels on
- * top of each other; splitting them above/below keeps both readable.
+ * Chip placement per agent, relative to its pointer. Collaborators often work
+ * on adjacent lines, and a single shared offset stacks their labels on top of
+ * each other; alternating above/below with a growing stride keeps all eight
+ * readable. Placement is clamped to the viewport, so the long strides cannot
+ * push a chip off screen.
  */
 const CHIP_OFFSETS: Record<AgentId, { dx: number; dy: number }> = {
   designer: { dx: 14, dy: 16 },
   writer: { dx: 14, dy: -28 },
   developer: { dx: 14, dy: 44 },
   editor: { dx: 14, dy: -58 },
+  artist: { dx: 14, dy: 72 },
+  tester: { dx: 14, dy: -86 },
+  planner: { dx: 14, dy: 100 },
+  reviewer: { dx: 14, dy: -114 },
 };
+
+/** Air kept between two de-collided labels, and around the viewport edges. */
+const CHIP_GAP = 4;
+
+/** How fast a label may slide out of a neighbour's way, in pixels per second. */
+const CHIP_GLIDE = 900;
 
 /** Where a cursor sits for a given action, in viewport coordinates. */
 function pointFor(action: UnitAction, rect: DOMRect, p: number): { x: number; y: number } {
@@ -76,6 +88,8 @@ interface AgentMotion {
   baseY: number;
   baseDirty: boolean;
   chipA: number;
+  /** Glided vertical nudge applied by the label de-collision pass. */
+  sepY: number;
   /** The unit this cursor is currently rebuilding. */
   task: BuildUnit | null;
 }
@@ -98,6 +112,20 @@ interface BoxEntry {
   action: UnitAction;
   w: number;
   h: number;
+}
+
+/** One chip label's placement for this frame, before and after separation. */
+interface ChipPlace {
+  id: AgentId;
+  x: number;
+  /** Beside its pointer. */
+  base: number;
+  /** Clear of the other labels. */
+  y: number;
+  w: number;
+  h: number;
+  /** False while the label is still fading; such labels keep their base. */
+  active: boolean;
 }
 
 interface CursorStageProps {
@@ -125,6 +153,7 @@ function createMotions(): Record<AgentId, AgentMotion> {
       baseY: -80,
       baseDirty: false,
       chipA: 0,
+      sepY: 0,
       task: null,
     };
   }
@@ -551,32 +580,121 @@ export function CursorStage({
       const alpha = alphaRef.current;
 
       // ── Writes ──────────────────────────────────────────────────────────
+      // Cursors are written straight away; chip labels go through a second
+      // pass, because eight cursors working on adjacent lines put eight
+      // labels on top of each other.
+      const chips: ChipPlace[] = [];
       for (const agent of AGENTS) {
         const motion = motions[agent.id];
         const cursor = cursorRefs.current[agent.id];
-        const chip = chipRefs.current[agent.id];
-        if (!cursor || !chip) continue;
-
-        let press = 1;
-        const task = motion.task;
-        if (task && task.action === "click" && task.armAt !== null) {
-          const p = clamp((clock - task.armAt) / task.duration, 0, 1);
-          if (p > 0.1 && p < 0.42) press = 1 - 0.22 * Math.sin(Math.PI * ((p - 0.1) / 0.32));
+        if (cursor) {
+          let press = 1;
+          const task = motion.task;
+          if (task && task.action === "click" && task.armAt !== null) {
+            const p = clamp((clock - task.armAt) / task.duration, 0, 1);
+            if (p > 0.1 && p < 0.42) press = 1 - 0.22 * Math.sin(Math.PI * ((p - 0.1) / 0.32));
+          }
+          cursor.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0) scale(${press})`;
+          cursor.style.opacity = alpha.toFixed(3);
         }
 
-        cursor.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0) scale(${press})`;
-        cursor.style.opacity = alpha.toFixed(3);
-
+        const chip = chipRefs.current[agent.id];
+        if (!chip) continue;
         const onScreen =
           motion.x > -8 && motion.x < vw + 8 && motion.y > -8 && motion.y < vh + 8;
-        const chipTarget = alpha * (onScreen ? 1 : 0);
-        motion.chipA += (chipTarget - motion.chipA) * fade;
+        motion.chipA += (alpha * (onScreen ? 1 : 0) - motion.chipA) * fade;
         const size = chipSizeRef.current.get(agent.id) ?? { w: 90, h: 18 };
         const off = CHIP_OFFSETS[agent.id];
-        const chipX = clamp(motion.x + off.dx, 6, Math.max(6, vw - size.w - 6));
-        const chipY = clamp(motion.y + off.dy, 6, Math.max(6, vh - size.h - 6));
-        chip.style.transform = `translate3d(${chipX}px, ${chipY}px, 0)`;
-        chip.style.opacity = motion.chipA.toFixed(3);
+        const baseY = clamp(motion.y + off.dy, CHIP_GAP, Math.max(CHIP_GAP, vh - size.h - CHIP_GAP));
+        chips.push({
+          id: agent.id,
+          x: clamp(motion.x + off.dx, CHIP_GAP, Math.max(CHIP_GAP, vw - size.w - CHIP_GAP)),
+          base: baseY,
+          y: baseY,
+          w: size.w,
+          h: size.h,
+          // A label still fading is parked at its pointer rather than joining
+          // the de-collision, but it is placed every frame so it cannot fade
+          // back in at wherever it was last left.
+          active: motion.chipA >= 0.02,
+        });
+      }
+
+      // Separation. The agent that gives way is chosen by roster position,
+      // not by which label happens to be higher: eight cursors working
+      // adjacent lines cross each other constantly, and a geometry-based
+      // rule hands the yielding to the other agent the instant two pointers
+      // swap rows — the label then teleports sixty pixels. A fixed rule makes
+      // the same label yield on both sides of the crossing, so its offset
+      // grows and shrinks smoothly as the pointers converge and part.
+      // Never sideways: a label has to stay beside the pointer it belongs to.
+      const clears = (a: ChipPlace, b: ChipPlace) =>
+        Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) > 0;
+
+      for (let pass = 0; pass < 4; pass++) {
+        let moved = false;
+        for (let i = 1; i < chips.length; i++) {
+          const c = chips[i];
+          if (!c.active) continue;
+          for (let j = 0; j < i; j++) {
+            const p = chips[j];
+            if (!p.active || !clears(c, p)) continue;
+            if (c.y >= p.y + p.h || c.y + c.h <= p.y) continue;
+            const need = p.y + p.h + CHIP_GAP;
+            if (c.y < need) {
+              c.y = need;
+              moved = true;
+            }
+          }
+        }
+        if (!moved) break;
+      }
+
+      // Pushing down can run off the foot of the page when the swarm crowds
+      // the last band. The crowded label takes the space above its neighbours
+      // instead — still the same label moving, only the direction changes.
+      for (let pass = 0; pass < 4; pass++) {
+        let moved = false;
+        for (let i = chips.length - 1; i >= 0; i--) {
+          const c = chips[i];
+          if (!c.active) continue;
+          if (c.y + c.h <= vh - CHIP_GAP) continue;
+          for (let j = 0; j < i; j++) {
+            const p = chips[j];
+            if (!p.active || !clears(c, p)) continue;
+            if (c.y >= p.y + p.h || c.y + c.h <= p.y) continue;
+            const above = p.y - CHIP_GAP - c.h;
+            if (above >= CHIP_GAP && c.y > above) {
+              c.y = above;
+              moved = true;
+            }
+          }
+          const ceiling = Math.max(CHIP_GAP, vh - CHIP_GAP - c.h);
+          if (c.y > ceiling) {
+            c.y = ceiling;
+            moved = true;
+          }
+        }
+        if (!moved) break;
+      }
+
+      for (const chip of chips) {
+        const el = chipRefs.current[chip.id];
+        if (!el) continue;
+        const motion = motions[chip.id];
+        // The resolver's answer is continuous while pointers converge and
+        // part, but it still changes abruptly the instant a pair makes
+        // contact. Only the offset is glided, never the position, which has
+        // to follow its pointer exactly. Capped by speed rather than by a
+        // time constant: a label covers a small correction at once and a
+        // large one over a handful of frames, so it never teleports and
+        // never lags long enough to sit on a neighbour.
+        const glide = CHIP_GLIDE * dt;
+        const err = chip.y - chip.base - motion.sepY;
+        motion.sepY += clamp(err, -glide, glide);
+        const y = clamp(chip.base + motion.sepY, CHIP_GAP, vh - CHIP_GAP - chip.h);
+        el.style.transform = `translate3d(${chip.x}px, ${y}px, 0)`;
+        el.style.opacity = motion.chipA.toFixed(3);
       }
 
       for (const entry of boxRefs.current.values()) {
